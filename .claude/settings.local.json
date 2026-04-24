@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "WebFetch(domain:www.chess.com)",
+      "Bash(xargs -0 ls -la)",
+      "Bash(xargs ls:*)",
+      "Bash(grep -E '\\\\.\\(py|js|ts|jsx|tsx|html|css\\)$')",
+      "Bash(ls:*)",
+      "WebFetch(domain:fr.wikipedia.org)"
+    ]
+  }
+}
