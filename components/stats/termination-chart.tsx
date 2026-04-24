@@ -1,8 +1,22 @@
 "use client";
 
 import { useMemo } from "react";
-import { Bar, BarChart, CartesianGrid, XAxis, YAxis, ResponsiveContainer } from "recharts";
-import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
+import { Pie, PieChart } from "recharts";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+  ChartLegend,
+  ChartLegendContent,
+  type ChartConfig,
+} from "@/components/ui/chart";
 import { ChessGame } from "@/types/chess";
 
 interface TerminationChartProps {
@@ -10,72 +24,145 @@ interface TerminationChartProps {
   username: string;
 }
 
+const chartConfig = {
+  checkmated: { label: "Mat", color: "hsl(30 50% 50%)" },
+  resigned: { label: "Abandon", color: "hsl(30 40% 40%)" },
+  timeout: { label: "Temps", color: "hsl(30 30% 30%)" },
+  repetition: { label: "Répétition", color: "hsl(40 20% 50%)" },
+  stalemate: { label: "Pat", color: "hsl(40 20% 40%)" },
+  insufficient: { label: "Manque de matériel", color: "hsl(40 20% 30%)" },
+  agreed: { label: "Accord", color: "hsl(40 20% 20%)" },
+  "50move": { label: "50 coups", color: "hsl(40 10% 40%)" },
+  win: { label: "Gain", color: "hsl(30 60% 60%)" },
+} satisfies ChartConfig;
+
 export function TerminationChart({ games, username }: TerminationChartProps) {
-  const chartData = useMemo(() => {
-    const counts: Record<string, { win: number; loss: number }> = {
-      checkmated: { win: 0, loss: 0 },
-      resigned: { win: 0, loss: 0 },
-      timeout: { win: 0, loss: 0 },
-      abandoned: { win: 0, loss: 0 },
-    };
+  const { winData, lossData, drawData } = useMemo(() => {
+    const wins: Record<string, number> = {};
+    const losses: Record<string, number> = {};
+    const draws: Record<string, number> = {};
+    
+    let totalWins = 0;
+    let totalLosses = 0;
+    let totalDraws = 0;
 
     games.forEach((game) => {
       const isWhite = game.white.username.toLowerCase() === username.toLowerCase();
       const playerResult = isWhite ? game.white.result : game.black.result;
       const opponentResult = isWhite ? game.black.result : game.white.result;
 
+      const normalize = (res: string) => {
+        if (res === "abandoned") return "resigned";
+        if (res === "timevsinsufficient") return "insufficient";
+        return res;
+      };
+      
+      const drawTypes = ["draw", "repetition", "stalemate", "insufficient", "agreed", "timevsinsufficient", "50move"];
+
       if (playerResult === "win") {
-        if (counts[opponentResult] !== undefined) counts[opponentResult].win++;
-      } else if (
-        playerResult === "checkmated" ||
-        playerResult === "resigned" ||
-        playerResult === "timeout" ||
-        playerResult === "abandoned"
-      ) {
-        counts[playerResult].loss++;
+        const normRes = normalize(opponentResult);
+        wins[normRes] = (wins[normRes] || 0) + 1;
+        totalWins++;
+      } else if (drawTypes.includes(playerResult)) {
+        const normRes = normalize(playerResult);
+        const finalRes = normRes === "draw" ? "agreed" : normRes;
+        draws[finalRes] = (draws[finalRes] || 0) + 1;
+        totalDraws++;
+      } else {
+        const normRes = normalize(playerResult);
+        losses[normRes] = (losses[normRes] || 0) + 1;
+        totalLosses++;
       }
     });
 
-    return [
-      { name: "Mat", win: counts.checkmated.win, loss: counts.checkmated.loss },
-      { name: "Abandon", win: counts.resigned.win, loss: counts.resigned.loss },
-      { name: "Temps", win: counts.timeout.win, loss: counts.timeout.loss },
-      { name: "Déco.", win: counts.abandoned.win, loss: counts.abandoned.loss },
-    ];
+    const format = (obj: Record<string, number>, total: number) => 
+      Object.entries(obj).map(([key, value]) => ({
+        result: key,
+        count: value,
+        percentage: total > 0 ? (value / total) * 100 : 0,
+        fill: chartConfig[key as keyof typeof chartConfig]?.color || "hsl(var(--muted))"
+      })).sort((a, b) => b.count - a.count);
+
+    return { 
+      winData: format(wins, totalWins), 
+      lossData: format(losses, totalLosses),
+      drawData: format(draws, totalDraws)
+    };
   }, [games, username]);
 
   if (games.length === 0) return null;
 
-  const chartConfig = {
-    win: {
-      label: "Gagnées par",
-      color: "#22c55e",
-    },
-    loss: {
-      label: "Perdues par",
-      color: "#ef4444",
-    },
-  } satisfies ChartConfig;
+  const renderTooltip = (value: any, name: any, item: any) => {
+    const config = chartConfig[item.payload.result as keyof typeof chartConfig];
+    return (
+      <div className="flex items-center gap-2">
+        <span className="font-bold">{item.payload.percentage.toFixed(1)}%</span>
+        <span className="text-stone-500 font-medium">| {config?.label || name}</span>
+      </div>
+    );
+  };
 
   return (
-    <div className="bg-white/[0.02] border border-white/[0.05] p-6 rounded-2xl flex flex-col gap-4">
-      <h2 className="text-xs font-black uppercase tracking-[0.2em] text-stone-500">Résultats de la partie</h2>
-      <p className="text-xs text-stone-400">Comment vous gagnez et perdez.</p>
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
+      {/* Wins Pie */}
+      <Card className="bg-white/[0.02] border-white/[0.05] flex flex-col">
+        <CardHeader className="items-center pb-0 text-center">
+          <CardTitle className="text-[10px] font-black uppercase tracking-[0.2em] text-stone-500">Causes de Victoire</CardTitle>
+          <CardDescription className="text-[9px] text-stone-600 font-bold uppercase">Comment vos adversaires perdent</CardDescription>
+        </CardHeader>
+        <CardContent className="flex-1 pb-0">
+          <ChartContainer config={chartConfig} className="mx-auto aspect-square max-h-[250px]">
+            <PieChart>
+              <ChartTooltip content={<ChartTooltipContent hideLabel formatter={renderTooltip} />} />
+              <Pie data={winData} dataKey="count" nameKey="result" innerRadius={35} />
+              <ChartLegend
+                content={<ChartLegendContent nameKey="result" />}
+                className="flex-wrap gap-2 text-[8px] uppercase font-black justify-center"
+              />
+            </PieChart>
+          </ChartContainer>
+        </CardContent>
+      </Card>
 
-      <div className="h-[250px] w-full mt-4">
-        <ChartContainer config={chartConfig} className="h-full w-full">
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={chartData} layout="vertical" margin={{ top: 0, right: 0, left: -20, bottom: 0 }}>
-              <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="rgba(255,255,255,0.05)" />
-              <XAxis type="number" tickLine={false} axisLine={false} tick={{ fill: 'rgba(255,255,255,0.5)', fontSize: 10 }} />
-              <YAxis dataKey="name" type="category" tickLine={false} axisLine={false} tick={{ fill: 'rgba(255,255,255,0.5)', fontSize: 12 }} />
-              <ChartTooltip content={<ChartTooltipContent />} />
-              <Bar dataKey="win" name="Gagnées" fill="var(--color-win)" radius={[0, 4, 4, 0]} barSize={12} />
-              <Bar dataKey="loss" name="Perdues" fill="var(--color-loss)" radius={[0, 4, 4, 0]} barSize={12} />
-            </BarChart>
-          </ResponsiveContainer>
-        </ChartContainer>
-      </div>
+      {/* Losses Pie */}
+      <Card className="bg-white/[0.02] border-white/[0.05] flex flex-col">
+        <CardHeader className="items-center pb-0 text-center">
+          <CardTitle className="text-[10px] font-black uppercase tracking-[0.2em] text-stone-500">Causes de Défaite</CardTitle>
+          <CardDescription className="text-[9px] text-stone-600 font-bold uppercase">Comment vous perdez</CardDescription>
+        </CardHeader>
+        <CardContent className="flex-1 pb-0">
+          <ChartContainer config={chartConfig} className="mx-auto aspect-square max-h-[250px]">
+            <PieChart>
+              <ChartTooltip content={<ChartTooltipContent hideLabel formatter={renderTooltip} />} />
+              <Pie data={lossData} dataKey="count" nameKey="result" innerRadius={35} />
+              <ChartLegend
+                content={<ChartLegendContent nameKey="result" />}
+                className="flex-wrap gap-2 text-[8px] uppercase font-black justify-center"
+              />
+            </PieChart>
+          </ChartContainer>
+        </CardContent>
+      </Card>
+
+      {/* Draws Pie */}
+      <Card className="bg-white/[0.02] border-white/[0.05] flex flex-col">
+        <CardHeader className="items-center pb-0 text-center">
+          <CardTitle className="text-[10px] font-black uppercase tracking-[0.2em] text-stone-500">Causes de Nulles</CardTitle>
+          <CardDescription className="text-[9px] text-stone-600 font-bold uppercase">Pourquoi la partie s'arrête</CardDescription>
+        </CardHeader>
+        <CardContent className="flex-1 pb-0">
+          <ChartContainer config={chartConfig} className="mx-auto aspect-square max-h-[250px]">
+            <PieChart>
+              <ChartTooltip content={<ChartTooltipContent hideLabel formatter={renderTooltip} />} />
+              <Pie data={drawData} dataKey="count" nameKey="result" innerRadius={35} />
+              <ChartLegend
+                content={<ChartLegendContent nameKey="result" />}
+                className="flex-wrap gap-2 text-[8px] uppercase font-black justify-center"
+              />
+            </PieChart>
+          </ChartContainer>
+        </CardContent>
+      </Card>
     </div>
   );
 }

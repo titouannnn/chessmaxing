@@ -3,9 +3,11 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useChessStore } from "@/lib/store";
-import { Search, Loader2 } from "lucide-react";
+import { Search, Loader2, Database, History } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ChessGame } from "@/types/chess";
+import localGames from "@/data/titouannnnnn_1y.json";
+import localGamesAll from "@/data/titouannnnnn_all.json";
 
 export default function Home() {
   const [searchInput, setSearchInput] = useState("");
@@ -13,6 +15,20 @@ export default function Home() {
   const router = useRouter();
   
   const { games, setGames, isLoading, setLoading, setSelectedGame, username, setUsername } = useChessStore();
+
+  const isDev = process.env.NEXT_PUBLIC_DEV === "1";
+
+  const loadLocalData = (all: boolean = false) => {
+    setLoading(true);
+    setUsername("titouannnnnn");
+    setSearchInput("titouannnnnn");
+    
+    // Simuler un léger délai pour le feedback visuel
+    setTimeout(() => {
+      setGames((all ? localGamesAll : localGames) as ChessGame[]);
+      setLoading(false);
+    }, 300);
+  };
 
   const fetchGames = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -66,27 +82,50 @@ export default function Home() {
           </div>
 
           <div className="w-full flex flex-col gap-6">
-            <form onSubmit={fetchGames} className="relative group">
-              <div className="absolute inset-0 bg-white/[0.03] backdrop-blur-2xl rounded-2xl -z-10 group-focus-within:bg-white/[0.05] transition-colors border border-white/5 shadow-2xl"></div>
-              <Search className="absolute left-6 top-1/2 -translate-y-1/2 size-4 text-stone-600 group-focus-within:text-chess-light transition-colors" />
-              <input
-                className="w-full bg-transparent border-none text-white placeholder:text-stone-700 py-5 pl-14 pr-24 rounded-2xl font-manrope text-sm focus:outline-none focus:ring-0"
-                placeholder="Entrez un pseudo..."
-                type="text"
-                value={searchInput}
-                onChange={(e) => setSearchInput(e.target.value)}
-                disabled={isLoading}
-              />
-              <div className="absolute right-3 top-1/2 -translate-y-1/2">
-                <button 
-                  type="submit"
-                  disabled={isLoading || !searchInput}
-                  className="bg-white/5 hover:bg-white/10 text-white px-5 py-2 rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all disabled:opacity-0 flex items-center gap-2"
-                >
-                  {isLoading ? <Loader2 className="size-3 animate-spin" /> : "Rechercher"}
-                </button>
-              </div>
-            </form>
+            <div className="flex gap-2 w-full">
+              <form onSubmit={fetchGames} className="relative group flex-grow">
+                <div className="absolute inset-0 bg-white/[0.03] backdrop-blur-2xl rounded-2xl -z-10 group-focus-within:bg-white/[0.05] transition-colors border border-white/5 shadow-2xl"></div>
+                <Search className="absolute left-6 top-1/2 -translate-y-1/2 size-4 text-stone-600 group-focus-within:text-chess-light transition-colors" />
+                <input
+                  className="w-full bg-transparent border-none text-white placeholder:text-stone-700 py-5 pl-14 pr-24 rounded-2xl font-manrope text-sm focus:outline-none focus:ring-0"
+                  placeholder="Entrez un pseudo..."
+                  type="text"
+                  value={searchInput}
+                  onChange={(e) => setSearchInput(e.target.value)}
+                  disabled={isLoading}
+                />
+                <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                  <button 
+                    type="submit"
+                    disabled={isLoading || !searchInput}
+                    className="bg-white/5 hover:bg-white/10 text-white px-5 py-2 rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all disabled:opacity-0 flex items-center gap-2"
+                  >
+                    {isLoading ? <Loader2 className="size-3 animate-spin" /> : "Rechercher"}
+                  </button>
+                </div>
+              </form>
+
+              {isDev && (
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => loadLocalData(false)}
+                    disabled={isLoading}
+                    className="bg-white/5 hover:bg-white/10 text-stone-400 hover:text-white px-5 rounded-2xl border border-white/5 transition-all flex items-center justify-center shrink-0"
+                    title="Charger données locales (1 AN)"
+                  >
+                    <Database className={cn("size-4", isLoading && "animate-pulse")} />
+                  </button>
+                  <button
+                    onClick={() => loadLocalData(true)}
+                    disabled={isLoading}
+                    className="bg-white/5 hover:bg-white/10 text-stone-400 hover:text-white px-5 rounded-2xl border border-white/5 transition-all flex items-center justify-center shrink-0"
+                    title="Charger données locales (ALL TIME)"
+                  >
+                    <History className={cn("size-4", isLoading && "animate-pulse")} />
+                  </button>
+                </div>
+              )}
+            </div>
 
             <div className="flex justify-center">
               <div className="inline-flex p-1 bg-white/[0.02] backdrop-blur-md border border-white/5 rounded-full">

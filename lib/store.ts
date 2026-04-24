@@ -1,6 +1,20 @@
 import { create } from 'zustand';
-import { persist, createJSONStorage } from 'zustand/middleware';
+import { persist, createJSONStorage, StateStorage } from 'zustand/middleware';
 import { ChessGame } from '@/types/chess';
+import { get, set, del } from 'idb-keyval';
+
+// Custom storage using IndexedDB via idb-keyval
+const storage: StateStorage = {
+  getItem: async (name: string): Promise<string | null> => {
+    return (await get(name)) || null;
+  },
+  setItem: async (name: string, value: string): Promise<void> => {
+    await set(name, value);
+  },
+  removeItem: async (name: string): Promise<void> => {
+    await del(name);
+  },
+};
 
 interface ChessStats {
   winRate: number;
@@ -31,6 +45,9 @@ interface ChessState {
   // History
   recentSearches: string[];
   addRecentSearch: (username: string) => void;
+  
+  // Reset for new sessions
+  clearStorage: () => void;
 }
 
 export const useChessStore = create<ChessState>()(
@@ -62,10 +79,26 @@ export const useChessStore = create<ChessState>()(
             recentSearches: [lowerUsername, ...filtered].slice(0, 5)
           };
         }),
+      
+      clearStorage: () => {
+        set({ games: [], username: '', statsCache: {} });
+        del('chessmaxer-storage');
+      }
     }),
     {
       name: 'chessmaxer-storage',
-      storage: createJSONStorage(() => localStorage),
+      storage: createJSONStorage(() => storage),
     }
   )
 );
+
+// Session management: Clear IndexedDB if it's a brand new session (tab opened)
+if (typeof window !== 'undefined') {
+  const SESSION_KEY = 'chessmaxer-session-active';
+  if (!sessionStorage.getItem(SESSION_KEY)) {
+    // New tab/session: we want a fresh start
+    del('chessmaxer-storage').then(() => {
+      sessionStorage.setItem(SESSION_KEY, 'true');
+    });
+  }
+}

@@ -1,7 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import { ChessArchiveResponse, ChessGame } from "@/types/chess";
-import fs from "fs/promises";
-import path from "path";
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
@@ -19,18 +17,6 @@ export async function GET(request: NextRequest) {
   const timestampLimit = now - secondsLimit;
 
   try {
-    if (process.env.DEV === "1") {
-      const filePath = path.join(process.cwd(), "data", "titouannnnnn_1y.json");
-      try {
-        const fileContent = await fs.readFile(filePath, "utf-8");
-        const allGames: ChessGame[] = JSON.parse(fileContent);
-        const filteredGames = allGames.filter((g) => g.end_time >= timestampLimit);
-        return NextResponse.json({ games: filteredGames.sort((a, b) => b.end_time - a.end_time) });
-      } catch (err) {
-        console.error("Failed to read local DEV file:", err);
-      }
-    }
-
     const archiveRes = await fetch(`https://api.chess.com/pub/player/${username}/games/archives`, {
       headers: { "User-Agent": "Chessmaxing (Minimal App)" },
     });
