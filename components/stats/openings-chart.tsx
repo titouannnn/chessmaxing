@@ -24,11 +24,23 @@ export function OpeningsChart({ games, username }: OpeningsChartProps) {
   const { aggregatedData, variationsMap } = useMemo(() => {
     if (games.length === 0) return { aggregatedData: [], variationsMap: new Map() };
 
+    // PERFORMANCE OPTIMIZATION: If we have massive amounts of games (e.g. 30k+), 
+    // we sample them to keep the UI fluid while keeping stats accurate.
+    let gamesToProcess = games;
+    const MAX_GAMES_FOR_OPENINGS = 2000;
+    if (games.length > MAX_GAMES_FOR_OPENINGS) {
+      // Stratified-like sampling: take 2000 games distributed across the history
+      const step = Math.floor(games.length / MAX_GAMES_FOR_OPENINGS);
+      gamesToProcess = games.filter((_, i) => i % step === 0).slice(0, MAX_GAMES_FOR_OPENINGS);
+    }
+
     const parentMap = new Map<string, { name: string; win: number; draw: number; loss: number; total: number }>();
-    // parent -> variation -> stats
     const varMap = new Map<string, Map<string, { name: string; win: number; draw: number; loss: number; total: number }>>();
 
-    games.forEach((game) => {
+    gamesToProcess.forEach((game) => {
+      // pgn might be undefined for some variant games or API glitches
+      if (!game.pgn) return;
+      
       const pgnData = parseBasicPgn(game.pgn);
       const eco = pgnData.ECO;
       let parent = "Inconnu";

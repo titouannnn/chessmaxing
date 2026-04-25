@@ -9,7 +9,6 @@ export function Navbar() {
 
   const navItems = [
     { label: "Explorer", href: "/" },
-    { label: "Statistiques", href: "/stats" },
     { label: "Analyse", href: "/analysis" },
   ];
 

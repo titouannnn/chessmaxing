@@ -3,7 +3,7 @@ import { persist, createJSONStorage, StateStorage } from 'zustand/middleware';
 import { ChessGame } from '@/types/chess';
 import { get, set, del } from 'idb-keyval';
 
-// Custom storage using IndexedDB via idb-keyval
+// Custom storage using IndexedDB to bypass 5MB limit of sessionStorage
 const storage: StateStorage = {
   getItem: async (name: string): Promise<string | null> => {
     return (await get(name)) || null;
@@ -50,6 +50,17 @@ interface ChessState {
   clearStorage: () => void;
 }
 
+// Session management: Clear IndexedDB if it's a brand new session (tab opened)
+// This keeps data if you refresh or navigate, but clears if you close the tab.
+if (typeof window !== 'undefined') {
+  const SESSION_KEY = 'chessmaxer-session-active';
+  if (!sessionStorage.getItem(SESSION_KEY)) {
+    del('chessmaxer-storage').then(() => {
+      sessionStorage.setItem(SESSION_KEY, 'true');
+    });
+  }
+}
+
 export const useChessStore = create<ChessState>()(
   persist(
     (set) => ({
@@ -92,13 +103,3 @@ export const useChessStore = create<ChessState>()(
   )
 );
 
-// Session management: Clear IndexedDB if it's a brand new session (tab opened)
-if (typeof window !== 'undefined') {
-  const SESSION_KEY = 'chessmaxer-session-active';
-  if (!sessionStorage.getItem(SESSION_KEY)) {
-    // New tab/session: we want a fresh start
-    del('chessmaxer-storage').then(() => {
-      sessionStorage.setItem(SESSION_KEY, 'true');
-    });
-  }
-}

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useRef, useMemo, useCallback } from "react";
+import { useRouter } from "next/navigation";
 import { useChessStore } from "@/lib/store";
 import { ChessBoard } from "@/components/chess-board";
 import { Chess } from "chess.js";
@@ -15,6 +16,7 @@ import {
   ChevronFirst, ChevronLeft, ChevronRight, ChevronLast, 
   Activity, Loader2, Settings2, ArrowUpDown, Layers, BarChart3, CheckCircle2
 } from "lucide-react";
+import { cn, logger } from "@/lib/utils";
 import { Area, AreaChart, CartesianGrid, ResponsiveContainer, XAxis, YAxis, ReferenceLine, Tooltip } from "recharts";
 import { ChartConfig, ChartContainer } from "@/components/ui/chart";
 
@@ -65,10 +67,11 @@ interface MoveEval {
 }
 
 export default function AnalysisPage() {
-  const selectedGame = useChessStore((state) => state.selectedGame);
+  const { selectedGame, username } = useChessStore();
   
   const [fen, setFen] = useState("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
   const [history, setHistory] = useState<string[]>([]);
+  const [clocks, setClocks] = useState<string[]>([]);
   const [currentMoveIndex, setCurrentMoveIndex] = useState(-1);
   const [pgnInput, setPgnInput] = useState("");
   const [animateNext, setAnimateNext] = useState(true);
@@ -114,26 +117,62 @@ export default function AnalysisPage() {
   const TARGET_DEPTH = 18;
   const REVIEW_DEPTH = 16;
 
-  useEffect(() => {
-    if (selectedGame && selectedGame.pgn) {
-      loadPgn(selectedGame.pgn);
-      setShowReviewPrompt(true);
-      setIsAnalyzing(true);
-    }
+  const playerInfo = useMemo(() => {
+    if (!selectedGame) return { 
+      white: { name: "Blanc", rating: "" }, 
+      black: { name: "Noir", rating: "" } 
+    };
+    return {
+      white: { name: selectedGame.white.username, rating: selectedGame.white.rating },
+      black: { name: selectedGame.black.username, rating: selectedGame.black.rating }
+    };
   }, [selectedGame]);
+// Initialize
+useEffect(() => {
+  if (selectedGame && selectedGame.pgn) {
+    loadPgn(selectedGame.pgn);
+    setShowReviewPrompt(true);
+    setIsAnalyzing(true);
+
+    // Auto-set orientation based on user point of view
+    const isBlackPlayer = selectedGame.black.username.toLowerCase() === username.toLowerCase();
+    setOrientation(isBlackPlayer ? "black" : "white");
+  }
+}, [selectedGame, username]);
+
 
   const loadPgn = (pgnStr: string) => {
     try {
+      logger.info("Loading new PGN into analysis...");
       setAnimateNext(false);
       const chess = new Chess();
       chess.loadPgn(pgnStr);
+      
       const newHistory = chess.history();
+      const newClocks: string[] = [];
+      
+      // Start position (index -1)
+      newClocks.push(""); 
+
+      // Regex for [%clk 0:09:58.5]
+      const clockRegex = /\{\[%clk\s+([\d:.]+)\]\}/g;
+      const allClocks = Array.from(pgnStr.matchAll(clockRegex)).map(m => m[1]);
+
+      for (let i = 0; i < newHistory.length; i++) {
+        newClocks.push(allClocks[i] || "");
+      }
+
+      logger.info(`PGN loaded successfully: ${newHistory.length} moves.`);
       setHistory(newHistory);
+      setClocks(newClocks);
       setCurrentMoveIndex(newHistory.length - 1);
       setPgnInput("");
       setGameEvaluations([]); 
       if (isAnalyzing) setIsInitialLoading(true);
-    } catch (e) { console.error("Invalid PGN", e); }
+    } catch (e) { 
+      logger.error("Failed to load PGN: Invalid format.");
+      console.error("Invalid PGN", e); 
+    }
   };
 
   const handlePgnImport = () => {
@@ -281,16 +320,20 @@ export default function AnalysisPage() {
       }
     } catch (e) { setFen(chess.fen()); }
   };
-
+  // Stockfish Communication
   useEffect(() => {
+    logger.engine("Initializing Stockfish Worker...");
     const worker = new Worker("/stockfish/stockfish-18-lite-single.js");
     workerRef.current = worker;
+
     worker.onmessage = (e) => {
       const line: string = e.data;
       if (line === "readyok") {
+        logger.engine("Stockfish readyok received.");
         setIsEngineReady(true);
         if (isReviewing) processNextReviewMove();
       }
+
       if (line.startsWith("bestmove") && isReviewing) {
         reviewCurrentIdx.current++;
         processNextReviewMove();
@@ -520,9 +563,6 @@ export default function AnalysisPage() {
           </div>
 
           <div ref={boardContainerRef} className="flex flex-row w-full gap-4 relative">
-            {showReviewPrompt && !isReviewing && (
-              <div className="absolute inset-0 z-40 bg-black/40 backdrop-blur-[2px] flex items-center justify-center rounded-xl animate-in fade-in"><div className="bg-[#1a1a1a] border border-white/10 p-6 rounded-2xl shadow-2xl max-w-xs text-center space-y-4"><div className="size-12 bg-blue-500/20 rounded-full flex items-center justify-center mx-auto"><BarChart3 className="text-blue-400" /></div><div className="space-y-1"><h3 className="font-bold text-lg">Bilan de partie ?</h3><p className="text-xs text-stone-400">Lancer une analyse complète de tous les coups de la partie.</p></div><div className="flex gap-3 pt-2"><Button onClick={() => setShowReviewPrompt(false)} variant="ghost" className="flex-1 text-xs">Plus tard</Button><Button onClick={startReview} className="flex-1 bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold uppercase tracking-wider">Oui, lancer</Button></div></div></div>
-            )}
             {isReviewing && (
               <div className="absolute inset-0 z-40 bg-black/60 backdrop-blur-sm flex flex-col items-center justify-center rounded-xl gap-6"><div className="text-center space-y-2"><Activity className="size-10 text-blue-500 animate-pulse mx-auto" /><h3 className="text-xl font-bold">Analyse globale...</h3><p className="text-sm text-stone-400 font-mono italic">Évaluation de chaque coup</p></div><div className="w-full max-w-xs space-y-2"><Progress value={reviewProgress} className="h-2 bg-white/10" /><p className="text-[10px] font-black uppercase text-center text-stone-500 tracking-widest">{reviewProgress}% terminé</p></div></div>
             )}
@@ -531,48 +571,125 @@ export default function AnalysisPage() {
                  className={`w-full transition-all duration-700 ease-in-out bg-white opacity-100`} 
                  style={{ height: `${displayedEval.height}%` }} 
                />
-               <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                 <div className="w-full h-[1px] bg-stone-400/50" />
-               </div>
                <div className="absolute bottom-2 w-full text-center text-[10px] font-black text-white z-10 mix-blend-difference">
                  {displayedEval.text}
                </div>
             </div>
 
-            <div className="aspect-square w-full bg-white/[0.02] border border-white/[0.05] rounded-xl overflow-hidden shadow-2xl shadow-black relative cursor-crosshair"><ChessBoard config={config} /></div>
-          </div>
-
-          <div className="flex flex-row w-full">
-            <div className="w-8 shrink-0 mr-4" />
-            <div ref={graphContainerRef} className="min-h-[300px] flex-grow bg-white/[0.02] border border-white/[0.05] rounded-xl p-4 flex flex-col items-center justify-center relative transition-all overflow-hidden">
-              {gameEvaluations.length > 0 ? (
-                 <div className="w-full h-full animate-in fade-in slide-in-from-bottom-2">
-                   <ChartContainer config={{ evaluation: { label: "Éval", color: "#fff" } }} className="h-[260px] w-full">
-                     <ResponsiveContainer width="100%" height="100%">
-                       <AreaChart data={gameEvaluations} onClick={(s) => s?.activeTooltipIndex !== undefined && setCurrentMoveIndex(s.activeTooltipIndex - 1)}>
-                         <defs><linearGradient id="colorEval" x1="0" y1="0" x2="0" y2="1"><stop offset="5%" stopColor="#fff" stopOpacity={0.3}/><stop offset="95%" stopColor="#fff" stopOpacity={0}/></linearGradient></defs>
-                         <XAxis dataKey="moveIndex" type="number" domain={['dataMin', 'dataMax']} hide /><YAxis domain={[-10, 10]} hide />
-                         <Tooltip content={({ active, payload }) => {
-                            if (active && payload?.[0]) {
-                              const data = payload[0].payload as MoveEval;
-                              let text = data.cp !== undefined ? (data.cp > 0 ? "+" : "") + (data.cp/100).toFixed(1) : (data.mate !== undefined ? `M${Math.abs(data.mate)}` : "0.0");
-                              return <div className="bg-[#1a1a1a] border border-white/10 p-2 rounded text-[10px] font-bold">{text}</div>;
-                            }
-                            return null;
-                         }} />
-                         <ReferenceLine y={0} stroke="rgba(255,255,255,0.2)" />
-                         <ReferenceLine x={currentMoveIndex} stroke="#ef4444" strokeWidth={2} />
-                         <Area type="linear" dataKey="evaluation" stroke="#fff" fillOpacity={1} fill="url(#colorEval)" isAnimationActive={false} />
-                       </AreaChart>
-                     </ResponsiveContainer>
-                   </ChartContainer>
-                   <div className="w-full flex justify-between px-1 opacity-30 text-[8px] font-bold uppercase tracking-tighter"><span>Début</span><span>Fin</span></div>
+            {/* Board Wrapper with Player Info */}
+            <div className="flex-grow flex flex-col gap-2">
+               {/* Top Player */}
+               <div className="flex items-center justify-between px-1 h-6">
+                 <div className="flex items-center gap-2">
+                   <div className="size-5 bg-white/10 rounded flex items-center justify-center text-[10px] font-bold uppercase">
+                     {orientation === "white" ? "B" : "W"}
+                   </div>
+                   <span className="text-xs font-bold text-stone-300">
+                     {orientation === "white" ? playerInfo.black.name : playerInfo.white.name}
+                     <span className="ml-2 text-[10px] text-stone-600 font-medium">
+                       ({orientation === "white" ? playerInfo.black.rating : playerInfo.white.rating})
+                     </span>
+                   </span>
                  </div>
-              ) : !isReviewing && history.length > 0 ? (
-                 <Button onClick={startReview} variant="ghost" className="group flex flex-col gap-2 hover:bg-transparent"><BarChart3 className="size-6 text-stone-600 group-hover:text-blue-400 transition-colors" /><span className="text-[10px] font-black uppercase tracking-widest text-stone-500 group-hover:text-stone-300">Lancer l'analyse du bilan</span></Button>
-              ) : <span className="text-[10px] font-bold text-stone-700 uppercase tracking-widest">Aucune donnée</span>}
+                 {/* Clock Top */}
+                 <div className="bg-white/5 px-2 py-0.5 rounded text-[11px] font-mono font-bold text-stone-400">
+                    {orientation === "white" 
+                      ? (clocks[currentMoveIndex + 1] || "0:00") 
+                      : (clocks[currentMoveIndex + 1] || "0:00")}
+                 </div>
+               </div>
+
+
+               <div className="aspect-square w-full bg-white/[0.02] border border-white/[0.05] rounded-xl overflow-hidden shadow-2xl shadow-black relative cursor-crosshair">
+                 <ChessBoard config={config} />
+               </div>
+
+               {/* Bottom Player */}
+               <div className="flex items-center justify-between px-1 h-6">
+                 <div className="flex items-center gap-2">
+                   <div className="size-5 bg-white/10 rounded flex items-center justify-center text-[10px] font-bold uppercase">
+                     {orientation === "white" ? "W" : "B"}
+                   </div>
+                   <span className="text-xs font-bold text-stone-300">
+                     {orientation === "white" ? playerInfo.white.name : playerInfo.black.name}
+                     <span className="ml-2 text-[10px] text-stone-600 font-medium">
+                       ({orientation === "white" ? playerInfo.white.rating : playerInfo.black.rating})
+                     </span>
+                   </span>
+                 </div>
+                 {/* Clock Bottom */}
+                 <div className="bg-white/10 px-2 py-0.5 rounded text-[11px] font-mono font-bold text-white">
+                    {orientation === "white" 
+                      ? (clocks[currentMoveIndex + 1] || "0:00") 
+                      : (clocks[currentMoveIndex + 1] || "0:00")}
+                 </div>
+               </div>
             </div>
           </div>
+
+          <div 
+            onClick={!gameEvaluations.length && !isReviewing && history.length > 0 ? startReview : undefined}
+            className={cn(
+              "min-h-[100px] w-full bg-white/[0.02] border border-white/[0.05] rounded-xl p-6 flex flex-col items-center justify-center relative transition-all overflow-hidden",
+              !gameEvaluations.length && !isReviewing && history.length > 0 && "cursor-pointer hover:bg-white/[0.05] hover:border-blue-500/20 group/bilan"
+            )}
+          >
+            {gameEvaluations.length > 0 ? (
+               <div className="w-full h-full animate-in fade-in slide-in-from-bottom-2">
+                 <ChartContainer config={{ evaluation: { label: "Éval", color: "#fff" } }} className="h-[180px] w-full">
+                   <ResponsiveContainer width="100%" height="100%">
+                     <AreaChart 
+                      data={gameEvaluations} 
+                      onClick={(s: any) => {
+                        if (s && s.activePayload && s.activePayload.length > 0) {
+                          // Perfect sync: moveIndex matches currentMoveIndex
+                          setCurrentMoveIndex(s.activePayload[0].payload.moveIndex);
+                        }
+                      }}
+                     >
+                       <defs><linearGradient id="colorEval" x1="0" y1="0" x2="0" y2="1"><stop offset="5%" stopColor="#fff" stopOpacity={0.3}/><stop offset="95%" stopColor="#fff" stopOpacity={0}/></linearGradient></defs>
+                       <XAxis dataKey="moveIndex" type="number" domain={['dataMin', 'dataMax']} hide />
+                       <YAxis domain={[-10, 10]} hide />
+                       <Tooltip 
+                          content={({ active, payload }) => {
+                            if (active && payload?.[0]) {
+                              const data = payload[0].payload as MoveEval;
+                              // Always show eval from WHITE perspective (standard)
+                              const val = (data.cp ?? 0) / 100;
+                              let text = data.mate !== undefined ? `M${Math.abs(data.mate)}` : (val > 0 ? "+" : "") + val.toFixed(1);
+                              if (data.mate !== undefined && data.mate < 0) text = `-M${Math.abs(data.mate)}`;
+
+                              const moveNum = data.moveIndex === -1 ? "Départ" : `Coup ${Math.floor(data.moveIndex / 2) + 1}${data.moveIndex % 2 === 0 ? ' (B)' : ' (N)'}`;
+                              return (
+                                <div className="bg-[#1a1a1a] border border-white/10 p-2 rounded shadow-xl">
+                                  <p className="text-[9px] text-stone-500 uppercase font-black mb-1">{moveNum}</p>
+                                  <p className="text-[11px] font-bold text-white">{text}</p>
+                                </div>
+                              );
+                            }
+                            return null;
+                          }} 
+                       />
+                       <ReferenceLine y={0} stroke="rgba(255,255,255,0.2)" />
+                       <ReferenceLine x={currentMoveIndex} stroke="#ef4444" strokeWidth={2} />
+                       <Area type="linear" dataKey="evaluation" stroke="#fff" fillOpacity={1} fill="url(#colorEval)" isAnimationActive={false} />
+                     </AreaChart>
+                   </ResponsiveContainer>
+                 </ChartContainer>
+
+                 <div className="w-full flex justify-between px-1 opacity-30 text-[8px] font-bold uppercase tracking-tighter"><span>Début</span><span>Fin</span></div>
+               </div>
+            ) : !isReviewing && history.length > 0 ? (
+               <div className="flex flex-col items-center gap-3 transition-all">
+                  <BarChart3 className="size-8 text-stone-600 group-hover/bilan:text-blue-400 group-hover/bilan:scale-110 transition-all" />
+                  <div className="flex flex-col items-center gap-1">
+                    <span className="text-[11px] font-black uppercase tracking-[0.2em] text-stone-500 group-hover/bilan:text-blue-200 transition-colors">Lancer l'analyse du bilan</span>
+                    <span className="text-[9px] text-stone-700 font-medium">Analyse complète à la profondeur 16</span>
+                  </div>
+               </div>
+            ) : <span className="text-[10px] font-bold text-stone-700 uppercase tracking-widest">Aucune donnée</span>}
+          </div>
+
         </div>
 
         <div className="w-full lg:w-[35%] xl:w-[30%] flex flex-col gap-6 self-stretch">

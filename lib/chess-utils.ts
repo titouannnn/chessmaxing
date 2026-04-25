@@ -14,6 +14,8 @@ export function formatDate(timestamp: number): string {
  */
 export function parseBasicPgn(pgn: string) {
   const result: Record<string, string> = {};
+  if (!pgn) return result;
+  
   const tags = pgn.match(/\[(\w+)\s+"(.*?)"\]/g) || [];
   
   tags.forEach(tag => {
