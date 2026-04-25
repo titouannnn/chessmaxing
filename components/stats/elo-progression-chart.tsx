@@ -23,6 +23,7 @@ interface EloProgressionChartProps {
   games: ChessGame[];
   username: string;
   period: string;
+  timeClass?: string;
 }
 
 const chartConfig = {
@@ -40,7 +41,7 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export function EloProgressionChart({ games, username, period }: EloProgressionChartProps) {
+export function EloProgressionChart({ games, username, period, timeClass = "all" }: EloProgressionChartProps) {
   const chartData = React.useMemo(() => {
     if (!games.length) return [];
 
@@ -187,27 +188,36 @@ export function EloProgressionChart({ games, username, period }: EloProgressionC
                 />
               }
             />
-            <Area
-              dataKey="rapid"
-              type="stepAfter"
-              fill="url(#fillRapid)"
-              stroke="var(--color-rapid)"
-              strokeWidth={2}
-            />
-            <Area
-              dataKey="blitz"
-              type="stepAfter"
-              fill="url(#fillBlitz)"
-              stroke="var(--color-blitz)"
-              strokeWidth={2}
-            />
-            <Area
-              dataKey="bullet"
-              type="stepAfter"
-              fill="url(#fillBullet)"
-              stroke="var(--color-bullet)"
-              strokeWidth={2}
-            />
+            {(timeClass === "all" || timeClass === "rapid") && (
+              <Area
+                dataKey="rapid"
+                type="monotone"
+                fill="url(#fillRapid)"
+                stroke="var(--color-rapid)"
+                strokeWidth={2}
+                connectNulls
+              />
+            )}
+            {(timeClass === "all" || timeClass === "blitz") && (
+              <Area
+                dataKey="blitz"
+                type="monotone"
+                fill="url(#fillBlitz)"
+                stroke="var(--color-blitz)"
+                strokeWidth={2}
+                connectNulls
+              />
+            )}
+            {(timeClass === "all" || timeClass === "bullet") && (
+              <Area
+                dataKey="bullet"
+                type="monotone"
+                fill="url(#fillBullet)"
+                stroke="var(--color-bullet)"
+                strokeWidth={2}
+                connectNulls
+              />
+            )}
             <ChartLegend content={<ChartLegendContent />} />
           </AreaChart>
         </ChartContainer>

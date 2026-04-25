@@ -2,6 +2,17 @@ export interface ChessArchiveResponse {
   archives: string[];
 }
 
+export interface EcoData {
+  parent: string;
+  variation: string;
+  name: string;
+  pgn: string;
+}
+
+export interface EcoIndex {
+  [ecoCode: string]: EcoData;
+}
+
 export interface ChessGame {
   url: string;
   pgn: string;

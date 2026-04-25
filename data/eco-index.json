@@ -1,0 +1,3002 @@
+{
+  "A00": {
+    "parent": "Uncommon Opening",
+    "variation": "Base",
+    "name": "Uncommon Opening",
+    "pgn": "1 g4, a3, h3, etc."
+  },
+  "A01": {
+    "parent": "Nimzovich-Larsen Attack",
+    "variation": "Base",
+    "name": "Nimzovich-Larsen Attack",
+    "pgn": "1 b3"
+  },
+  "A02": {
+    "parent": "Bird's Opening",
+    "variation": "Base",
+    "name": "Bird's Opening",
+    "pgn": "1 f4"
+  },
+  "A03": {
+    "parent": "Bird's Opening",
+    "variation": "Base",
+    "name": "Bird's Opening",
+    "pgn": "1 f4 d5"
+  },
+  "A04": {
+    "parent": "Reti Opening",
+    "variation": "Base",
+    "name": "Reti Opening",
+    "pgn": "1 Nf3"
+  },
+  "A05": {
+    "parent": "Reti Opening",
+    "variation": "Base",
+    "name": "Reti Opening",
+    "pgn": "1 Nf3 Nf6"
+  },
+  "A06": {
+    "parent": "Reti Opening",
+    "variation": "Base",
+    "name": "Reti Opening",
+    "pgn": "1 Nf3 d5"
+  },
+  "A07": {
+    "parent": "King's Indian Attack",
+    "variation": "Base",
+    "name": "King's Indian Attack",
+    "pgn": "1 Nf3 d5 2 g3"
+  },
+  "A08": {
+    "parent": "King's Indian Attack",
+    "variation": "Base",
+    "name": "King's Indian Attack",
+    "pgn": "1 Nf3 d5 2 g3 c5 3 Bg2"
+  },
+  "A09": {
+    "parent": "Reti Opening",
+    "variation": "Base",
+    "name": "Reti Opening",
+    "pgn": "1 Nf3 d5 2 c4"
+  },
+  "A10": {
+    "parent": "English",
+    "variation": "Base",
+    "name": "English",
+    "pgn": "1 c4"
+  },
+  "A11": {
+    "parent": "English",
+    "variation": "Caro-Kann Defensive System",
+    "name": "English, Caro-Kann Defensive System",
+    "pgn": "1 c4 c6"
+  },
+  "A12": {
+    "parent": "English with b3",
+    "variation": "Base",
+    "name": "English with b3",
+    "pgn": "1 c4 c6 2 Nf3 d5 3 b3"
+  },
+  "A13": {
+    "parent": "English",
+    "variation": "Base",
+    "name": "English",
+    "pgn": "1 c4 e6"
+  },
+  "A14": {
+    "parent": "English",
+    "variation": "Base",
+    "name": "English",
+    "pgn": "1 c4 e6 2 Nf3 d5 3 g3 Nf6 4 Bg2 Be7 5 O-O"
+  },
+  "A15": {
+    "parent": "English",
+    "variation": "Base",
+    "name": "English",
+    "pgn": "1 c4 Nf6"
+  },
+  "A16": {
+    "parent": "English",
+    "variation": "Base",
+    "name": "English",
+    "pgn": "1 c4 Nf6 2 Nc3"
+  },
+  "A17": {
+    "parent": "English",
+    "variation": "Base",
+    "name": "English",
+    "pgn": "1 c4 Nf6 2 Nc3 e6"
+  },
+  "A18": {
+    "parent": "English",
+    "variation": "Mikenas-Carls",
+    "name": "English, Mikenas-Carls",
+    "pgn": "1 c4 Nf6 2 Nc3 e6 3 e4"
+  },
+  "A19": {
+    "parent": "English",
+    "variation": "Mikenas-Carls, Sicilian Variation",
+    "name": "English, Mikenas-Carls, Sicilian Variation",
+    "pgn": "1 c4 Nf6 2 Nc3 e6 3 e4 c5"
+  },
+  "A20": {
+    "parent": "English",
+    "variation": "Base",
+    "name": "English",
+    "pgn": "1 c4 e5"
+  },
+  "A21": {
+    "parent": "English",
+    "variation": "Base",
+    "name": "English",
+    "pgn": "1 c4 e5 2 Nc3"
+  },
+  "A22": {
+    "parent": "English",
+    "variation": "Base",
+    "name": "English",
+    "pgn": "1 c4 e5 2 Nc3 Nf6"
+  },
+  "A23": {
+    "parent": "English",
+    "variation": "Bremen System, Keres Variation",
+    "name": "English, Bremen System, Keres Variation",
+    "pgn": "1 c4 e5 2 Nc3 Nf6 3 g3 c6"
+  },
+  "A24": {
+    "parent": "English",
+    "variation": "Bremen System with ...g6",
+    "name": "English, Bremen System with ...g6",
+    "pgn": "1 c4 e5 2 Nc3 Nf6 3 g3 g6"
+  },
+  "A25": {
+    "parent": "English",
+    "variation": "Base",
+    "name": "English",
+    "pgn": "1 c4 e5 2 Nc3 Nc6"
+  },
+  "A26": {
+    "parent": "English",
+    "variation": "Base",
+    "name": "English",
+    "pgn": "1 c4 e5 2 Nc3 Nc6 3 g3 g6 4 Bg2 Bg7 5 d3 d6"
+  },
+  "A27": {
+    "parent": "English",
+    "variation": "Three Knights System",
+    "name": "English, Three Knights System",
+    "pgn": "1 c4 e5 2 Nc3 Nc6 3 Nf3"
+  },
+  "A28": {
+    "parent": "English",
+    "variation": "Base",
+    "name": "English",
+    "pgn": "1 c4 e5 2 Nc3 Nc6 3 Nf3 Nf6"
+  },
+  "A29": {
+    "parent": "English",
+    "variation": "Four Knights, Kingside Fianchetto",
+    "name": "English, Four Knights, Kingside Fianchetto",
+    "pgn": "1 c4 e5 2 Nc3 Nc6 3 Nf3 Nf6 4 g3"
+  },
+  "A30": {
+    "parent": "English",
+    "variation": "Symmetrical",
+    "name": "English, Symmetrical",
+    "pgn": "1 c4 c5"
+  },
+  "A31": {
+    "parent": "English",
+    "variation": "Symmetrical, Benoni Formation",
+    "name": "English, Symmetrical, Benoni Formation",
+    "pgn": "1 c4 c5 2 Nf3 Nf6 3 d4"
+  },
+  "A32": {
+    "parent": "English",
+    "variation": "Symmetrical Variation",
+    "name": "English, Symmetrical Variation",
+    "pgn": "1 c4 c5 2 Nf3 Nf6 3 d4 cxd4 4 Nxd4 e6"
+  },
+  "A33": {
+    "parent": "English",
+    "variation": "Symmetrical",
+    "name": "English, Symmetrical",
+    "pgn": "1 c4 c5 2 Nf3 Nf6 3 d4 cxd4 4 Nxd4 e6 5 Nc3 Nc6"
+  },
+  "A34": {
+    "parent": "English",
+    "variation": "Symmetrical",
+    "name": "English, Symmetrical",
+    "pgn": "1 c4 c5 2 Nc3"
+  },
+  "A35": {
+    "parent": "English",
+    "variation": "Symmetrical",
+    "name": "English, Symmetrical",
+    "pgn": "1 c4 c5 2 Nc3 Nc6"
+  },
+  "A36": {
+    "parent": "English",
+    "variation": "Base",
+    "name": "English",
+    "pgn": "1 c4 c5 2 Nc3 Nc6 3 g3"
+  },
+  "A37": {
+    "parent": "English",
+    "variation": "Symmetrical",
+    "name": "English, Symmetrical",
+    "pgn": "1 c4 c5 2 Nc3 Nc6 3 g3 g6 4 Bg2 Bg7 5 Nf3"
+  },
+  "A38": {
+    "parent": "English",
+    "variation": "Symmetrical",
+    "name": "English, Symmetrical",
+    "pgn": "1 c4 c5 2 Nc3 Nc6 3 g3 g6 4 Bg2 Bg7 5 Nf3 Nf6"
+  },
+  "A39": {
+    "parent": "English",
+    "variation": "Symmetrical, Main line with d4",
+    "name": "English, Symmetrical, Main line with d4",
+    "pgn": "1 c4 c5 2 Nc3 Nc6 3 g3 g6 4 Bg2 Bg7 5 Nf3 Nf6 6 O-O O-O 7 d4"
+  },
+  "A40": {
+    "parent": "Queen's Pawn Game",
+    "variation": "Base",
+    "name": "Queen's Pawn Game",
+    "pgn": "1 d4"
+  },
+  "A41": {
+    "parent": "Queen's Pawn Game (with ...d6)",
+    "variation": "Base",
+    "name": "Queen's Pawn Game (with ...d6)",
+    "pgn": "1 d4 d6"
+  },
+  "A42": {
+    "parent": "Modern Defense",
+    "variation": "Averbakh System",
+    "name": "Modern Defense, Averbakh System",
+    "pgn": "1 d4 d6 2 c4 g6 3 Nc3 Bg7 4 e4"
+  },
+  "A43": {
+    "parent": "Old Benoni",
+    "variation": "Base",
+    "name": "Old Benoni",
+    "pgn": "1 d4 c5"
+  },
+  "A44": {
+    "parent": "Old Benoni Defense",
+    "variation": "Base",
+    "name": "Old Benoni Defense",
+    "pgn": "1 d4 c5 2 d5 e5"
+  },
+  "A45": {
+    "parent": "Queen's Pawn Game",
+    "variation": "Base",
+    "name": "Queen's Pawn Game",
+    "pgn": "1 d4 Nf6"
+  },
+  "A46": {
+    "parent": "Queen's Pawn Game",
+    "variation": "Base",
+    "name": "Queen's Pawn Game",
+    "pgn": "1 d4 Nf6 2 Nf3"
+  },
+  "A47": {
+    "parent": "Queen's Indian",
+    "variation": "Base",
+    "name": "Queen's Indian",
+    "pgn": "1 d4 Nf6 2 Nf3 b6"
+  },
+  "A48": {
+    "parent": "King's Indian",
+    "variation": "Base",
+    "name": "King's Indian",
+    "pgn": "1 d4 Nf6 2 Nf3 g6"
+  },
+  "A49": {
+    "parent": "King's Indian",
+    "variation": "Fianchetto without c4",
+    "name": "King's Indian, Fianchetto without c4",
+    "pgn": "1 d4 Nf6 2 f3 g6 3 g3"
+  },
+  "A50": {
+    "parent": "Queen's Pawn Game",
+    "variation": "Base",
+    "name": "Queen's Pawn Game",
+    "pgn": "1 d4 Nf6 2 c4"
+  },
+  "A51": {
+    "parent": "Budapest Gambit",
+    "variation": "Base",
+    "name": "Budapest Gambit",
+    "pgn": "1 d4 Nf6 2 c4 e5"
+  },
+  "A52": {
+    "parent": "Budapest Gambit",
+    "variation": "Base",
+    "name": "Budapest Gambit",
+    "pgn": "1 d4 Nf6 2 c4 e5 3 dxe5 Ng4"
+  },
+  "A53": {
+    "parent": "Old Indian",
+    "variation": "Base",
+    "name": "Old Indian",
+    "pgn": "1 d4 Nf6 2 c4 d6"
+  },
+  "A54": {
+    "parent": "Old Indian",
+    "variation": "Ukrainian Variation, 4.Nf3",
+    "name": "Old Indian, Ukrainian Variation, 4.Nf3",
+    "pgn": "1 d4 Nf6 2 c4 d6 3 Nc3 e5 4 Nf3"
+  },
+  "A55": {
+    "parent": "Old Indian",
+    "variation": "Main line",
+    "name": "Old Indian, Main line",
+    "pgn": "1 d4 Nf6 2 c4 d6 3 Nc3 e5 4 Nf3 Nbd7 5 e4"
+  },
+  "A56": {
+    "parent": "Benoni Defense",
+    "variation": "Base",
+    "name": "Benoni Defense",
+    "pgn": "1 d4 Nf6 2 c4 c5"
+  },
+  "A57": {
+    "parent": "Benko Gambit",
+    "variation": "Base",
+    "name": "Benko Gambit",
+    "pgn": "1 d4 Nf6 2 c4 c5 3 d5 b5"
+  },
+  "A58": {
+    "parent": "Benko Gambit",
+    "variation": "Base",
+    "name": "Benko Gambit",
+    "pgn": "1 d4 Nf6 2 c4 c5 3 d5 b5 4 cxb5 a6 5 bxa6"
+  },
+  "A59": {
+    "parent": "Benko Gambit",
+    "variation": "Base",
+    "name": "Benko Gambit",
+    "pgn": "1 d4 Nf6 2 c4 c5 3 d5 b5 4 cxb5 a6 5 bxa6 Bxa6 6 Nc3 d6 7 e4"
+  },
+  "A60": {
+    "parent": "Benoni Defense",
+    "variation": "Base",
+    "name": "Benoni Defense",
+    "pgn": "1 d4 Nf6 2 c4 c5 3 d5 e6"
+  },
+  "A61": {
+    "parent": "Benoni",
+    "variation": "Base",
+    "name": "Benoni",
+    "pgn": "1 d4 Nf6 2 c4 c5 3 d5 e6 4 Nc3 exd5 5 cxd5 d6 6 Nf3 g6"
+  },
+  "A62": {
+    "parent": "Benoni",
+    "variation": "Fianchetto Variation",
+    "name": "Benoni, Fianchetto Variation",
+    "pgn": "1 d4 Nf6 2 c4 c5 3 d5 e6 4 Nc3 exd5 5 cxd5 d6 6 Nf3 g6 7 g3 Bg7 8 Bg2 O-O"
+  },
+  "A63": {
+    "parent": "Benoni",
+    "variation": "Fianchetto, 9...Nbd7",
+    "name": "Benoni, Fianchetto, 9...Nbd7",
+    "pgn": "1 d4 Nf6 2 c4 c5 3 d5 e6 4 Nc3 exd5 5 cxd5 d6 6 Nf3 g6 7 g3 Bg7 8 Bg2 O-O 9"
+  },
+  "A64": {
+    "parent": "Benoni",
+    "variation": "Fianchetto, 11...Re8",
+    "name": "Benoni, Fianchetto, 11...Re8",
+    "pgn": "1 d4 Nf6 2 c4 c5 3 d5 e6 4 Nc3 exd5 5 cxd5 d6 6 Nf3 g6 7 g3 Bg7 8 Bg2 O-O 9"
+  },
+  "A65": {
+    "parent": "Benoni",
+    "variation": "6.e4",
+    "name": "Benoni, 6.e4",
+    "pgn": "1 d4 Nf6 2 c4 c5 3 d5 e6 4 Nc3 exd5 5 cxd5 d6 6 e4"
+  },
+  "A66": {
+    "parent": "Benoni",
+    "variation": "Base",
+    "name": "Benoni",
+    "pgn": "1 d4 Nf6 2 c4 c5 3 d5 e6 4 Nc3 exd5 5 cxd5 d6 6 e4 g6 7 f4"
+  },
+  "A67": {
+    "parent": "Benoni",
+    "variation": "Taimanov Variation",
+    "name": "Benoni, Taimanov Variation",
+    "pgn": "1 d4 Nf6 2 c4 c5 3 d5 e6 4 Nc3 exd5 5 cxd5 d6 6 e4 g6 7 f4 Bg7 8 Bb5+"
+  },
+  "A68": {
+    "parent": "Benoni",
+    "variation": "Four Pawns Attack",
+    "name": "Benoni, Four Pawns Attack",
+    "pgn": "1 d4 Nf6 2 c4 c5 3 d5 e6 4 Nc3 exd5 5 cxd5 d6 6 e4 g6 7 f4 Bg7 8 Nf3 O-O"
+  },
+  "A69": {
+    "parent": "Benoni",
+    "variation": "Four Pawns Attack, Main line",
+    "name": "Benoni, Four Pawns Attack, Main line",
+    "pgn": "1 d4 Nf6 2 c4 c5 3 d5 e6 4 Nc3 exd5 5 cxd5 d6 6 e4 g6 7 f4 Bg7 8 Nf3 O-O 9"
+  },
+  "A70": {
+    "parent": "Benoni",
+    "variation": "Classical with 7.Nf3",
+    "name": "Benoni, Classical with 7.Nf3",
+    "pgn": "1 d4 Nf6 2 c4 c5 3 d5 e6 4 Nc3 exd5 5 cxd5 d6 6 e4 g6 7 Nf3"
+  },
+  "A71": {
+    "parent": "Benoni",
+    "variation": "Classical, 8.Bg5",
+    "name": "Benoni, Classical, 8.Bg5",
+    "pgn": "1 d4 Nf6 2 c4 c5 3 d5 e6 4 Nc3 exd5 5 cxd5 d6 6 e4 g6 7 Nf3 Bg7 8 Bg5"
+  },
+  "A72": {
+    "parent": "Benoni",
+    "variation": "Classical without 9.O-O",
+    "name": "Benoni, Classical without 9.O-O",
+    "pgn": "1 d4 Nf6 2 c4 c5 3 d5 e6 4 Nc3 exd5 5 cxd5 d6 6 e4 g6 7 Nf3 Bg7 8 Be2 O-O"
+  },
+  "A73": {
+    "parent": "Benoni",
+    "variation": "Classical, 9.O-O",
+    "name": "Benoni, Classical, 9.O-O",
+    "pgn": "1 d4 Nf6 2 c4 c5 3 d5 e6 4 Nc3 exd5 5 cxd5 d6 6 e4 g6 7 Nf3 Bg7 8 Be2 O-O 9"
+  },
+  "A74": {
+    "parent": "Benoni",
+    "variation": "Classical, 9...a6, 10.a4",
+    "name": "Benoni, Classical, 9...a6, 10.a4",
+    "pgn": "1 d4 Nf6 2 c4 c5 3 d5 e6 4 Nc3 exd5 5 cxd5 d6 6 e4 g6 7 Nf3 Bg7 8 Be2 O-O 9"
+  },
+  "A75": {
+    "parent": "Benoni",
+    "variation": "Classical with ...a6 and 10...Bg4",
+    "name": "Benoni, Classical with ...a6 and 10...Bg4",
+    "pgn": "1 d4 Nf6 2 c4 c5 3 d5 e6 4 Nc3 exd5 5 cxd5 d6 6 e4 g6 7 Nf3 Bg7 8 Be2 O-O 9"
+  },
+  "A76": {
+    "parent": "Benoni",
+    "variation": "Classical, 9...Re8",
+    "name": "Benoni, Classical, 9...Re8",
+    "pgn": "1 d4 Nf6 2 c4 c5 3 d5 e6 4 Nc3 exd5 5 cxd5 d6 6 e4 g6 7 Nf3 Bg7 8 Be2 O-O 9"
+  },
+  "A77": {
+    "parent": "Benoni",
+    "variation": "Classical, 9...Re8, 10.Nd2",
+    "name": "Benoni, Classical, 9...Re8, 10.Nd2",
+    "pgn": "1 d4 Nf6 2 c4 c5 3 d5 e6 4 Nc3 exd5 5 cxd5 d6 6 e4 g6 7 Nf3 Bg7 8 Be2 O-O 9"
+  },
+  "A78": {
+    "parent": "Benoni",
+    "variation": "Classical with ...Re8 and ...Na6",
+    "name": "Benoni, Classical with ...Re8 and ...Na6",
+    "pgn": "1 d4 Nf6 2 c4 c5 3 d5 e6 4 Nc3 exd5 5 cxd5 d6 6 e4 g6 7 Nf3 Bg7 8 Be2 O-O 9"
+  },
+  "A79": {
+    "parent": "Benoni",
+    "variation": "Classical, 11.f3",
+    "name": "Benoni, Classical, 11.f3",
+    "pgn": "1 d4 Nf6 2 c4 c5 3 d5 e6 4 Nc3 exd5 5 cxd5 d6 6 e4 g6 7 Nf3 Bg7 8 Be2 O-O 9"
+  },
+  "A80": {
+    "parent": "Dutch",
+    "variation": "Base",
+    "name": "Dutch",
+    "pgn": "1 d4 f5"
+  },
+  "A81": {
+    "parent": "Dutch",
+    "variation": "Base",
+    "name": "Dutch",
+    "pgn": "1 d4 f5 2 g3"
+  },
+  "A82": {
+    "parent": "Dutch",
+    "variation": "Staunton Gambit",
+    "name": "Dutch, Staunton Gambit",
+    "pgn": "1 d4 f5 2 e4"
+  },
+  "A83": {
+    "parent": "Dutch",
+    "variation": "Staunton Gambit",
+    "name": "Dutch, Staunton Gambit",
+    "pgn": "1 d4 f5 2 e4 fxe4 3 Nc3 Nf6 4 Bg5"
+  },
+  "A84": {
+    "parent": "Dutch",
+    "variation": "Base",
+    "name": "Dutch",
+    "pgn": "1 d4 f5 2 c4"
+  },
+  "A85": {
+    "parent": "Dutch",
+    "variation": "with c4 & Nc3",
+    "name": "Dutch, with c4 & Nc3",
+    "pgn": "1 d4 f5 2 c4 Nf6 3 Nc3"
+  },
+  "A86": {
+    "parent": "Dutch",
+    "variation": "Base",
+    "name": "Dutch",
+    "pgn": "1 d4 f5 2 c4 Nf6 3 g3"
+  },
+  "A87": {
+    "parent": "Dutch",
+    "variation": "Leningrad, Main Variation",
+    "name": "Dutch, Leningrad, Main Variation",
+    "pgn": "1 d4 f5 2 c4 Nf6 3 g3 g6 4 Bg2 Bg7 5 Nf3"
+  },
+  "A88": {
+    "parent": "Dutch",
+    "variation": "Leningrad, Main Variation with c6",
+    "name": "Dutch, Leningrad, Main Variation with c6",
+    "pgn": "1 d4 f5 2 c4 Nf6 3 g3 g6 4 Bg2 Bg7 5 Nf3 O-O 6 O-O d6 7 Nc3 c6"
+  },
+  "A89": {
+    "parent": "Dutch",
+    "variation": "Leningrad, Main Variation with Nc6",
+    "name": "Dutch, Leningrad, Main Variation with Nc6",
+    "pgn": "1 d4 f5 2 c4 Nf6 3 g3 g6 4 Bg2 Bg7 5 Nf3 O-O 6 O-O d6 7 Nc3 Nc6"
+  },
+  "A90": {
+    "parent": "Dutch",
+    "variation": "Base",
+    "name": "Dutch",
+    "pgn": "1 d4 f5 2 c4 Nf6 3 g3 e6 4 Bg2"
+  },
+  "A91": {
+    "parent": "Dutch Defense",
+    "variation": "Base",
+    "name": "Dutch Defense",
+    "pgn": "1 d4 f5 2 c4 Nf6 3 g3 e6 4 Bg2 Be7"
+  },
+  "A92": {
+    "parent": "Dutch",
+    "variation": "Base",
+    "name": "Dutch",
+    "pgn": "1 d4 f5 2 c4 Nf6 3 g3 e6 4 Bg2 Be7 5 Nf3 O-O"
+  },
+  "A93": {
+    "parent": "Dutch",
+    "variation": "Stonewall, Botvinnik Variation",
+    "name": "Dutch, Stonewall, Botvinnik Variation",
+    "pgn": "1 d4 f5 2 c4 Nf6 3 g3 e6 4 Bg2 Be7 5 Nf3 O-O 6 O-O d5 7 b3"
+  },
+  "A94": {
+    "parent": "Dutch",
+    "variation": "Stonewall with Ba3",
+    "name": "Dutch, Stonewall with Ba3",
+    "pgn": "1 d4 f5 2 c4 Nf6 3 g3 e6 4 Bg2 Be7 5 Nf3 O-O 6 O-O d5 7 b3 c6 8 Ba3"
+  },
+  "A95": {
+    "parent": "Dutch",
+    "variation": "Stonewall",
+    "name": "Dutch, Stonewall",
+    "pgn": "1 d4 f5 2 c4 Nf6 3 g3 e6 4 Bg2 Be7 5 Nf3 O-O 6 O-O d5 7 Nc3 c6"
+  },
+  "A96": {
+    "parent": "Dutch",
+    "variation": "Classical Variation",
+    "name": "Dutch, Classical Variation",
+    "pgn": "1 d4 f5 2 c4 Nf6 3 g3 e6 4 Bg2 Be7 5 Nf3 O-O 6 O-O d6"
+  },
+  "A97": {
+    "parent": "Dutch",
+    "variation": "Ilyin-Genevsky",
+    "name": "Dutch, Ilyin-Genevsky",
+    "pgn": "1 d4 f5 2 c4 Nf6 3 g3 e6 4 Bg2 Be7 5 Nf3 O-O 6 O-O d6 7 Nc3 Qe8"
+  },
+  "A98": {
+    "parent": "Dutch",
+    "variation": "Ilyin-Genevsky Variation with Qc2",
+    "name": "Dutch, Ilyin-Genevsky Variation with Qc2",
+    "pgn": "1 d4 f5 2 c4 Nf6 3 g3 e6 4 Bg2 Be7 5 Nf3 O-O 6 O-O d6 7 Nc3 Qe8 8 Qc2"
+  },
+  "A99": {
+    "parent": "Dutch",
+    "variation": "Ilyin-Genevsky Variation with b3",
+    "name": "Dutch, Ilyin-Genevsky Variation with b3",
+    "pgn": "1 d4 f5 2 c4 Nf6 3 g3 e6 4 Bg2 Be7 5 Nf3 O-O 6 O-O d6 7 Nc3 Qe8 8 b3"
+  },
+  "B00": {
+    "parent": "Uncommon King's Pawn Opening",
+    "variation": "Base",
+    "name": "Uncommon King's Pawn Opening",
+    "pgn": "1 e4"
+  },
+  "B01": {
+    "parent": "Scandinavian",
+    "variation": "Base",
+    "name": "Scandinavian",
+    "pgn": "1 e4 d5"
+  },
+  "B02": {
+    "parent": "Alekhine's Defense",
+    "variation": "Base",
+    "name": "Alekhine's Defense",
+    "pgn": "1 e4 f6"
+  },
+  "B03": {
+    "parent": "Alekhine's Defense",
+    "variation": "Base",
+    "name": "Alekhine's Defense",
+    "pgn": "1 e4 Nf6 2 e5 Nd5 3 d4"
+  },
+  "B04": {
+    "parent": "Alekhine's Defense",
+    "variation": "Modern",
+    "name": "Alekhine's Defense, Modern",
+    "pgn": "1 e4 Nf6 2 e5 Nd5 3 d4 d6 4 Nf3"
+  },
+  "B05": {
+    "parent": "Alekhine's Defense",
+    "variation": "Modern",
+    "name": "Alekhine's Defense, Modern",
+    "pgn": "1 e4 Nf6 2 e5 Nd5 3 d4 d6 4 Nf3 Bg4"
+  },
+  "B06": {
+    "parent": "Robatsch",
+    "variation": "Base",
+    "name": "Robatsch",
+    "pgn": "1 e4 g6"
+  },
+  "B07": {
+    "parent": "Pirc",
+    "variation": "Base",
+    "name": "Pirc",
+    "pgn": "1 e4 d6 2 d4 Nf6"
+  },
+  "B08": {
+    "parent": "Pirc",
+    "variation": "Classical",
+    "name": "Pirc, Classical",
+    "pgn": "1 e4 d6 2 d4 Nf6 3 Nc3 g6 4 Nf3"
+  },
+  "B09": {
+    "parent": "Pirc",
+    "variation": "Austrian Attack",
+    "name": "Pirc, Austrian Attack",
+    "pgn": "1 e4 d6 2 d4 Nf6 3 Nc3 g6 4 f4"
+  },
+  "B10": {
+    "parent": "Caro-Kann",
+    "variation": "Base",
+    "name": "Caro-Kann",
+    "pgn": "1 e4 c6"
+  },
+  "B11": {
+    "parent": "Caro-Kann",
+    "variation": "Two Knights, 3...Bg4",
+    "name": "Caro-Kann, Two Knights, 3...Bg4",
+    "pgn": "1 e4 c6 2 Nc3 d5 3 Nf3 Bg4"
+  },
+  "B12": {
+    "parent": "Caro-Kann Defense",
+    "variation": "Base",
+    "name": "Caro-Kann Defense",
+    "pgn": "1 e4 c6 2 d4"
+  },
+  "B13": {
+    "parent": "Caro-Kann",
+    "variation": "Exchange",
+    "name": "Caro-Kann, Exchange",
+    "pgn": "1 e4 c6 2 d4 d5 3 exd5 cxd5"
+  },
+  "B14": {
+    "parent": "Caro-Kann",
+    "variation": "Panov-Botvinnik Attack",
+    "name": "Caro-Kann, Panov-Botvinnik Attack",
+    "pgn": "1 e4 c6 2 d4 d5 3 exd5 cxd5 4 c4 Nf6 5 Nc3 e6"
+  },
+  "B15": {
+    "parent": "Caro-Kann",
+    "variation": "Base",
+    "name": "Caro-Kann",
+    "pgn": "1 e4 c6 2 d4 d5 3 Nc3"
+  },
+  "B16": {
+    "parent": "Caro-Kann",
+    "variation": "Bronstein-Larsen Variation",
+    "name": "Caro-Kann, Bronstein-Larsen Variation",
+    "pgn": "1 e4 c6 2 d4 d5 3 Nc3 dxe4 4 Nxe4 Nf6 5 Nxf6+ gxf6"
+  },
+  "B17": {
+    "parent": "Caro-Kann",
+    "variation": "Steinitz Variation",
+    "name": "Caro-Kann, Steinitz Variation",
+    "pgn": "1 e4 c6 2 d4 d5 3 Nc3 dxe4 4 Nxe4 Nd7"
+  },
+  "B18": {
+    "parent": "Caro-Kann",
+    "variation": "Classical",
+    "name": "Caro-Kann, Classical",
+    "pgn": "1 e4 c6 2 d4 d5 3 Nc3 dxe4 4 Nxe4 Bf5"
+  },
+  "B19": {
+    "parent": "Caro-Kann",
+    "variation": "Classical",
+    "name": "Caro-Kann, Classical",
+    "pgn": "1 e4 c6 2 d4 d5 3 Nc3 dxe4 4 Nxe4 Bf5 5 Ng3 Bg6 6 h4 h6 7 Nf3 Nd7"
+  },
+  "B20": {
+    "parent": "Sicilian",
+    "variation": "Base",
+    "name": "Sicilian",
+    "pgn": "1 e4 c5"
+  },
+  "B21": {
+    "parent": "Sicilian",
+    "variation": "2.f4 and 2.d4",
+    "name": "Sicilian, 2.f4 and 2.d4",
+    "pgn": "1 e4 c5 2 f4"
+  },
+  "B22": {
+    "parent": "Sicilian",
+    "variation": "Alapin",
+    "name": "Sicilian, Alapin",
+    "pgn": "1 e4 c5 2 c3"
+  },
+  "B23": {
+    "parent": "Sicilian",
+    "variation": "Closed",
+    "name": "Sicilian, Closed",
+    "pgn": "1 e4 c5 2 Nc3"
+  },
+  "B24": {
+    "parent": "Sicilian",
+    "variation": "Closed",
+    "name": "Sicilian, Closed",
+    "pgn": "1 e4 c5 2 Nc3 Nc6 3 g3"
+  },
+  "B25": {
+    "parent": "Sicilian",
+    "variation": "Closed",
+    "name": "Sicilian, Closed",
+    "pgn": "1 e4 c5 2 Nc3 Nc6 3 g3 g6 4 Bg2 Bg7 5 d3 d6"
+  },
+  "B26": {
+    "parent": "Sicilian",
+    "variation": "Closed, 6.Be3",
+    "name": "Sicilian, Closed, 6.Be3",
+    "pgn": "1 e4 c5 2 Nc3 Nc6 3 g3 g6 4 Bg2 Bg7 5 d3 d6 6 Be3"
+  },
+  "B27": {
+    "parent": "Sicilian",
+    "variation": "Base",
+    "name": "Sicilian",
+    "pgn": "1 e4 c5 2 Nf3"
+  },
+  "B28": {
+    "parent": "Sicilian",
+    "variation": "O'Kelly Variation",
+    "name": "Sicilian, O'Kelly Variation",
+    "pgn": "1 e4 c5 2 Nf3 a6"
+  },
+  "B29": {
+    "parent": "Sicilian",
+    "variation": "Nimzovich-Rubinstein",
+    "name": "Sicilian, Nimzovich-Rubinstein",
+    "pgn": "1 e4 c5 2 Nf3 Nf6"
+  },
+  "B30": {
+    "parent": "Sicilian",
+    "variation": "Base",
+    "name": "Sicilian",
+    "pgn": "1 e4 c5 2 Nf3 Nc6"
+  },
+  "B31": {
+    "parent": "Sicilian",
+    "variation": "Rossolimo Variation",
+    "name": "Sicilian, Rossolimo Variation",
+    "pgn": "1 e4 c5 2 Nf3 Nc6 3 Bb5 g6"
+  },
+  "B32": {
+    "parent": "Sicilian",
+    "variation": "Base",
+    "name": "Sicilian",
+    "pgn": "1 e4 c5 2 Nf3 Nc6 3 d4 cxd4 4 Nxd4 e5"
+  },
+  "B33": {
+    "parent": "Sicilian",
+    "variation": "Base",
+    "name": "Sicilian",
+    "pgn": "1 e4 c5 2 Nf3 Nc6 3 d4 cxd4 4 Nxd4"
+  },
+  "B34": {
+    "parent": "Sicilian",
+    "variation": "Accelerated Fianchetto",
+    "name": "Sicilian, Accelerated Fianchetto",
+    "pgn": "1 e4 c5 2 Nf3 Nc6 3 d4 cxd4 4 Nxd4 g6 5 Nxc6"
+  },
+  "B35": {
+    "parent": "Sicilian",
+    "variation": "Accelerated Fianchetto, Modern Variation with Bc4",
+    "name": "Sicilian, Accelerated Fianchetto, Modern Variation with Bc4",
+    "pgn": "1 e4 c5 2 Nf3 Nc6 3 d4 cxd4 4 Nxd4 g6 5 Nc3 Bg7 6 Be3 Nf6 7 Bc4"
+  },
+  "B36": {
+    "parent": "Sicilian",
+    "variation": "Accelerated Fianchetto",
+    "name": "Sicilian, Accelerated Fianchetto",
+    "pgn": "1 e4 c5 2 Nf3 Nc6 3 d4 cxd4 4 Nxd4 g6 5 c4"
+  },
+  "B37": {
+    "parent": "Sicilian",
+    "variation": "Accelerated Fianchetto",
+    "name": "Sicilian, Accelerated Fianchetto",
+    "pgn": "1 e4 c5 2 Nf3 Nc6 3 d4 cxd4 4 Nxd4 g6 5 c4 Bg7"
+  },
+  "B38": {
+    "parent": "Sicilian",
+    "variation": "Accelerated Fianchetto, Maroczy Bind, 6.Be3",
+    "name": "Sicilian, Accelerated Fianchetto, Maroczy Bind, 6.Be3",
+    "pgn": "1 e4 c5 2 Nf3 Nc6 3 d4 cxd4 4 Nxd4 g6 5 c4 Bg7 6 Be3"
+  },
+  "B39": {
+    "parent": "Sicilian",
+    "variation": "Accelerated Fianchetto, Breyer Variation",
+    "name": "Sicilian, Accelerated Fianchetto, Breyer Variation",
+    "pgn": "1 e4 c5 2 Nf3 Nc6 3 d4 cxd4 4 Nxd4 g6 5 c4 Bg7 6 Be3 Nf6 7 Nc3 Ng4"
+  },
+  "B40": {
+    "parent": "Sicilian",
+    "variation": "Base",
+    "name": "Sicilian",
+    "pgn": "1 e4 c5 2 Nf3 e6"
+  },
+  "B41": {
+    "parent": "Sicilian",
+    "variation": "Kan",
+    "name": "Sicilian, Kan",
+    "pgn": "1 e4 c5 2 Nf3 e6 3 d4 cxd4 4 Nxd4 a6"
+  },
+  "B42": {
+    "parent": "Sicilian",
+    "variation": "Kan",
+    "name": "Sicilian, Kan",
+    "pgn": "1 e4 c5 2 Nf3 e6 3 d4 cxd4 4 Nxd4 a6 5 Bd3"
+  },
+  "B43": {
+    "parent": "Sicilian",
+    "variation": "Kan, 5.Nc3",
+    "name": "Sicilian, Kan, 5.Nc3",
+    "pgn": "1 e4 c5 2 Nf3 e6 3 d4 cxd4 4 Nxd4 a6 5 Nc3"
+  },
+  "B44": {
+    "parent": "Sicilian",
+    "variation": "Base",
+    "name": "Sicilian",
+    "pgn": "1 e4 c5 2 Nf3 e6 3 d4 cxd4 4 Nxd4 Nc6"
+  },
+  "B45": {
+    "parent": "Sicilian",
+    "variation": "Taimanov",
+    "name": "Sicilian, Taimanov",
+    "pgn": "1 e4 c5 2 Nf3 e6 3 d4 cxd4 4 Nxd4 Nc6 5 Nc3"
+  },
+  "B46": {
+    "parent": "Sicilian",
+    "variation": "Taimanov Variation",
+    "name": "Sicilian, Taimanov Variation",
+    "pgn": "1 e4 c5 2 Nf3 e6 3 d4 cxd4 4 Nxd4 Nc6 5 Nc3 a6"
+  },
+  "B47": {
+    "parent": "Sicilian",
+    "variation": "Taimanov (Bastrikov) Variation",
+    "name": "Sicilian, Taimanov (Bastrikov) Variation",
+    "pgn": "1 e4 c5 2 Nf3 e6 3 d4 cxd4 4 Nxd4 Nc6 5 Nc3 Qc7"
+  },
+  "B48": {
+    "parent": "Sicilian",
+    "variation": "Taimanov Variation",
+    "name": "Sicilian, Taimanov Variation",
+    "pgn": "1 e4 c5 2 Nf3 e6 3 d4 cxd4 4 Nxd4 Nc6 5 Nc3 Qc7 6 Be3"
+  },
+  "B49": {
+    "parent": "Sicilian",
+    "variation": "Taimanov Variation",
+    "name": "Sicilian, Taimanov Variation",
+    "pgn": "1 e4 c5 2 Nf3 e6 3 d4 cxd4 4 Nxd4 Nc6 5 Nc3 Qc7 6 Be3 a6 7 Be2"
+  },
+  "B50": {
+    "parent": "Sicilian",
+    "variation": "Base",
+    "name": "Sicilian",
+    "pgn": "1 e4 c5 2 Nf3 d6"
+  },
+  "B51": {
+    "parent": "Sicilian",
+    "variation": "Canal-Sokolsky (Rossolimo) Attack",
+    "name": "Sicilian, Canal-Sokolsky (Rossolimo) Attack",
+    "pgn": "1 e4 c5 2 Nf3 d6 3 Bb5+"
+  },
+  "B52": {
+    "parent": "Sicilian",
+    "variation": "Canal-Sokolsky (Rossolimo) Attack",
+    "name": "Sicilian, Canal-Sokolsky (Rossolimo) Attack",
+    "pgn": "1 e4 c5 2 Nf3 d6 3 Bb5+ Bd7"
+  },
+  "B53": {
+    "parent": "Sicilian",
+    "variation": "Base",
+    "name": "Sicilian",
+    "pgn": "1 e4 c5 2 Nf3 d6 3 d4 cxd4 4 Qxd4"
+  },
+  "B54": {
+    "parent": "Sicilian",
+    "variation": "Base",
+    "name": "Sicilian",
+    "pgn": "1 e4 c5 2 Nf3 d6 3 d4 cxd4 4 Nxd4"
+  },
+  "B55": {
+    "parent": "Sicilian",
+    "variation": "Prins Variation, Venice Attack",
+    "name": "Sicilian, Prins Variation, Venice Attack",
+    "pgn": "1 e4 c5 2 Nf3 d6 3 d4 cxd4 4 Nxd4 Nf6 5 f3 e5 6 Bb5+"
+  },
+  "B56": {
+    "parent": "Sicilian",
+    "variation": "Base",
+    "name": "Sicilian",
+    "pgn": "1 e4 c5 2 Nf3 d6 3 d4 cxd4 4 Nxd4 Nf6 5 Nc3"
+  },
+  "B57": {
+    "parent": "Sicilian",
+    "variation": "Base",
+    "name": "Sicilian",
+    "pgn": "1 e4 c5 2 Nf3 d6 3 d4 cxd4 4 Nxd4 Nf6 5 Nc3 Nc6 6 Bc4"
+  },
+  "B58": {
+    "parent": "Sicilian",
+    "variation": "Base",
+    "name": "Sicilian",
+    "pgn": "1 e4 c5 2 Nf3 Nc6 3 d4 cxd4 4 Nxd4 Nf6 5 Nc3 d6 6 Be2"
+  },
+  "B59": {
+    "parent": "Sicilian",
+    "variation": "Boleslavsky Variation, 7.Nb3",
+    "name": "Sicilian, Boleslavsky Variation, 7.Nb3",
+    "pgn": "1 e4 c5 2 Nf3 Nc6 3 d4 cxd4 4 Nxd4 Nf6 5 Nc3 d6 6 Be2 e5 7 Nb3"
+  },
+  "B60": {
+    "parent": "Sicilian",
+    "variation": "Richter-Rauzer",
+    "name": "Sicilian, Richter-Rauzer",
+    "pgn": "1 e4 c5 2 Nf3 d6 3 d4 cxd4 4 Nxd4 Nf6 5 Nc3 Nc6 6 Bg5"
+  },
+  "B61": {
+    "parent": "Sicilian",
+    "variation": "Richter-Rauzer, Larsen Variation, 7.Qd2",
+    "name": "Sicilian, Richter-Rauzer, Larsen Variation, 7.Qd2",
+    "pgn": "1 e4 c5 2 Nf3 d6 3 d4 cxd4 4 Nxd4 Nf6 5 Nc3 Nc6 6 Bg5 Bd7 7 Qd2"
+  },
+  "B62": {
+    "parent": "Sicilian",
+    "variation": "Richter-Rauzer",
+    "name": "Sicilian, Richter-Rauzer",
+    "pgn": "1 e4 c5 2 Nf3 d6 3 d4 cxd4 4 Nxd4 Nf6 5 Nc3 Nc6 6 Bg5 e6"
+  },
+  "B63": {
+    "parent": "Sicilian",
+    "variation": "Richter-Rauzer Attack",
+    "name": "Sicilian, Richter-Rauzer Attack",
+    "pgn": "1 e4 c5 2 Nf3 d6 3 d4 cxd4 4 Nxd4 Nf6 5 Nc3 Nc6 6 Bg5 e6 7 Qd2"
+  },
+  "B64": {
+    "parent": "Sicilian",
+    "variation": "Richter-Rauzer Attack",
+    "name": "Sicilian, Richter-Rauzer Attack",
+    "pgn": "1 e4 c5 2 Nf3 d6 3 d4 cxd4 4 Nxd4 Nf6 5 Nc3 Nc6 6 Bg5 e6 7 Qd2 Be7 8 O-O-O O-O 9 f4"
+  },
+  "B65": {
+    "parent": "Sicilian",
+    "variation": "Richter-Rauzer Attack, 7...Be7 Defense, 9...Nxd4",
+    "name": "Sicilian, Richter-Rauzer Attack, 7...Be7 Defense, 9...Nxd4",
+    "pgn": "1 e4 c5 2 Nf3 d6 3 d4 cxd4 4 Nxd4 Nf6 5 Nc3 Nc6 6 Bg5 e6 7 Qd2 Be7 8 O-O-O O-O 9 f4 Nxd4 10 Qxd4"
+  },
+  "B66": {
+    "parent": "Sicilian",
+    "variation": "Richter-Rauzer Attack, 7...a6",
+    "name": "Sicilian, Richter-Rauzer Attack, 7...a6",
+    "pgn": "1 e4 c5 2 Nf3 d6 3 d4 cxd4 4 Nxd4 Nf6 5 Nc3 Nc6 6 Bg5 e6 7 Qd2 a6"
+  },
+  "B67": {
+    "parent": "Sicilian",
+    "variation": "Richter-Rauzer Attack, 7...a6 Defense, 8...Bd7",
+    "name": "Sicilian, Richter-Rauzer Attack, 7...a6 Defense, 8...Bd7",
+    "pgn": "1 e4 c5 2 Nf3 d6 3 d4 cxd4 4 Nxd4 Nf6 5 Nc3 Nc6 6 Bg5 e6 7 Qd2 a6 8 O-O-O Bd7"
+  },
+  "B68": {
+    "parent": "Sicilian",
+    "variation": "Richter-Rauzer Attack, 7...a6 Defense, 9...Be7",
+    "name": "Sicilian, Richter-Rauzer Attack, 7...a6 Defense, 9...Be7",
+    "pgn": "1 e4 c5 2 Nf3 d6 3 d4 cxd4 4 Nxd4 Nf6 5 Nc3 Nc6 6 Bg5 e6 7 Qd2 a6 8 O-O-O Bd7 9 f4 Be7"
+  },
+  "B69": {
+    "parent": "Sicilian",
+    "variation": "Richter-Rauzer Attack, 7...a6 Defense, 11.Bxf6",
+    "name": "Sicilian, Richter-Rauzer Attack, 7...a6 Defense, 11.Bxf6",
+    "pgn": "1 e4 c5 2 Nf3 d6 3 d4 cxd4 4 Nxd4 Nf6 5 Nc3 Nc6 6 Bg5 e6 7 Qd2 a6 8 O-O-O Bd7 9 f4 Be7 10 Nf3 b5 11 Bxf6"
+  },
+  "B70": {
+    "parent": "Sicilian",
+    "variation": "Dragon Variation",
+    "name": "Sicilian, Dragon Variation",
+    "pgn": "1 e4 c5 2 Nf3 d6 3 d4 cxd4 4 Nxd4 Nf6 5 Nc3 g6"
+  },
+  "B71": {
+    "parent": "Sicilian",
+    "variation": "Dragon, Levenfish Variation",
+    "name": "Sicilian, Dragon, Levenfish Variation",
+    "pgn": "1 e4 c5 2 Nf3 d6 3 d4 cxd4 4 Nxd4 Nf6 5 Nc3 g6 6 f4"
+  },
+  "B72": {
+    "parent": "Sicilian",
+    "variation": "Dragon",
+    "name": "Sicilian, Dragon",
+    "pgn": "1 e4 c5 2 Nf3 d6 3 d4 cxd4 4 Nxd4 Nf6 5 Nc3 g6 6 Be3"
+  },
+  "B73": {
+    "parent": "Sicilian",
+    "variation": "Dragon, Classical",
+    "name": "Sicilian, Dragon, Classical",
+    "pgn": "1 e4 c5 2 Nf3 d6 3 d4 cxd4 4 Nxd4 Nf6 5 Nc3 g6 6 Be3 Bg7 7 Be2 Nc6 8 O-O"
+  },
+  "B74": {
+    "parent": "Sicilian",
+    "variation": "Dragon, Classical",
+    "name": "Sicilian, Dragon, Classical",
+    "pgn": "1 e4 c5 2 Nf3 d6 3 d4 cxd4 4 Nxd4 Nf6 5 Nc3 g6 6 Be3 Bg7 7 Be2 Nc6 8 O-O O-O 9 Nb3"
+  },
+  "B75": {
+    "parent": "Sicilian",
+    "variation": "Dragon, Yugoslav Attack",
+    "name": "Sicilian, Dragon, Yugoslav Attack",
+    "pgn": "1 e4 c5 2 Nf3 d6 3 d4 cxd4 4 Nxd4 Nf6 5 Nc3 g6 6 Be3 Bg7 7 f3"
+  },
+  "B76": {
+    "parent": "Sicilian",
+    "variation": "Dragon, Yugoslav Attack",
+    "name": "Sicilian, Dragon, Yugoslav Attack",
+    "pgn": "1 e4 c5 2 Nf3 d6 3 d4 cxd4 4 Nxd4 Nf6 5 Nc3 g6 6 Be3 Bg7 7 f3 O-O"
+  },
+  "B77": {
+    "parent": "Sicilian",
+    "variation": "Dragon, Yugoslav Attack",
+    "name": "Sicilian, Dragon, Yugoslav Attack",
+    "pgn": "1 e4 c5 2 Nf3 d6 3 d4 cxd4 4 Nxd4 Nf6 5 Nc3 g6 6 Be3 Bg7 7 f3 O-O 8 Qd2 Nc6 9 Bc4"
+  },
+  "B78": {
+    "parent": "Sicilian",
+    "variation": "Dragon, Yugoslav Attack, 10.castle long",
+    "name": "Sicilian, Dragon, Yugoslav Attack, 10.castle long",
+    "pgn": "1 e4 c5 2 Nf3 d6 3 d4 cxd4 4 Nxd4 Nf6 5 Nc3 g6 6 Be3 Bg7 7 f3 O-O 8 Qd2 Nc6 9 Bc4 Bd7 10 O-O-O"
+  },
+  "B79": {
+    "parent": "Sicilian",
+    "variation": "Dragon, Yugoslav Attack, 12.h4",
+    "name": "Sicilian, Dragon, Yugoslav Attack, 12.h4",
+    "pgn": "1 e4 c5 2 Nf3 d6 3 d4 cxd4 4 Nxd4 Nf6 5 Nc3 g6 6 Be3 Bg7 7 f3 O-O 8 Qd2 Nc6 9 Bc4 Bd7 10 O-O-O Qa5 11 Bb3 Rfc8 12 h4"
+  },
+  "B80": {
+    "parent": "Sicilian",
+    "variation": "Scheveningen",
+    "name": "Sicilian, Scheveningen",
+    "pgn": "1 e4 c5 2 Nf3 d6 3 d4 cxd4 4 Nxd4 Nf6 5 Nc3 e6"
+  },
+  "B81": {
+    "parent": "Sicilian",
+    "variation": "Scheveningen, Keres Attack",
+    "name": "Sicilian, Scheveningen, Keres Attack",
+    "pgn": "1 e4 c5 2 Nf3 d6 3 d4 cxd4 4 Nxd4 Nf6 5 Nc3 e6 6 g4"
+  },
+  "B82": {
+    "parent": "Sicilian",
+    "variation": "Scheveningen",
+    "name": "Sicilian, Scheveningen",
+    "pgn": "1 e4 c5 2 Nf3 d6 3 d4 cxd4 4 Nxd4 Nf6 5 Nc3 e6 6 f4"
+  },
+  "B83": {
+    "parent": "Sicilian",
+    "variation": "Base",
+    "name": "Sicilian",
+    "pgn": "1 e4 c5 2 Nf3 d6 3 d4 cxd4 4 Nxd4 Nf6 5 Nc3 e6 6 Be2"
+  },
+  "B84": {
+    "parent": "Sicilian",
+    "variation": "Scheveningen",
+    "name": "Sicilian, Scheveningen",
+    "pgn": "1 e4 c5 2 Nf3 d6 3 d4 cxd4 4 Nxd4 Nf6 5 Nc3 e6 6 Be2 a6"
+  },
+  "B85": {
+    "parent": "Sicilian",
+    "variation": "Scheveningen, Classical",
+    "name": "Sicilian, Scheveningen, Classical",
+    "pgn": "1 e4 c5 2 Nf3 d6 3 d4 cxd4 4 Nxd4 Nf6 5 Nc3 e6 6 Be2 a6 7 O-O Qc7 8 f4 Nc6"
+  },
+  "B86": {
+    "parent": "Sicilian",
+    "variation": "Fischer-Sozin Attack",
+    "name": "Sicilian, Fischer-Sozin Attack",
+    "pgn": "1 e4 c5 2 Nf3 d6 3 d4 cxd4 4 Nxd4 Nf6 5 Nc3 e6 6 Bc4"
+  },
+  "B87": {
+    "parent": "Sicilian",
+    "variation": "Fischer-Sozin with ...a6 and ...b5",
+    "name": "Sicilian, Fischer-Sozin with ...a6 and ...b5",
+    "pgn": "1 e4 c5 2 Nf3 d6 3 d4 cxd4 4 Nxd4 Nf6 5 Nc3 e6 6 Bc4 a6 7 Bb3 b5"
+  },
+  "B88": {
+    "parent": "Sicilian",
+    "variation": "Fischer-Sozin Attack",
+    "name": "Sicilian, Fischer-Sozin Attack",
+    "pgn": "1 e4 c5 2 Nf3 d6 3 d4 cxd4 4 Nxd4 Nf6 5 Nc3 e6 6 Bc4 Nc6"
+  },
+  "B89": {
+    "parent": "Sicilian",
+    "variation": "Base",
+    "name": "Sicilian",
+    "pgn": "1 e4 c5 2 Nf3 d6 3 d4 cxd4 4 Nxd4 Nf6 5 Nc3 e6 6 Bc4 Nc6 7 Be3"
+  },
+  "B90": {
+    "parent": "Sicilian",
+    "variation": "Najdorf",
+    "name": "Sicilian, Najdorf",
+    "pgn": "1 e4 c5 2 Nf3 d6 3 d4 cxd4 4 Nxd4 Nf6 5 Nc3 a6"
+  },
+  "B91": {
+    "parent": "Sicilian",
+    "variation": "Najdorf, Zagreb (Fianchetto) Variation",
+    "name": "Sicilian, Najdorf, Zagreb (Fianchetto) Variation",
+    "pgn": "1 e4 c5 2 Nf3 d6 3 d4 cxd4 4 Nxd4 Nf6 5 Nc3 a6 6 g3"
+  },
+  "B92": {
+    "parent": "Sicilian",
+    "variation": "Najdorf, Opocensky Variation",
+    "name": "Sicilian, Najdorf, Opocensky Variation",
+    "pgn": "1 e4 c5 2 Nf3 d6 3 d4 cxd4 4 Nxd4 Nf6 5 Nc3 a6 6 Be2"
+  },
+  "B93": {
+    "parent": "Sicilian",
+    "variation": "Najdorf, 6.f4",
+    "name": "Sicilian, Najdorf, 6.f4",
+    "pgn": "1 e4 c5 2 Nf3 d6 3 d4 cxd4 4 Nxd4 Nf6 5 Nc3 a6 6 f4"
+  },
+  "B94": {
+    "parent": "Sicilian",
+    "variation": "Najdorf",
+    "name": "Sicilian, Najdorf",
+    "pgn": "1 e4 c5 2 Nf3 d6 3 d4 cxd4 4 Nxd4 Nf6 5 Nc3 a6 6 Bg5"
+  },
+  "B95": {
+    "parent": "Sicilian",
+    "variation": "Najdorf, 6...e6",
+    "name": "Sicilian, Najdorf, 6...e6",
+    "pgn": "1 e4 c5 2 Nf3 d6 3 d4 cxd4 4 Nxd4 Nf6 5 Nc3 a6 6 Bg5 e6"
+  },
+  "B96": {
+    "parent": "Sicilian",
+    "variation": "Najdorf",
+    "name": "Sicilian, Najdorf",
+    "pgn": "1 e4 c5 2 Nf3 d6 3 d4 cxd4 4 Nxd4 Nf6 5 Nc3 a6 6 Bg5 e6 7 f4"
+  },
+  "B97": {
+    "parent": "Sicilian",
+    "variation": "Najdorf",
+    "name": "Sicilian, Najdorf",
+    "pgn": "1 e4 c5 2 Nf3 d6 3 d4 cxd4 4 Nxd4 Nf6 5 Nc3 a6 6 Bg5 e6 7 f4 Qb6"
+  },
+  "B98": {
+    "parent": "Sicilian",
+    "variation": "Najdorf",
+    "name": "Sicilian, Najdorf",
+    "pgn": "1 e4 c5 2 Nf3 d6 3 d4 cxd4 4 Nxd4 Nf6 5 Nc3 a6 6 Bg5 e6 7 f4 Be7"
+  },
+  "B99": {
+    "parent": "Sicilian",
+    "variation": "Najdorf, 7...Be7 Main line",
+    "name": "Sicilian, Najdorf, 7...Be7 Main line",
+    "pgn": "1 e4 c5 2 Nf3 d6 3 d4 cxd4 4 Nxd4 Nf6 5 Nc3 a6 6 Bg5 e6 7 f4 Be7 8 Qf3 Qc7 9 O-O-O Nbd7"
+  },
+  "C00": {
+    "parent": "French Defense",
+    "variation": "Base",
+    "name": "French Defense",
+    "pgn": "1 e4 e6"
+  },
+  "C01": {
+    "parent": "French",
+    "variation": "Exchange",
+    "name": "French, Exchange",
+    "pgn": "1 e4 e6 2 d4 d5 3 exd5 exd5 4 Nc3 Nf6 5 Bg5"
+  },
+  "C02": {
+    "parent": "French",
+    "variation": "Advance",
+    "name": "French, Advance",
+    "pgn": "1 e4 e6 2 d4 d5 3 e5"
+  },
+  "C03": {
+    "parent": "French",
+    "variation": "Tarrasch",
+    "name": "French, Tarrasch",
+    "pgn": "1 e4 e6 2 d4 d5 3 Nd2"
+  },
+  "C04": {
+    "parent": "French",
+    "variation": "Tarrasch, Guimard Main line",
+    "name": "French, Tarrasch, Guimard Main line",
+    "pgn": "1 e4 e6 2 d4 d5 3 Nd2 Nc6 4 Ngf3 Nf6"
+  },
+  "C05": {
+    "parent": "French",
+    "variation": "Tarrasch",
+    "name": "French, Tarrasch",
+    "pgn": "1 e4 e6 2 d4 d5 3 Nd2 Nf6"
+  },
+  "C06": {
+    "parent": "French",
+    "variation": "Tarrasch",
+    "name": "French, Tarrasch",
+    "pgn": "1 e4 e6 2 d4 d5 3 Nd2 Nf6 4 e5 Nfd7 5 Bd3 c5 6 c3 Nc6 7 Ne2 cxd4 8 cxd4"
+  },
+  "C07": {
+    "parent": "French",
+    "variation": "Tarrasch",
+    "name": "French, Tarrasch",
+    "pgn": "1 e4 e6 2 d4 d5 3 Nd2 c5"
+  },
+  "C08": {
+    "parent": "French",
+    "variation": "Tarrasch, Open, 4.ed ed",
+    "name": "French, Tarrasch, Open, 4.ed ed",
+    "pgn": "1 e4 e6 2 d4 d5 3 Nd2 c5 4 exd5 exd5"
+  },
+  "C09": {
+    "parent": "French",
+    "variation": "Tarrasch, Open Variation, Main line",
+    "name": "French, Tarrasch, Open Variation, Main line",
+    "pgn": "1 e4 e6 2 d4 d5 3 Nd2 c5 4 exd5 exd5 5 Ngf3 Nc6"
+  },
+  "C10": {
+    "parent": "French",
+    "variation": "Base",
+    "name": "French",
+    "pgn": "1 e4 e6 2 d4 d5 3 Nc3"
+  },
+  "C11": {
+    "parent": "French",
+    "variation": "Base",
+    "name": "French",
+    "pgn": "1 e4 e6 2 d4 d5 3 Nc3 Nf6"
+  },
+  "C12": {
+    "parent": "French",
+    "variation": "McCutcheon",
+    "name": "French, McCutcheon",
+    "pgn": "1 e4 e6 2 d4 d5 3 Nc3 Nf6 4 Bg5 Bb4"
+  },
+  "C13": {
+    "parent": "French",
+    "variation": "Base",
+    "name": "French",
+    "pgn": "1 e4 e6 2 d4 d5 3 Nc3 Nf6 4 Bg5 Be7"
+  },
+  "C14": {
+    "parent": "French",
+    "variation": "Classical",
+    "name": "French, Classical",
+    "pgn": "1 e4 e6 2 d4 d5 3 Nc3 Nf6 4 Bg5 Be7 5 e5 Nfd7 6 Bxe7 Qxe7"
+  },
+  "C15": {
+    "parent": "French",
+    "variation": "Winawer",
+    "name": "French, Winawer",
+    "pgn": "1 e4 e6 2 d4 d5 3 Nc3 Bb4"
+  },
+  "C16": {
+    "parent": "French",
+    "variation": "Winawer",
+    "name": "French, Winawer",
+    "pgn": "1 e4 e6 2 d4 d5 3 Nc3 Bb4 4 e5"
+  },
+  "C17": {
+    "parent": "French",
+    "variation": "Winawer, Advance",
+    "name": "French, Winawer, Advance",
+    "pgn": "1 e4 e6 2 d4 d5 3 Nc3 Bb4 4 e5 c5"
+  },
+  "C18": {
+    "parent": "French",
+    "variation": "Winawer",
+    "name": "French, Winawer",
+    "pgn": "1 e4 e6 2 d4 d5 3 Nc3 Bb4 4 e5 c5 5 a3 Bxc3+ 6 bxc3"
+  },
+  "C19": {
+    "parent": "French",
+    "variation": "Winawer, Advance",
+    "name": "French, Winawer, Advance",
+    "pgn": "1 e4 e6 2 d4 d5 3 Nc3 Bb4 4 e5 c5 5 a3 Bxc3+ 6 bxc3 Ne7"
+  },
+  "C20": {
+    "parent": "King's Pawn Game",
+    "variation": "Base",
+    "name": "King's Pawn Game",
+    "pgn": "1 e4 e5"
+  },
+  "C21": {
+    "parent": "Center Game",
+    "variation": "Base",
+    "name": "Center Game",
+    "pgn": "1 e4 e5 2 d4 exd4"
+  },
+  "C22": {
+    "parent": "Center Game",
+    "variation": "Base",
+    "name": "Center Game",
+    "pgn": "1 e4 e5 2 d4 exd4 3 Qxd4 Nc6"
+  },
+  "C23": {
+    "parent": "Bishop's Opening",
+    "variation": "Base",
+    "name": "Bishop's Opening",
+    "pgn": "1 e4 e5 2 Bc4"
+  },
+  "C24": {
+    "parent": "Bishop's Opening",
+    "variation": "Base",
+    "name": "Bishop's Opening",
+    "pgn": "1 e4 e5 2 Bc4 Nf6"
+  },
+  "C25": {
+    "parent": "Vienna",
+    "variation": "Base",
+    "name": "Vienna",
+    "pgn": "1 e4 e5 2 Nc3"
+  },
+  "C26": {
+    "parent": "Vienna",
+    "variation": "Base",
+    "name": "Vienna",
+    "pgn": "1 e4 e5 2 Nc3 Nf6"
+  },
+  "C27": {
+    "parent": "Vienna Game",
+    "variation": "Base",
+    "name": "Vienna Game",
+    "pgn": "1 e4 e5 2 Nc3 Nf6 3 Bc4 Nxe4"
+  },
+  "C28": {
+    "parent": "Vienna Game",
+    "variation": "Base",
+    "name": "Vienna Game",
+    "pgn": "1 e4 e5 2 Nc3 Nf6 3 Bc4 Nc6"
+  },
+  "C29": {
+    "parent": "Vienna Gambit",
+    "variation": "Base",
+    "name": "Vienna Gambit",
+    "pgn": "1 e4 e5 2 Nc3 Nf6 3 f4"
+  },
+  "C30": {
+    "parent": "King's Gambit Declined",
+    "variation": "Base",
+    "name": "King's Gambit Declined",
+    "pgn": "1 e4 e5 2 f4"
+  },
+  "C31": {
+    "parent": "King's Gambit Declined",
+    "variation": "Falkbeer Counter Gambit",
+    "name": "King's Gambit Declined, Falkbeer Counter Gambit",
+    "pgn": "1 e4 e5 2 f4 d5"
+  },
+  "C32": {
+    "parent": "King's Gambit Declined",
+    "variation": "Falkbeer Counter Gambit",
+    "name": "King's Gambit Declined, Falkbeer Counter Gambit",
+    "pgn": "1 e4 e5 2 f4 d5 3 exd5 e4 4 d3 Nf6"
+  },
+  "C33": {
+    "parent": "King's Gambit Accepted",
+    "variation": "Base",
+    "name": "King's Gambit Accepted",
+    "pgn": "1 e4 e5 2 f4 exf4"
+  },
+  "C34": {
+    "parent": "King's Gambit Accepted",
+    "variation": "Base",
+    "name": "King's Gambit Accepted",
+    "pgn": "1 e4 e5 2 f4 exf4 3 Nf3"
+  },
+  "C35": {
+    "parent": "King's Gambit Accepted",
+    "variation": "Cunningham",
+    "name": "King's Gambit Accepted, Cunningham",
+    "pgn": "1 e4 e5 2 f4 exf4 3 Nf3 Be7"
+  },
+  "C36": {
+    "parent": "King's Gambit Accepted",
+    "variation": "Abbazia Defense",
+    "name": "King's Gambit Accepted, Abbazia Defense",
+    "pgn": "1 e4 e5 2 f4 exf4 3 Nf3 d5"
+  },
+  "C37": {
+    "parent": "King's Gambit Accepted",
+    "variation": "Base",
+    "name": "King's Gambit Accepted",
+    "pgn": "1 e4 e5 2 f4 exf4 3 Nf3 g5 4 Nc3"
+  },
+  "C38": {
+    "parent": "King's Gambit Accepted",
+    "variation": "Base",
+    "name": "King's Gambit Accepted",
+    "pgn": "1 e4 e5 2 f4 exf4 3 Nf3 g5 4 Bc4 Bg7"
+  },
+  "C39": {
+    "parent": "King's Gambit Accepted",
+    "variation": "Base",
+    "name": "King's Gambit Accepted",
+    "pgn": "1 e4 e5 2 f4 exf4 3 Nf3 g5 4 h4"
+  },
+  "C40": {
+    "parent": "King's Knight Opening",
+    "variation": "Base",
+    "name": "King's Knight Opening",
+    "pgn": "1 e4 e5 2 Nf3"
+  },
+  "C41": {
+    "parent": "Philidor Defense",
+    "variation": "Base",
+    "name": "Philidor Defense",
+    "pgn": "1 e4 e5 2 Nf3 d6"
+  },
+  "C42": {
+    "parent": "Petrov Defense",
+    "variation": "Base",
+    "name": "Petrov Defense",
+    "pgn": "1 e4 e5 2 Nf3 Nf6"
+  },
+  "C43": {
+    "parent": "Petrov",
+    "variation": "Modern Attack",
+    "name": "Petrov, Modern Attack",
+    "pgn": "1 e4 e5 2 Nf3 Nf6 3 d4 exd4 4 e5 Ne4 5 Qxd4"
+  },
+  "C44": {
+    "parent": "King's Pawn Game",
+    "variation": "Base",
+    "name": "King's Pawn Game",
+    "pgn": "1 e4 e5 2 Nf3 Nc6"
+  },
+  "C45": {
+    "parent": "Scotch Game",
+    "variation": "Base",
+    "name": "Scotch Game",
+    "pgn": "1 e4 e5 2 Nf3 Nc6 3 d4 exd4 4 Nxd4"
+  },
+  "C46": {
+    "parent": "Three Knights",
+    "variation": "Base",
+    "name": "Three Knights",
+    "pgn": "1 e4 e5 2 Nf3 Nc6 3 Nc3"
+  },
+  "C47": {
+    "parent": "Four Knights",
+    "variation": "Base",
+    "name": "Four Knights",
+    "pgn": "1 e4 e5 2 Nf3 Nc6 3 Nc3 Nf6"
+  },
+  "C48": {
+    "parent": "Four Knights",
+    "variation": "Base",
+    "name": "Four Knights",
+    "pgn": "1 e4 e5 2 Nf3 Nc6 3 Nc3 Nf6 4 Bb5"
+  },
+  "C49": {
+    "parent": "Four Knights",
+    "variation": "Base",
+    "name": "Four Knights",
+    "pgn": "1 e4 e5 2 Nf3 Nc6 3 Nc3 Nf6 4 Bb5 Bb4"
+  },
+  "C50": {
+    "parent": "Giuoco Piano",
+    "variation": "Base",
+    "name": "Giuoco Piano",
+    "pgn": "1 e4 e5 2 Nf3 Nc6 3 Bc4 Bc5"
+  },
+  "C51": {
+    "parent": "Evans Gambit",
+    "variation": "Base",
+    "name": "Evans Gambit",
+    "pgn": "1 e4 e5 2 f4 Nc6 3 Bc4 Bc5 4 b4"
+  },
+  "C52": {
+    "parent": "Evans Gambit",
+    "variation": "Base",
+    "name": "Evans Gambit",
+    "pgn": "1 e4 e5 2 Nf3 Nc6 3 Bc4 Bc5 4 b4 Bxb4 5 c3 Ba5"
+  },
+  "C53": {
+    "parent": "Giuoco Piano",
+    "variation": "Base",
+    "name": "Giuoco Piano",
+    "pgn": "1 e4 e5 2 Nf3 Nc6 3 Bc4 Bc5 4 c3"
+  },
+  "C54": {
+    "parent": "Giuoco Piano",
+    "variation": "Base",
+    "name": "Giuoco Piano",
+    "pgn": "1 e4 e5 2 Nf3 Nc6 3 Bc4 Bc5 4 c3 Nf6 5 d4 exd4 6 cxd4"
+  },
+  "C55": {
+    "parent": "Two Knights Defense",
+    "variation": "Base",
+    "name": "Two Knights Defense",
+    "pgn": "1 e4 e5 2 Nf3 Nc6 3 Bc4 Nf6"
+  },
+  "C56": {
+    "parent": "Two Knights",
+    "variation": "Base",
+    "name": "Two Knights",
+    "pgn": "1 e4 e5 2 Nf3 Nc6 3 Bc4 Nf6 4 d4 exd4 5 O-O Nxe4"
+  },
+  "C57": {
+    "parent": "Two Knights",
+    "variation": "Base",
+    "name": "Two Knights",
+    "pgn": "1 e4 e5 2 Nf3 Nc6 3 Bc4 Nf6 4 Ng5"
+  },
+  "C58": {
+    "parent": "Two Knights",
+    "variation": "Base",
+    "name": "Two Knights",
+    "pgn": "1 e4 e5 2 Nf3 Nc6 3 Bc4 Nf6 4 Ng5 d5 5 exd5 Na5"
+  },
+  "C59": {
+    "parent": "Two Knights",
+    "variation": "Base",
+    "name": "Two Knights",
+    "pgn": "1 e4 e5 2 Nf3 Nc6 3 Bc4 Nf6 4 Ng5 d5 5 exd5 Na5 6 Bb5+ c6 7 dxc6 bxc6 8 Be2 h6"
+  },
+  "C60": {
+    "parent": "Ruy Lopez",
+    "variation": "Base",
+    "name": "Ruy Lopez",
+    "pgn": "1 e4 e5 2 Nf3 Nc6 3 Bb5"
+  },
+  "C61": {
+    "parent": "Ruy Lopez",
+    "variation": "Bird's Defense",
+    "name": "Ruy Lopez, Bird's Defense",
+    "pgn": "1 e4 e5 2 Nf3 Nc6 3 Bb5 Nd4"
+  },
+  "C62": {
+    "parent": "Ruy Lopez",
+    "variation": "Old Steinitz Defense",
+    "name": "Ruy Lopez, Old Steinitz Defense",
+    "pgn": "1 e4 e5 2 Nf3 Nc6 3 Bb5 d6"
+  },
+  "C63": {
+    "parent": "Ruy Lopez",
+    "variation": "Schliemann Defense",
+    "name": "Ruy Lopez, Schliemann Defense",
+    "pgn": "1 e4 e5 2 Nf3 Nc6 3 Bb5 f5"
+  },
+  "C64": {
+    "parent": "Ruy Lopez",
+    "variation": "Classical",
+    "name": "Ruy Lopez, Classical",
+    "pgn": "1 e4 e5 2 Nf3 Nc6 3 Bb5 Bc5"
+  },
+  "C65": {
+    "parent": "Ruy Lopez",
+    "variation": "Berlin Defense",
+    "name": "Ruy Lopez, Berlin Defense",
+    "pgn": "1 e4 e5 2 Nf3 Nc6 3 Bb5 Nf6"
+  },
+  "C66": {
+    "parent": "Ruy Lopez",
+    "variation": "Base",
+    "name": "Ruy Lopez",
+    "pgn": "1 e4 e5 2 Nf3 Nc6 3 Bb5 Nf6 4 O-O d6"
+  },
+  "C67": {
+    "parent": "Ruy Lopez",
+    "variation": "Base",
+    "name": "Ruy Lopez",
+    "pgn": "1 e4 e5 2 Nf3 Nc6 3 Bb5 Nf6 4 O-O Nxe4"
+  },
+  "C68": {
+    "parent": "Ruy Lopez",
+    "variation": "Exchange",
+    "name": "Ruy Lopez, Exchange",
+    "pgn": "1 e4 e5 2 Nf3 Nc6 3 Bb5 a6 4 Bxc6"
+  },
+  "C69": {
+    "parent": "Ruy Lopez",
+    "variation": "Exchange, Gligoric Variation",
+    "name": "Ruy Lopez, Exchange, Gligoric Variation",
+    "pgn": "1 e4 e5 2 Nf3 Nc6 3 Bb5 a6 4 Bxc6 dc 5 O-O f6"
+  },
+  "C70": {
+    "parent": "Ruy Lopez",
+    "variation": "Base",
+    "name": "Ruy Lopez",
+    "pgn": "1 e4 e5 2 Nf3 Nc6 3 Bb5 a6 4 Ba4"
+  },
+  "C71": {
+    "parent": "Ruy Lopez",
+    "variation": "Base",
+    "name": "Ruy Lopez",
+    "pgn": "1 e4 e5 2 Nf3 Nc6 3 Bb5 a6 4 Ba4 d6"
+  },
+  "C72": {
+    "parent": "Ruy Lopez",
+    "variation": "Modern Steinitz Defense, 5.O-O",
+    "name": "Ruy Lopez, Modern Steinitz Defense, 5.O-O",
+    "pgn": "1 e4 e5 2 Nf3 Nc6 3 Bb5 a6 4 Ba4 d6 5 O-O"
+  },
+  "C73": {
+    "parent": "Ruy Lopez",
+    "variation": "Modern Steinitz Defense",
+    "name": "Ruy Lopez, Modern Steinitz Defense",
+    "pgn": "1 e4 e5 2 Nf3 Nc6 3 Bb5 a6 4 Ba4 d6 5 Bxc6+ bxc6 6 d4"
+  },
+  "C74": {
+    "parent": "Ruy Lopez",
+    "variation": "Modern Steinitz Defense",
+    "name": "Ruy Lopez, Modern Steinitz Defense",
+    "pgn": "1 e4 e5 2 Nf3 Nc6 3 Bb5 a6 4 Ba4 d6 5 c3"
+  },
+  "C75": {
+    "parent": "Ruy Lopez",
+    "variation": "Modern Steinitz Defense",
+    "name": "Ruy Lopez, Modern Steinitz Defense",
+    "pgn": "1 e4 e5 2 Nf3 Nc6 3 Bb5 a6 4 Ba4 d6 5 c3 Bd7"
+  },
+  "C76": {
+    "parent": "Ruy Lopez",
+    "variation": "Modern Steinitz Defense, Fianchetto Variation",
+    "name": "Ruy Lopez, Modern Steinitz Defense, Fianchetto Variation",
+    "pgn": "1 e4 e5 2 Nf3 Nc6 3 Bb5 a6 4 Ba4 d6 5 c3 Bd7 6 d4 g6"
+  },
+  "C77": {
+    "parent": "Ruy Lopez",
+    "variation": "Base",
+    "name": "Ruy Lopez",
+    "pgn": "1 e4 e5 2 Nf3 Nc6 3 Bb5 a6 4 Ba4 Nf6"
+  },
+  "C78": {
+    "parent": "Ruy Lopez",
+    "variation": "Base",
+    "name": "Ruy Lopez",
+    "pgn": "1 e4 e5 2 Nf3 Nc6 3 Bb5 a6 4 Ba4 Nf6 5 O-O"
+  },
+  "C79": {
+    "parent": "Ruy Lopez",
+    "variation": "Steinitz Defense Deferred",
+    "name": "Ruy Lopez, Steinitz Defense Deferred",
+    "pgn": "1 e4 e5 2 Nf3 Nc6 3 Bb5 a6 4 Ba4 Nf6 5 O-O d6"
+  },
+  "C80": {
+    "parent": "Ruy Lopez",
+    "variation": "Open",
+    "name": "Ruy Lopez, Open",
+    "pgn": "1 e4 e5 2 Nf3 Nc6 3 Bb5 a6 4 Ba4 Nf6 5 O-O Nxe4"
+  },
+  "C81": {
+    "parent": "Ruy Lopez",
+    "variation": "Open, Howell Attack",
+    "name": "Ruy Lopez, Open, Howell Attack",
+    "pgn": "1 e4 e5 2 Nf3 Nc6 3 Bb5 a6 4 Ba4 Nf6 5 O-O Nxe4 6 d4 b5 7 Bb3 d5 8 dxe5 Be6 9 Qe2"
+  },
+  "C82": {
+    "parent": "Ruy Lopez",
+    "variation": "Open",
+    "name": "Ruy Lopez, Open",
+    "pgn": "1 e4 e5 2 Nf3 Nc6 3 Bb5 a6 4 Ba4 Nf6 5 O-O Nxe4 6 d4 b5 7 Bb3 d5 8 dxe5 Be6 9 c3"
+  },
+  "C83": {
+    "parent": "Ruy Lopez",
+    "variation": "Open",
+    "name": "Ruy Lopez, Open",
+    "pgn": "1 e4 e5 2 Nf3 Nc6 3 Bb5 a6 4 Ba4 Nf6 5 O-O Nxe4 6 d4 b5 7 Bb3 d5 8 dxe5 Be6"
+  },
+  "C84": {
+    "parent": "Ruy Lopez",
+    "variation": "Closed",
+    "name": "Ruy Lopez, Closed",
+    "pgn": "1 e4 e5 2 Nf3 Nc6 3 Bb5 a6 4 Ba4 Nf6 5 O-O Be7"
+  },
+  "C85": {
+    "parent": "Ruy Lopez",
+    "variation": "Exchange Variation Doubly Deferred (DERLD)",
+    "name": "Ruy Lopez, Exchange Variation Doubly Deferred (DERLD)",
+    "pgn": "1 e4 e5 2 Nf3 Nc6 3 Bb5 a6 4 Ba4 Nf6 5 O-O Be7 6 Bxc6 dxc6"
+  },
+  "C86": {
+    "parent": "Ruy Lopez",
+    "variation": "Worrall Attack",
+    "name": "Ruy Lopez, Worrall Attack",
+    "pgn": "1 e4 e5 2 Nf3 Nc6 3 Bb5 a6 4 Ba4 Nf6 5 O-O Be7 6 Qe2"
+  },
+  "C87": {
+    "parent": "Ruy Lopez",
+    "variation": "Base",
+    "name": "Ruy Lopez",
+    "pgn": "1 e4 e5 2 Nf3 Nc6 3 Bb5 a6 4 Ba4 Nf6 5 O-O Be7 6 Re1 d6"
+  },
+  "C88": {
+    "parent": "Ruy Lopez",
+    "variation": "Base",
+    "name": "Ruy Lopez",
+    "pgn": "1 e4 e5 2 Nf3 Nc6 3 Bb5 a6 4 Ba4 Nf6 5 O-O Be7 6 Re1 b5 7 Bb3"
+  },
+  "C89": {
+    "parent": "Ruy Lopez",
+    "variation": "Marshall",
+    "name": "Ruy Lopez, Marshall",
+    "pgn": "1 e4 e5 2 Nf3 Nc6 3 Bb5 a6 4 Ba4 Nf6 5 O-O Be7 6 Re1 b5 7 Bb3 O-O 8 c3 d5"
+  },
+  "C90": {
+    "parent": "Ruy Lopez",
+    "variation": "Closed",
+    "name": "Ruy Lopez, Closed",
+    "pgn": "1 e4 e5 2 Nf3 Nc6 3 Bb5 a6 4 Ba4 Nf6 5 O-O Be7 6 Re1 b5 7 Bb3 O-O 8 c3 d6"
+  },
+  "C91": {
+    "parent": "Ruy Lopez",
+    "variation": "Closed",
+    "name": "Ruy Lopez, Closed",
+    "pgn": "1 e4 e5 2 Nf3 Nc6 3 Bb5 a6 4 Ba4 Nf6 5 O-O Be7 6 Re1 b5 7 Bb3 O-O 8 c3 d6 9 d4"
+  },
+  "C92": {
+    "parent": "Ruy Lopez",
+    "variation": "Closed",
+    "name": "Ruy Lopez, Closed",
+    "pgn": "1 e4 e5 2 Nf3 Nc6 3 Bb5 a6 4 Ba4 Nf6 5 O-O Be7 6 Re1 b5 7 Bb3 O-O 8 c3 d6 9 h3"
+  },
+  "C93": {
+    "parent": "Ruy Lopez",
+    "variation": "Closed, Smyslov Defense",
+    "name": "Ruy Lopez, Closed, Smyslov Defense",
+    "pgn": "1 e4 e5 2 Nf3 Nc6 3 Bb5 a6 4 Ba4 Nf6 5 O-O Be7 6 Re1 b5 7 Bb3 O-O 8 c3 d6 9 h3 h6"
+  },
+  "C94": {
+    "parent": "Ruy Lopez",
+    "variation": "Closed, Breyer Defense",
+    "name": "Ruy Lopez, Closed, Breyer Defense",
+    "pgn": "1 e4 e5 2 Nf3 Nc6 3 Bb5 a6 4 Ba4 Nf6 5 O-O Be7 6 Re1 b5 7 Bb3 O-O 8 c3 d6 9 h3 Nb8"
+  },
+  "C95": {
+    "parent": "Ruy Lopez",
+    "variation": "Closed, Breyer",
+    "name": "Ruy Lopez, Closed, Breyer",
+    "pgn": "1 e4 e5 2 Nf3 Nc6 3 Bb5 a6 4 Ba4 Nf6 5 O-O Be7 6 Re1 b5 7 Bb3 O-O 8 c3 d6 9 h3 Nb8 10 d4"
+  },
+  "C96": {
+    "parent": "Ruy Lopez",
+    "variation": "Closed",
+    "name": "Ruy Lopez, Closed",
+    "pgn": "1 e4 e5 2 Nf3 Nc6 3 Bb5 a6 4 Ba4 Nf6 5 O-O Be7 6 Re1 b5 7 Bb3 O-O 8 c3 d6 9 h3 Na5 10 Bc2"
+  },
+  "C97": {
+    "parent": "Ruy Lopez",
+    "variation": "Closed, Chigorin",
+    "name": "Ruy Lopez, Closed, Chigorin",
+    "pgn": "1 e4 e5 2 Nf3 Nc6 3 Bb5 a6 4 Ba4 Nf6 5 O-O Be7 6 Re1 b5 7 Bb3 O-O 8 c3 d6 9 h3 Na5 10 Bc2 c5 11 d4 Qc7"
+  },
+  "C98": {
+    "parent": "Ruy Lopez",
+    "variation": "Closed, Chigorin",
+    "name": "Ruy Lopez, Closed, Chigorin",
+    "pgn": "1 e4 e5 2 Nf3 Nc6 3 Bb5 a6 4 Ba4 Nf6 5 O-O Be7 6 Re1 b5 7 Bb3 O-O 8 c3 d6 9 h3 Na5 10 Bc2 c5 11 d4 Qc7 12 Nbd2 Nc6"
+  },
+  "C99": {
+    "parent": "Ruy Lopez",
+    "variation": "Closed, Chigorin, 12...cd",
+    "name": "Ruy Lopez, Closed, Chigorin, 12...cd",
+    "pgn": "1 e4 e5 2 Nf3 Nc6 3 Bb5 a6 4 Ba4 Nf6 5 O-O Be7 6 Re1 b5 7 Bb3 O-O 8 c3 d6 9 h3 Na5 10 Bc2 c5 11 d4 Qc7 12 Nbd2 cxd4 13 cxd4"
+  },
+  "D00": {
+    "parent": "Queen's Pawn Game",
+    "variation": "Base",
+    "name": "Queen's Pawn Game",
+    "pgn": "1 d4 d5"
+  },
+  "D01": {
+    "parent": "Richter-Veresov Attack",
+    "variation": "Base",
+    "name": "Richter-Veresov Attack",
+    "pgn": "1 d4 d5 2 Nc3 Nf6 3 Bg5"
+  },
+  "D02": {
+    "parent": "Queen's Pawn Game",
+    "variation": "Base",
+    "name": "Queen's Pawn Game",
+    "pgn": "1 d4 d5 2 Nf3"
+  },
+  "D03": {
+    "parent": "Torre Attack (Tartakower Variation)",
+    "variation": "Base",
+    "name": "Torre Attack (Tartakower Variation)",
+    "pgn": "1 d4 d5 2 Nf3 Nf6 3 Bg5"
+  },
+  "D04": {
+    "parent": "Queen's Pawn Game",
+    "variation": "Base",
+    "name": "Queen's Pawn Game",
+    "pgn": "1 d4 d5 2 Nf3 Nf6 3 e3"
+  },
+  "D05": {
+    "parent": "Queen's Pawn Game",
+    "variation": "Base",
+    "name": "Queen's Pawn Game",
+    "pgn": "1 d4 d5 2 Nf3 Nf6 3 e3 e6"
+  },
+  "D06": {
+    "parent": "Queen's Gambit Declined",
+    "variation": "Base",
+    "name": "Queen's Gambit Declined",
+    "pgn": "1 d4 d5 2 c4"
+  },
+  "D07": {
+    "parent": "Queen's Gambit Declined",
+    "variation": "Chigorin Defense",
+    "name": "Queen's Gambit Declined, Chigorin Defense",
+    "pgn": "1 d4 d5 2 c4 Nc6"
+  },
+  "D08": {
+    "parent": "Queen's Gambit Declined",
+    "variation": "Albin Counter Gambit",
+    "name": "Queen's Gambit Declined, Albin Counter Gambit",
+    "pgn": "1 d4 d5 2 c4 e5"
+  },
+  "D09": {
+    "parent": "Queen's Gambit Declined",
+    "variation": "Albin Counter Gambit, 5.g3",
+    "name": "Queen's Gambit Declined, Albin Counter Gambit, 5.g3",
+    "pgn": "1 d4 d5 2 c4 e5 3 dxe5 d4 4 Nf3 Nc6 5 g3"
+  },
+  "D10": {
+    "parent": "Queen's Gambit Declined Slav",
+    "variation": "Base",
+    "name": "Queen's Gambit Declined Slav",
+    "pgn": "1 d4 d5 2 c4 c6"
+  },
+  "D11": {
+    "parent": "Queen's Gambit Declined Slav",
+    "variation": "Base",
+    "name": "Queen's Gambit Declined Slav",
+    "pgn": "1 d4 d5 2 c4 c6 3 Nf3"
+  },
+  "D12": {
+    "parent": "Queen's Gambit Declined Slav",
+    "variation": "Base",
+    "name": "Queen's Gambit Declined Slav",
+    "pgn": "1 d4 d5 2 c4 c6 3 Nf3 Nf6 4 e3 Bf5"
+  },
+  "D13": {
+    "parent": "Queen's Gambit Declined Slav",
+    "variation": "Exchange Variation",
+    "name": "Queen's Gambit Declined Slav, Exchange Variation",
+    "pgn": "1 d4 d5 2 c4 c6 3 Nf3 Nf6 4 cxd5 cxd5"
+  },
+  "D14": {
+    "parent": "Queen's Gambit Declined Slav",
+    "variation": "Exchange Variation",
+    "name": "Queen's Gambit Declined Slav, Exchange Variation",
+    "pgn": "1 d4 d5 2 c4 c6 3 Nf3 Nf6 4 cxd5 cxd5 5 Nc3 Nc6 6 Bf4 Bf5"
+  },
+  "D15": {
+    "parent": "Queen's Gambit Declined Slav",
+    "variation": "Base",
+    "name": "Queen's Gambit Declined Slav",
+    "pgn": "1 d4 d5 2 c4 c6 3 Nf3 Nf6 4 Nc3"
+  },
+  "D16": {
+    "parent": "Queen's Gambit Declined Slav",
+    "variation": "Base",
+    "name": "Queen's Gambit Declined Slav",
+    "pgn": "1 d4 d5 2 c4 c6 3 Nf3 Nf6 4 Nc3 dxc4 5 a4"
+  },
+  "D17": {
+    "parent": "Queen's Gambit Declined Slav",
+    "variation": "Base",
+    "name": "Queen's Gambit Declined Slav",
+    "pgn": "1 d4 d5 2 c4 c6 3 Nf3 Nf6 4 Nc3 dxc4 5 a4 Bf5"
+  },
+  "D18": {
+    "parent": "Queen's Gambit Declined Slav",
+    "variation": "Dutch",
+    "name": "Queen's Gambit Declined Slav, Dutch",
+    "pgn": "1 d4 d5 2 c4 c6 3 Nf3 Nf6 4 Nc3 dxc4 5 a4 Bf5 6 e3"
+  },
+  "D19": {
+    "parent": "Queen's Gambit Declined Slav",
+    "variation": "Dutch",
+    "name": "Queen's Gambit Declined Slav, Dutch",
+    "pgn": "1 d4 d5 2 c4 c6 3 Nf3 Nf6 4 Nc3 dxc4 5 a4 Bf5 6 e3 e6 7 Bxc4 Bb4 8 O-O O-O 9 Qe2"
+  },
+  "D20": {
+    "parent": "Queen's Gambit Accepted",
+    "variation": "Base",
+    "name": "Queen's Gambit Accepted",
+    "pgn": "1 d4 d5 2 c4 dxc4"
+  },
+  "D21": {
+    "parent": "Queen's Gambit Accepted",
+    "variation": "Base",
+    "name": "Queen's Gambit Accepted",
+    "pgn": "1 d4 d5 2 c4 dxc4 3 Nf3"
+  },
+  "D22": {
+    "parent": "Queen's Gambit Accepted",
+    "variation": "Base",
+    "name": "Queen's Gambit Accepted",
+    "pgn": "1 d4 d5 2 c4 dxc4 3 Nf3 a6 4 e3 Bg4 5 Bxc4 e6 6 d5"
+  },
+  "D23": {
+    "parent": "Queen's Gambit Accepted",
+    "variation": "Base",
+    "name": "Queen's Gambit Accepted",
+    "pgn": "1 d4 d5 2 c4 dxc4 3 Nf3 Nf6"
+  },
+  "D24": {
+    "parent": "Queen's Gambit Accepted",
+    "variation": "Base",
+    "name": "Queen's Gambit Accepted",
+    "pgn": "1 d4 d5 2 c4 dxc4 3 Nf3 Nf6 4 Nc3"
+  },
+  "D25": {
+    "parent": "Queen's Gambit Accepted",
+    "variation": "Base",
+    "name": "Queen's Gambit Accepted",
+    "pgn": "1 d4 d5 2 c4 dxc4 3 Nf3 Nf6 4 e3"
+  },
+  "D26": {
+    "parent": "Queen's Gambit Accepted",
+    "variation": "Base",
+    "name": "Queen's Gambit Accepted",
+    "pgn": "1 d4 d5 2 c4 dxc4 3 Nf3 Nf6 4 e3 e6"
+  },
+  "D27": {
+    "parent": "Queen's Gambit Accepted",
+    "variation": "Classical",
+    "name": "Queen's Gambit Accepted, Classical",
+    "pgn": "1 d4 d5 2 c4 dxc4 3 Nf3 Nf6 4 e3 e6 5 Bxc4 c5 6 O-O a6"
+  },
+  "D28": {
+    "parent": "Queen's Gambit Accepted",
+    "variation": "Classical",
+    "name": "Queen's Gambit Accepted, Classical",
+    "pgn": "1 d4 d5 2 c4 dxc4 3 Nf3 Nf6 4 e3 e6 5 Bxc4 c5 6 O-O a6 7 Qe2"
+  },
+  "D29": {
+    "parent": "Queen's Gambit Accepted",
+    "variation": "Classical",
+    "name": "Queen's Gambit Accepted, Classical",
+    "pgn": "1 d4 d5 2 c4 dxc4 3 Nf3 Nf6 4 e3 e6 5 Bxc4 c5 6 O-O a6 7 Qe2 b5 8 Bb3 Bb7"
+  },
+  "D30": {
+    "parent": "Queen's Gambit Declined",
+    "variation": "Base",
+    "name": "Queen's Gambit Declined",
+    "pgn": "1 d4 d5 2 c4 e6"
+  },
+  "D31": {
+    "parent": "Queen's Gambit Declined",
+    "variation": "Base",
+    "name": "Queen's Gambit Declined",
+    "pgn": "1 d4 d5 2 c4 e6 3 Nc3"
+  },
+  "D32": {
+    "parent": "Queen's Gambit Declined",
+    "variation": "Tarrasch",
+    "name": "Queen's Gambit Declined, Tarrasch",
+    "pgn": "1 d4 d5 2 c4 e6 3 Nc3 c5"
+  },
+  "D33": {
+    "parent": "Queen's Gambit Declined",
+    "variation": "Tarrasch",
+    "name": "Queen's Gambit Declined, Tarrasch",
+    "pgn": "1 d4 d5 2 c4 e6 3 Nc3 c5 4 cxd5 exd5 5 Nf3 Nc6 6 g3"
+  },
+  "D34": {
+    "parent": "Queen's Gambit Declined",
+    "variation": "Tarrasch",
+    "name": "Queen's Gambit Declined, Tarrasch",
+    "pgn": "1 d4 d5 2 c4 e6 3 Nc3 c5 4 cxd5 exd5 5 Nf3 Nc6 6 g3 Nf6 7 Bg2 Be7"
+  },
+  "D35": {
+    "parent": "Queen's Gambit Declined",
+    "variation": "Base",
+    "name": "Queen's Gambit Declined",
+    "pgn": "1 d4 d5 2 c4 e6 3 Nc3 Nf6"
+  },
+  "D36": {
+    "parent": "Queen's Gambit Declined",
+    "variation": "Exchange, Positional line, 6.Qc2",
+    "name": "Queen's Gambit Declined, Exchange, Positional line, 6.Qc2",
+    "pgn": "1 d4 d5 2 c4 e6 3 Nc3 Nf6 4 cxd5 exd5 5 Bg5 c6 6 Qc2"
+  },
+  "D37": {
+    "parent": "Queen's Gambit Declined",
+    "variation": "Base",
+    "name": "Queen's Gambit Declined",
+    "pgn": "1 d4 d5 2 c4 e6 3 Nc3 Nf6 4 Nf3"
+  },
+  "D38": {
+    "parent": "Queen's Gambit Declined",
+    "variation": "Ragozin Variation",
+    "name": "Queen's Gambit Declined, Ragozin Variation",
+    "pgn": "1 d4 d5 2 c4 e6 3 Nc3 Nf6 4 Nf3 Bb4"
+  },
+  "D39": {
+    "parent": "Queen's Gambit Declined",
+    "variation": "Ragozin, Vienna Variation",
+    "name": "Queen's Gambit Declined, Ragozin, Vienna Variation",
+    "pgn": "1 d4 d5 2 c4 e6 3 Nc3 Nf6 4 Nf3 Bb4 5 Bg5 dxc4"
+  },
+  "D40": {
+    "parent": "Queen's Gambit Declined",
+    "variation": "Semi-Tarrasch",
+    "name": "Queen's Gambit Declined, Semi-Tarrasch",
+    "pgn": "1 d4 d5 2 c4 e6 3 Nc3 Nf6 4 Nf3 c5"
+  },
+  "D41": {
+    "parent": "Queen's Gambit Declined",
+    "variation": "Semi-Tarrasch",
+    "name": "Queen's Gambit Declined, Semi-Tarrasch",
+    "pgn": "1 d4 d5 2 c4 e6 3 Nc3 Nf6 4 Nf3 c5 5 cxd5"
+  },
+  "D42": {
+    "parent": "Queen's Gambit Declined",
+    "variation": "Semi-Tarrasch, 7.Bd3",
+    "name": "Queen's Gambit Declined, Semi-Tarrasch, 7.Bd3",
+    "pgn": "1 d4 d5 2 c4 e6 3 Nc3 Nf6 4 Nf3 c5 5 cxd5 Nxd5 6 e3 Nc6 7 Bd3"
+  },
+  "D43": {
+    "parent": "Queen's Gambit Declined Semi-Slav",
+    "variation": "Base",
+    "name": "Queen's Gambit Declined Semi-Slav",
+    "pgn": "1 d4 d5 2 c4 e6 3 Nc3 Nf6 4 Nf3 c6"
+  },
+  "D44": {
+    "parent": "Queen's Gambit Declined Semi-Slav",
+    "variation": "Base",
+    "name": "Queen's Gambit Declined Semi-Slav",
+    "pgn": "1 d4 d5 2 c4 e6 3 Nc3 Nf6 4 Nf3 c6 5 Bg5 dxc4"
+  },
+  "D45": {
+    "parent": "Queen's Gambit Declined Semi-Slav",
+    "variation": "Base",
+    "name": "Queen's Gambit Declined Semi-Slav",
+    "pgn": "1 d4 d5 2 c4 e6 3 Nc3 Nf6 4 Nf3 c6 5 e3"
+  },
+  "D46": {
+    "parent": "Queen's Gambit Declined Semi-Slav",
+    "variation": "Base",
+    "name": "Queen's Gambit Declined Semi-Slav",
+    "pgn": "1 d4 d5 2 c4 e6 3 Nc3 Nf6 4 Nf3 c6 5 e3 Nbd7 6 Bd3"
+  },
+  "D47": {
+    "parent": "Queen's Gambit Declined Semi-Slav",
+    "variation": "Base",
+    "name": "Queen's Gambit Declined Semi-Slav",
+    "pgn": "1 d4 d5 2 c4 e6 3 Nc3 Nf6 4 Nf3 c6 5 e3 Nbd7 6 Bd3 dxc4 7 Bxc4"
+  },
+  "D48": {
+    "parent": "Queen's Gambit Declined Semi-Slav",
+    "variation": "Meran",
+    "name": "Queen's Gambit Declined Semi-Slav, Meran",
+    "pgn": "1 d4 d5 2 c4 e6 3 Nc3 Nf6 4 Nf3 c6 5 e3 Nbd7 6 Bd3 dxc4 7 Bxc4 b5 8 Bd3 a6"
+  },
+  "D49": {
+    "parent": "Queen's Gambit Declined Semi-Slav",
+    "variation": "Meran",
+    "name": "Queen's Gambit Declined Semi-Slav, Meran",
+    "pgn": "1 d4 d5 2 c4 e6 3 Nc3 Nf6 4 Nf3 c6 5 e3 Nbd7 6 Bd3 dxc4 7 Bxc4 b5 8 Bd3 a6 9 e4 c5 10 e5 cxd4 11 Nxb5"
+  },
+  "D50": {
+    "parent": "Queen's Gambit Declined",
+    "variation": "Base",
+    "name": "Queen's Gambit Declined",
+    "pgn": "1 d4 d5 2 c4 e6 3 Nc3 Nf6 4 Bg5"
+  },
+  "D51": {
+    "parent": "Queen's Gambit Declined",
+    "variation": "Base",
+    "name": "Queen's Gambit Declined",
+    "pgn": "1 d4 d5 2 c4 e6 3 Nc3 Nf6 4 Bg5 Nbd7"
+  },
+  "D52": {
+    "parent": "Queen's Gambit Declined",
+    "variation": "Base",
+    "name": "Queen's Gambit Declined",
+    "pgn": "1 d4 d5 2 c4 e6 3 Nc3 Nf6 4 Bg5 Nbd7 5 e3 c6 6 Nf3"
+  },
+  "D53": {
+    "parent": "Queen's Gambit Declined",
+    "variation": "Base",
+    "name": "Queen's Gambit Declined",
+    "pgn": "1 d4 d5 2 c4 e6 3 Nc3 Nf6 4 Bg5 Be7"
+  },
+  "D54": {
+    "parent": "Queen's Gambit Declined",
+    "variation": "Anti-Neo-Orthodox Variation",
+    "name": "Queen's Gambit Declined, Anti-Neo-Orthodox Variation",
+    "pgn": "1 d4 d5 2 c4 e6 3 Nc3 Nf6 4 Bg5 Be7 5 e3 O-O 6 Rc1"
+  },
+  "D55": {
+    "parent": "Queen's Gambit Declined",
+    "variation": "Base",
+    "name": "Queen's Gambit Declined",
+    "pgn": "1 d4 d5 2 c4 e6 3 Nc3 Nf6 4 Bg5 Be7 5 e3 O-O 6 Nf3"
+  },
+  "D56": {
+    "parent": "Queen's Gambit Declined",
+    "variation": "Base",
+    "name": "Queen's Gambit Declined",
+    "pgn": "1 d4 d5 2 c4 e6 3 Nc3 Nf6 4 Bg5 Be7 5 e3 O-O 6 Nf3 h6 7 Bh4"
+  },
+  "D57": {
+    "parent": "Queen's Gambit Declined",
+    "variation": "Lasker Defense",
+    "name": "Queen's Gambit Declined, Lasker Defense",
+    "pgn": "1 d4 d5 2 c4 e6 3 Nc3 Nf6 4 Bg5 Be7 5 e3 O-O 6 Nf3 h6 7 Bh4 Ne4 8 Bxe7 Qxe7"
+  },
+  "D58": {
+    "parent": "Queen's Gambit Declined",
+    "variation": "Tartakower (Makagonov-Bondarevsky) System",
+    "name": "Queen's Gambit Declined, Tartakower (Makagonov-Bondarevsky) System",
+    "pgn": "1 d4 d5 2 c4 e6 3 Nc3 Nf6 4 Bg5 Be7 5 e3 O-O 6 Nf3 h6 7 Bh4 b6"
+  },
+  "D59": {
+    "parent": "Queen's Gambit Declined",
+    "variation": "Tartakower",
+    "name": "Queen's Gambit Declined, Tartakower",
+    "pgn": "1 d4 d5 2 c4 e6 3 Nc3 Nf6 4 Bg5 Be7 5 e3 O-O 6 Nf3 h6 7 Bh4 b6 8 cxd5 Nxd5"
+  },
+  "D60": {
+    "parent": "Queen's Gambit Declined",
+    "variation": "Orthodox Defense",
+    "name": "Queen's Gambit Declined, Orthodox Defense",
+    "pgn": "1 d4 d5 2 c4 e6 3 Nc3 Nf6 4 Bg5 Be7 5 e3 O-O 6 Nf3 Nbd7"
+  },
+  "D61": {
+    "parent": "Queen's Gambit Declined",
+    "variation": "Orthodox, Rubinstein Attack",
+    "name": "Queen's Gambit Declined, Orthodox, Rubinstein Attack",
+    "pgn": "1 d4 d5 2 c4 e6 3 Nc3 Nf6 4 Bg5 Be7 5 e3 O-O 6 Nf3 Nbd7 7 Qc2"
+  },
+  "D62": {
+    "parent": "Queen's Gambit Declined",
+    "variation": "Orthodox, Rubinstein Attack",
+    "name": "Queen's Gambit Declined, Orthodox, Rubinstein Attack",
+    "pgn": "1 d4 d5 2 c4 e6 3 Nc3 Nf6 4 Bg5 Be7 5 e3 O-O 6 Nf3 Nbd7 7 Qc2 c5 8 cxd5"
+  },
+  "D63": {
+    "parent": "Queen's Gambit Declined",
+    "variation": "Orthodox Defense",
+    "name": "Queen's Gambit Declined, Orthodox Defense",
+    "pgn": "1 d4 d5 2 c4 e6 3 Nc3 Nf6 4 Bg5 Be7 5 e3 O-O 6 Nf3 Nbd7 7 Rc1"
+  },
+  "D64": {
+    "parent": "Queen's Gambit Declined",
+    "variation": "Orthodox, Rubinstein Attack",
+    "name": "Queen's Gambit Declined, Orthodox, Rubinstein Attack",
+    "pgn": "1 d4 d5 2 c4 e6 3 Nc3 Nf6 4 Bg5 Be7 5 e3 O-O 6 Nf3 Nbd7 7 Rc1 c6 8 Qc2"
+  },
+  "D65": {
+    "parent": "Queen's Gambit Declined",
+    "variation": "Orthodox, Rubinstein Attack, Main line",
+    "name": "Queen's Gambit Declined, Orthodox, Rubinstein Attack, Main line",
+    "pgn": "1 d4 d5 2 c4 e6 3 Nc3 Nf6 4 Bg5 Be7 5 e3 O-O 6 Nf3 Nbd7 7 Rc1 c6 8 Qc2 a6 9 cxd5"
+  },
+  "D66": {
+    "parent": "Queen's Gambit Declined",
+    "variation": "Orthodox Defense, Bd3 line",
+    "name": "Queen's Gambit Declined, Orthodox Defense, Bd3 line",
+    "pgn": "1 d4 d5 2 c4 e6 3 Nc3 Nf6 4 Bg5 Be7 5 e3 O-O 6 Nf3 Nbd7 7 Rc1 c6 8 Bd3"
+  },
+  "D67": {
+    "parent": "Queen's Gambit Declined",
+    "variation": "Orthodox Defense, Bd3 line",
+    "name": "Queen's Gambit Declined, Orthodox Defense, Bd3 line",
+    "pgn": "1 d4 d5 2 c4 e6 3 Nc3 Nf6 4 Bg5 Be7 5 e3 O-O 6 Nf3 Nbd7 7 Rc1 c6 8 Bd3 dxc4 9 Bxc4 Nd5"
+  },
+  "D68": {
+    "parent": "Queen's Gambit Declined",
+    "variation": "Orthodox Defense, Classical",
+    "name": "Queen's Gambit Declined, Orthodox Defense, Classical",
+    "pgn": "1 d4 d5 2 c4 e6 3 Nc3 Nf6 4 Bg5 Be7 5 e3 O-O 6 Nf3 Nbd7 7 Rc1 c6 8 Bd3 dxc4"
+  },
+  "D69": {
+    "parent": "Queen's Gambit Declined",
+    "variation": "Orthodox Defense, Classical, 13.de",
+    "name": "Queen's Gambit Declined, Orthodox Defense, Classical, 13.de",
+    "pgn": "1 d4 d5 2 c4 e6 3 Nc3 Nf6 4 Bg5 Be7 5 e3 O-O 6 Nf3 Nbd7 7 Rc1 c6 8 Bd3 dxc4"
+  },
+  "D70": {
+    "parent": "Neo-Grunfeld Defense",
+    "variation": "Base",
+    "name": "Neo-Grunfeld Defense",
+    "pgn": "1 d4 Nf6 2 c4 g6 3 f3 d5"
+  },
+  "D71": {
+    "parent": "Neo-Grunfeld",
+    "variation": "Base",
+    "name": "Neo-Grunfeld",
+    "pgn": "1 d4 Nf6 2 c4 g6 3 g3 d5"
+  },
+  "D72": {
+    "parent": "Neo-Grunfeld",
+    "variation": "5.cd, Main line",
+    "name": "Neo-Grunfeld, 5.cd, Main line",
+    "pgn": "1 d4 Nf6 2 c4 g6 3 g3 d5 4 Bg2 Bg7 5 cxd5 Nxd5 6 e4 Nb6 7 Ne2"
+  },
+  "D73": {
+    "parent": "Neo-Grunfeld",
+    "variation": "5.Nf3",
+    "name": "Neo-Grunfeld, 5.Nf3",
+    "pgn": "1 d4 Nf6 2 c4 g6 3 g3 d5 4 Bg2 Bg7 5 Nf3"
+  },
+  "D74": {
+    "parent": "Neo-Grunfeld",
+    "variation": "6.cd Nxd5, 7.O-O",
+    "name": "Neo-Grunfeld, 6.cd Nxd5, 7.O-O",
+    "pgn": "1 d4 Nf6 2 c4 g6 3 g3 d5 4 Bg2 Bg7 5 Nf3 O-O 6 cxd5 Nxd5 7 O-O"
+  },
+  "D75": {
+    "parent": "Neo-Grunfeld",
+    "variation": "6.cd Nxd5, 7.O-O c5, 8.dxc5",
+    "name": "Neo-Grunfeld, 6.cd Nxd5, 7.O-O c5, 8.dxc5",
+    "pgn": "1 d4 Nf6 2 c4 g6 3 g3 d5 4 Bg2 Bg7 5 Nf3 O-O 6 cxd5 Nxd5 7 O-O c5 8 dxc5"
+  },
+  "D76": {
+    "parent": "Neo-Grunfeld",
+    "variation": "6.cd Nxd5, 7.O-O Nb6",
+    "name": "Neo-Grunfeld, 6.cd Nxd5, 7.O-O Nb6",
+    "pgn": "1 d4 Nf6 2 c4 g6 3 g3 d5 4 Bg2 Bg7 5 Nf3 O-O 6 cxd5 Nxd5 7 O-O Nb6"
+  },
+  "D77": {
+    "parent": "Neo-Grunfeld",
+    "variation": "6.O-O",
+    "name": "Neo-Grunfeld, 6.O-O",
+    "pgn": "1 d4 Nf6 2 c4 g6 3 g3 d5 4 Bg2 Bg7 5 Nf3 O-O 6 O-O"
+  },
+  "D78": {
+    "parent": "Neo-Grunfeld",
+    "variation": "6.O-O c6",
+    "name": "Neo-Grunfeld, 6.O-O c6",
+    "pgn": "1 d4 Nf6 2 c4 g6 3 g3 d5 4 Bg2 Bg7 5 Nf3 O-O 6 O-O c6"
+  },
+  "D79": {
+    "parent": "Neo-Grunfeld",
+    "variation": "6.O-O, Main line",
+    "name": "Neo-Grunfeld, 6.O-O, Main line",
+    "pgn": "1 d4 Nf6 2 c4 g6 3 g3 d5 4 Bg2 Bg7 5 Nf3 O-O 6 O-O c6 7 cxd5 cxd5"
+  },
+  "D80": {
+    "parent": "Grunfeld",
+    "variation": "Base",
+    "name": "Grunfeld",
+    "pgn": "1 d4 Nf6 2 c4 g6 3 Nc3 d5"
+  },
+  "D81": {
+    "parent": "Grunfeld",
+    "variation": "Russian Variation",
+    "name": "Grunfeld, Russian Variation",
+    "pgn": "1 d4 Nf6 2 c4 g6 3 Nc3 d5 4 Qb3"
+  },
+  "D82": {
+    "parent": "Grunfeld",
+    "variation": "4.Bf4",
+    "name": "Grunfeld, 4.Bf4",
+    "pgn": "1 d4 Nf6 2 c4 g6 3 Nc3 d5 4 Bf4"
+  },
+  "D83": {
+    "parent": "Grunfeld",
+    "variation": "Grunfeld Gambit",
+    "name": "Grunfeld, Grunfeld Gambit",
+    "pgn": "1 d4 Nf6 2 c4 g6 3 Nc3 d5 4 Bf4 Bg7 5 e3 O-O"
+  },
+  "D84": {
+    "parent": "Grunfeld",
+    "variation": "Grunfeld Gambit Accepted",
+    "name": "Grunfeld, Grunfeld Gambit Accepted",
+    "pgn": "1 d4 Nf6 2 c4 g6 3 Nc3 d5 4 Bf4 Bg7 5 e3 O-O 6 cxd5 Nxd5 7 Nxd5 Qxd5 8 Bxc7"
+  },
+  "D85": {
+    "parent": "Grunfeld",
+    "variation": "Base",
+    "name": "Grunfeld",
+    "pgn": "1 d4 Nf6 2 c4 g6 3 Nc3 d5 4 cxd5 Nxd5"
+  },
+  "D86": {
+    "parent": "Grunfeld",
+    "variation": "Exchange",
+    "name": "Grunfeld, Exchange",
+    "pgn": "1 d4 Nf6 2 c4 g6 3 Nc3 d5 4 cxd5 Nxd5 5 e4 Nxc3 6 bxc3 Bg7 7 Bc4"
+  },
+  "D87": {
+    "parent": "Grunfeld",
+    "variation": "Exchange",
+    "name": "Grunfeld, Exchange",
+    "pgn": "1 d4 Nf6 2 c4 g6 3 Nc3 d5 4 cxd5 Nxd5 5 e4 Nxc3 6 bxc3 Bg7 7 Bc4 O-O 8 Ne2 c5"
+  },
+  "D88": {
+    "parent": "Grunfeld",
+    "variation": "Spassky Variation, Main line, 10...cd, 11.cd",
+    "name": "Grunfeld, Spassky Variation, Main line, 10...cd, 11.cd",
+    "pgn": "1 d4 Nf6 2 c4 g6 3 Nc3 d5 4 cxd5 Nxd5 5 e4 Nxc3 6 bxc3 Bg7 7 Bc4 O-O 8 Ne2"
+  },
+  "D89": {
+    "parent": "Grunfeld",
+    "variation": "Base",
+    "name": "Grunfeld",
+    "pgn": "1 d4 Nf6 2 c4 g6 3 Nc3 d5 4 cxd5 Nxd5 5 e4 Nxc3 6 bxc3 Bg7 7 Bc4 O-O 8 Ne2"
+  },
+  "D90": {
+    "parent": "Grunfeld",
+    "variation": "Base",
+    "name": "Grunfeld",
+    "pgn": "1 d4 Nf6 2 c4 g6 3 Nc3 d5 4 Nf3"
+  },
+  "D91": {
+    "parent": "Grunfeld",
+    "variation": "5.Bg5",
+    "name": "Grunfeld, 5.Bg5",
+    "pgn": "1 d4 Nf6 2 c4 g6 3 Nc3 d5 4 Nf3 Bg7 5 Bg5"
+  },
+  "D92": {
+    "parent": "Grunfeld",
+    "variation": "5.Bf4",
+    "name": "Grunfeld, 5.Bf4",
+    "pgn": "1 d4 Nf6 2 c4 g6 3 Nc3 d5 4 Nf3 Bg7 5 Bf4"
+  },
+  "D93": {
+    "parent": "Grunfeld",
+    "variation": "with Bf4 & e3",
+    "name": "Grunfeld, with Bf4 & e3",
+    "pgn": "1 d4 Nf6 2 c4 g6 3 Nc3 d5 4 Nf3 Bg7 5 Bf4 O-O 6 e3"
+  },
+  "D94": {
+    "parent": "Grunfeld",
+    "variation": "Base",
+    "name": "Grunfeld",
+    "pgn": "1 d4 Nf6 2 c4 g6 3 Nc3 d5 4 Nf3 Bg7 5 e3"
+  },
+  "D95": {
+    "parent": "Grunfeld",
+    "variation": "Base",
+    "name": "Grunfeld",
+    "pgn": "1 d4 Nf6 2 c4 g6 3 Nc3 d5 4 Nf3 Bg7 5 e3 O-O 6 Qb3"
+  },
+  "D96": {
+    "parent": "Grunfeld",
+    "variation": "Russian Variation",
+    "name": "Grunfeld, Russian Variation",
+    "pgn": "1 d4 Nf6 2 c4 g6 3 Nc3 d5 4 Nf3 Bg7 5 Qb3"
+  },
+  "D97": {
+    "parent": "Grunfeld",
+    "variation": "Russian",
+    "name": "Grunfeld, Russian",
+    "pgn": "1 d4 Nf6 2 c4 g6 3 Nc3 d5 4 Nf3 Bg7 5 Qb3 dxc4 6 Qxc4 O-O 7 e4"
+  },
+  "D98": {
+    "parent": "Grunfeld",
+    "variation": "Russian",
+    "name": "Grunfeld, Russian",
+    "pgn": "1 d4 Nf6 2 c4 g6 3 Nc3 d5 4 Nf3 Bg7 5 Qb3 dxc4 6 Qxc4 O-O 7 e4 Bg4"
+  },
+  "D99": {
+    "parent": "Grunfeld Defense",
+    "variation": "Smyslov",
+    "name": "Grunfeld Defense, Smyslov",
+    "pgn": "1 d4 Nf6 2 c4 g6 3 Nc3 d5 4 Nf3 Bg7 5 Qb3 dxc4 6 Qxc4 O-O 7 e4 Bg4 8 Be3"
+  },
+  "E00": {
+    "parent": "Queen's Pawn Game",
+    "variation": "Base",
+    "name": "Queen's Pawn Game",
+    "pgn": "1 d4 Nf6 2 c4 e6"
+  },
+  "E01": {
+    "parent": "Catalan",
+    "variation": "Closed",
+    "name": "Catalan, Closed",
+    "pgn": "1 d4 Nf6 2 c4 e6 3 g3 d5 4 Bg2"
+  },
+  "E02": {
+    "parent": "Catalan",
+    "variation": "Open, 5.Qa4",
+    "name": "Catalan, Open, 5.Qa4",
+    "pgn": "1 d4 Nf6 2 c4 e6 3 g3 d5 4 Bg2 dxc4 5 Qa4+"
+  },
+  "E03": {
+    "parent": "Catalan",
+    "variation": "Open",
+    "name": "Catalan, Open",
+    "pgn": "1 d4 Nf6 2 c4 e6 3 g3 d5 4 Bg2 dxc4 5 Qa4+ Nbd7 6 Qxc4"
+  },
+  "E04": {
+    "parent": "Catalan",
+    "variation": "Open, 5.Nf3",
+    "name": "Catalan, Open, 5.Nf3",
+    "pgn": "1 d4 Nf6 2 c4 e6 3 g3 d5 4 Bg2 dxc4 5 Nf3"
+  },
+  "E05": {
+    "parent": "Catalan",
+    "variation": "Open, Classical line",
+    "name": "Catalan, Open, Classical line",
+    "pgn": "1 d4 Nf6 2 c4 e6 3 g3 d5 4 Bg2 dxc4 5 Nf3 Be7"
+  },
+  "E06": {
+    "parent": "Catalan",
+    "variation": "Closed, 5.Nf3",
+    "name": "Catalan, Closed, 5.Nf3",
+    "pgn": "1 d4 Nf6 2 c4 e6 3 g3 d5 4 Bg2 Be7 5 Nf3"
+  },
+  "E07": {
+    "parent": "Catalan",
+    "variation": "Closed",
+    "name": "Catalan, Closed",
+    "pgn": "1 d4 Nf6 2 c4 e6 3 g3 d5 4 Bg2 Be7 5 Nf3 O-O 6 O-O Nbd7"
+  },
+  "E08": {
+    "parent": "Catalan",
+    "variation": "Closed",
+    "name": "Catalan, Closed",
+    "pgn": "1 d4 Nf6 2 c4 e6 3 g3 d5 4 Bg2 Be7 5 Nf3 O-O 6 O-O Nbd7 7 Qc2"
+  },
+  "E09": {
+    "parent": "Catalan",
+    "variation": "Closed",
+    "name": "Catalan, Closed",
+    "pgn": "1 d4 Nf6 2 c4 e6 3 g3 d5 4 Bg2 Be7 5 Nf3 O-O 6 O-O Nbd7 7 Qc2 c6 8 Nbd2"
+  },
+  "E10": {
+    "parent": "Queen's Pawn Game",
+    "variation": "Base",
+    "name": "Queen's Pawn Game",
+    "pgn": "1 d4 Nf6 2 c4 e6 3 Nf3"
+  },
+  "E11": {
+    "parent": "Bogo-Indian Defense",
+    "variation": "Base",
+    "name": "Bogo-Indian Defense",
+    "pgn": "1 d4 Nf6 2 c4 e6 3 Nf3 Bb4+"
+  },
+  "E12": {
+    "parent": "Queen's Indian",
+    "variation": "Base",
+    "name": "Queen's Indian",
+    "pgn": "1 d4 Nf6 2 c4 e6 3 Nf3 b6"
+  },
+  "E13": {
+    "parent": "Queen's Indian",
+    "variation": "4.Nc3, Main line",
+    "name": "Queen's Indian, 4.Nc3, Main line",
+    "pgn": "1 d4 Nf6 2 c4 e6 3 Nf3 b6 4 Nc3 Bb7 5 Bg5 h6 6 Bh4 Bb4"
+  },
+  "E14": {
+    "parent": "Queen's Indian",
+    "variation": "Base",
+    "name": "Queen's Indian",
+    "pgn": "1 d4 Nf6 2 c4 e6 3 Nf3 b6 4 e3"
+  },
+  "E15": {
+    "parent": "Queen's Indian",
+    "variation": "Base",
+    "name": "Queen's Indian",
+    "pgn": "1 d4 Nf6 2 c4 e6 3 Nf3 b6 4 g3"
+  },
+  "E16": {
+    "parent": "Queen's Indian",
+    "variation": "Base",
+    "name": "Queen's Indian",
+    "pgn": "1 d4 Nf6 2 c4 e6 3 Nf3 b6 4 g3 Bb7 5 Bg2 Bb4+"
+  },
+  "E17": {
+    "parent": "Queen's Indian",
+    "variation": "Base",
+    "name": "Queen's Indian",
+    "pgn": "1 d4 Nf6 2 c4 e6 3 Nf3 b6 4 g3 Bb7 5 Bg2 Be7"
+  },
+  "E18": {
+    "parent": "Queen's Indian",
+    "variation": "Old Main line, 7.Nc3",
+    "name": "Queen's Indian, Old Main line, 7.Nc3",
+    "pgn": "1 d4 Nf6 2 c4 e6 3 Nf3 b6 4 g3 Bb7 5 Bg2 Be7 6 O-O O-O 7 Nc3"
+  },
+  "E19": {
+    "parent": "Queen's Indian",
+    "variation": "Old Main line, 9.Qxc3",
+    "name": "Queen's Indian, Old Main line, 9.Qxc3",
+    "pgn": "1 d4 Nf6 2 c4 e6 3 Nf3 b6 4 g3 Bb7 5 Bg2 Be7 6 O-O O-O 7 Nc3 Ne4 8 Qc2 Nxc3"
+  },
+  "E20": {
+    "parent": "Nimzo-Indian",
+    "variation": "Base",
+    "name": "Nimzo-Indian",
+    "pgn": "1 d4 Nf6 2 c4 e6 3 Nc3 Bb4"
+  },
+  "E21": {
+    "parent": "Nimzo-Indian",
+    "variation": "Three Knights",
+    "name": "Nimzo-Indian, Three Knights",
+    "pgn": "1 d4 Nf6 2 c4 e6 3 Nc3 Bb4 4 Nf3"
+  },
+  "E22": {
+    "parent": "Nimzo-Indian",
+    "variation": "Spielmann Variation",
+    "name": "Nimzo-Indian, Spielmann Variation",
+    "pgn": "1 d4 Nf6 2 c4 e6 3 Nc3 Bb4 4 Qb3"
+  },
+  "E23": {
+    "parent": "Nimzo-Indian",
+    "variation": "Spielmann",
+    "name": "Nimzo-Indian, Spielmann",
+    "pgn": "1 d4 Nf6 2 c4 e6 3 Nc3 Bb4 4 Qb3 c5 5 dxc5 Nc6"
+  },
+  "E24": {
+    "parent": "Nimzo-Indian",
+    "variation": "Samisch",
+    "name": "Nimzo-Indian, Samisch",
+    "pgn": "1 d4 Nf6 2 c4 e6 3 Nc3 Bb4 4 a3 Bxc3+ 5 bxc3"
+  },
+  "E25": {
+    "parent": "Nimzo-Indian",
+    "variation": "Samisch",
+    "name": "Nimzo-Indian, Samisch",
+    "pgn": "1 d4 Nf6 2 c4 e6 3 Nc3 Bb4 4 a3 Bxc3+ 5 bxc3 c5 6 f3 d5 7 cxd5"
+  },
+  "E26": {
+    "parent": "Nimzo-Indian",
+    "variation": "Samisch",
+    "name": "Nimzo-Indian, Samisch",
+    "pgn": "1 d4 Nf6 2 c4 e6 3 Nc3 Bb4 4 a3 Bxc3+ 5 bxc3 c5 6 e3"
+  },
+  "E27": {
+    "parent": "Nimzo-Indian",
+    "variation": "Samisch Variation",
+    "name": "Nimzo-Indian, Samisch Variation",
+    "pgn": "1 d4 Nf6 2 c4 e6 3 Nc3 Bb4 4 a3 Bxc3+ 5 bxc3 O-O"
+  },
+  "E28": {
+    "parent": "Nimzo-Indian",
+    "variation": "Samisch Variation",
+    "name": "Nimzo-Indian, Samisch Variation",
+    "pgn": "1 d4 Nf6 2 c4 e6 3 Nc3 Bb4 4 a3 Bxc3+ 5 bxc3 O-O 6 e3"
+  },
+  "E29": {
+    "parent": "Nimzo-Indian",
+    "variation": "Samisch",
+    "name": "Nimzo-Indian, Samisch",
+    "pgn": "1 d4 Nf6 2 c4 e6 3 Nc3 Bb4 4 a3 Bxc3+ 5 bxc3 O-O 6 e3 c5 7 Bd3 Nc6"
+  },
+  "E30": {
+    "parent": "Nimzo-Indian",
+    "variation": "Leningrad",
+    "name": "Nimzo-Indian, Leningrad",
+    "pgn": "1 d4 Nf6 2 c4 e6 3 Nc3 Bb4 4 Bg5"
+  },
+  "E31": {
+    "parent": "Nimzo-Indian",
+    "variation": "Leningrad, Main line",
+    "name": "Nimzo-Indian, Leningrad, Main line",
+    "pgn": "1 d4 Nf6 2 c4 e6 3 Nc3 Bb4 4 Bg5 h6 5 Bh4 c5 6 d5 d6"
+  },
+  "E32": {
+    "parent": "Nimzo-Indian",
+    "variation": "Classical",
+    "name": "Nimzo-Indian, Classical",
+    "pgn": "1 d4 Nf6 2 c4 e6 3 Nc3 Bb4 4 Qc2"
+  },
+  "E33": {
+    "parent": "Nimzo-Indian",
+    "variation": "Classical",
+    "name": "Nimzo-Indian, Classical",
+    "pgn": "1 d4 Nf6 2 c4 e6 3 Nc3 Bb4 4 Qc2 Nc6"
+  },
+  "E34": {
+    "parent": "Nimzo-Indian",
+    "variation": "Classical, Noa Variation",
+    "name": "Nimzo-Indian, Classical, Noa Variation",
+    "pgn": "1 d4 Nf6 2 c4 e6 3 Nc3 Bb4 4 Qc2 d5"
+  },
+  "E35": {
+    "parent": "Nimzo-Indian",
+    "variation": "Classical, Noa Variation, 5.cd ed",
+    "name": "Nimzo-Indian, Classical, Noa Variation, 5.cd ed",
+    "pgn": "1 d4 Nf6 2 c4 e6 3 Nc3 Bb4 4 Qc2 d5 5 cxd5 exd5"
+  },
+  "E36": {
+    "parent": "Nimzo-Indian",
+    "variation": "Classical",
+    "name": "Nimzo-Indian, Classical",
+    "pgn": "1 d4 Nf6 2 c4 e6 3 Nc3 Bb4 4 Qc2 d5 5 a3"
+  },
+  "E37": {
+    "parent": "Nimzo-Indian",
+    "variation": "Classical",
+    "name": "Nimzo-Indian, Classical",
+    "pgn": "1 d4 Nf6 2 c4 e6 3 Nc3 Bb4 4 Qc2 d5 5 a3 Bxc3+ 6 Qxc3 Ne4 7 Qc2"
+  },
+  "E38": {
+    "parent": "Nimzo-Indian",
+    "variation": "Classical, 4...c5",
+    "name": "Nimzo-Indian, Classical, 4...c5",
+    "pgn": "1 d4 Nf6 2 c4 e6 3 Nc3 Bb4 4 Qc2 c5"
+  },
+  "E39": {
+    "parent": "Nimzo-Indian",
+    "variation": "Classical, Pirc Variation",
+    "name": "Nimzo-Indian, Classical, Pirc Variation",
+    "pgn": "1 d4 Nf6 2 c4 e6 3 Nc3 Bb4 4 Qc2 c5 5 dxc5 O-O"
+  },
+  "E40": {
+    "parent": "Nimzo-Indian",
+    "variation": "4.e3",
+    "name": "Nimzo-Indian, 4.e3",
+    "pgn": "1 d4 Nf6 2 c4 e6 3 Nc3 Bb4 4 e3"
+  },
+  "E41": {
+    "parent": "Nimzo-Indian",
+    "variation": "Base",
+    "name": "Nimzo-Indian",
+    "pgn": "1 d4 Nf6 2 c4 e6 3 Nc3 Bb4 4 e3 c5"
+  },
+  "E42": {
+    "parent": "Nimzo-Indian",
+    "variation": "4.e3 c5, 5.Ne2 (Rubinstein)",
+    "name": "Nimzo-Indian, 4.e3 c5, 5.Ne2 (Rubinstein)",
+    "pgn": "1 d4 Nf6 2 c4 e6 3 Nc3 Bb4 4 e3 c5 5 Ne2"
+  },
+  "E43": {
+    "parent": "Nimzo-Indian",
+    "variation": "Fischer Variation",
+    "name": "Nimzo-Indian, Fischer Variation",
+    "pgn": "1 d4 Nf6 2 c4 e6 3 Nc3 Bb4 4 e3 b6"
+  },
+  "E44": {
+    "parent": "Nimzo-Indian",
+    "variation": "Fischer Variation, 5.Ne2",
+    "name": "Nimzo-Indian, Fischer Variation, 5.Ne2",
+    "pgn": "1 d4 Nf6 2 c4 e6 3 Nc3 Bb4 4 e3 b6 5 Ne2"
+  },
+  "E45": {
+    "parent": "Nimzo-Indian",
+    "variation": "4.e3, Bronstein (Byrne) Variation",
+    "name": "Nimzo-Indian, 4.e3, Bronstein (Byrne) Variation",
+    "pgn": "1 d4 Nf6 2 c4 e6 3 Nc3 Bb4 4 e3 b6 5 Ne2 Ba6"
+  },
+  "E46": {
+    "parent": "Nimzo-Indian",
+    "variation": "Base",
+    "name": "Nimzo-Indian",
+    "pgn": "1 d4 Nf6 2 c4 e6 3 Nc3 Bb4 4 e3 O-O"
+  },
+  "E47": {
+    "parent": "Nimzo-Indian",
+    "variation": "4.e3 O-O 5.Bd3",
+    "name": "Nimzo-Indian, 4.e3 O-O 5.Bd3",
+    "pgn": "1 d4 Nf6 2 c4 e6 3 Nc3 Bb4 4 e3 O-O 5 Bd3"
+  },
+  "E48": {
+    "parent": "Nimzo-Indian",
+    "variation": "4.e3 O-O 5.Bd3 d5",
+    "name": "Nimzo-Indian, 4.e3 O-O 5.Bd3 d5",
+    "pgn": "1 d4 Nf6 2 c4 e6 3 Nc3 Bb4 4 e3 O-O 5 Bd3 d5"
+  },
+  "E49": {
+    "parent": "Nimzo-Indian",
+    "variation": "4.e3, Botvinnik System",
+    "name": "Nimzo-Indian, 4.e3, Botvinnik System",
+    "pgn": "1 d4 Nf6 2 c4 e6 3 Nc3 Bb4 4 e3 O-O 5 Bd3 d5 6 a3 Bxc3+ 7 bxc3"
+  },
+  "E50": {
+    "parent": "Nimzo-Indian",
+    "variation": "4.e3 O-O 5.Nf3, without ...d5",
+    "name": "Nimzo-Indian, 4.e3 O-O 5.Nf3, without ...d5",
+    "pgn": "1 d4 Nf6 2 c4 e6 3 Nc3 Bb4 4 e3 O-O 5 Nf3"
+  },
+  "E51": {
+    "parent": "Nimzo-Indian",
+    "variation": "4.e3",
+    "name": "Nimzo-Indian, 4.e3",
+    "pgn": "1 d4 Nf6 2 c4 e6 3 Nc3 Bb4 4 e3 O-O 5 Nf3 d5"
+  },
+  "E52": {
+    "parent": "Nimzo-Indian",
+    "variation": "4.e3, Main line with ...b6",
+    "name": "Nimzo-Indian, 4.e3, Main line with ...b6",
+    "pgn": "1 d4 Nf6 2 c4 e6 3 Nc3 Bb4 4 e3 O-O 5 Nf3 d5 6 Bd3 b6"
+  },
+  "E53": {
+    "parent": "Nimzo-Indian",
+    "variation": "4.e3",
+    "name": "Nimzo-Indian, 4.e3",
+    "pgn": "1 d4 Nf6 2 c4 e6 3 Nc3 Bb4 4 e3 O-O 5 Nf3 d5 6 Bd3 c5"
+  },
+  "E54": {
+    "parent": "Nimzo-Indian",
+    "variation": "4.e3, Gligoric System",
+    "name": "Nimzo-Indian, 4.e3, Gligoric System",
+    "pgn": "1 d4 Nf6 2 c4 e6 3 Nc3 Bb4 4 e3 O-O 5 Nf3 d5 6 Bd3 c5 7 O-O dxc4 8 Bxc4"
+  },
+  "E55": {
+    "parent": "Nimzo-Indian",
+    "variation": "4.e3, Gligoric System, Bronstein Variation",
+    "name": "Nimzo-Indian, 4.e3, Gligoric System, Bronstein Variation",
+    "pgn": "1 d4 Nf6 2 c4 e6 3 Nc3 Bb4 4 e3 O-O 5 Nf3 d5 6 Bd3 c5 7 O-O dxc4 8 Bxc4 Nbd7"
+  },
+  "E56": {
+    "parent": "Nimzo-Indian",
+    "variation": "4.e3, Main line with 7...Nc6",
+    "name": "Nimzo-Indian, 4.e3, Main line with 7...Nc6",
+    "pgn": "1 d4 Nf6 2 c4 e6 3 Nc3 Bb4 4 e3 O-O 5 Nf3 d5 6 Bd3 c5 7 O-O Nc6"
+  },
+  "E57": {
+    "parent": "Nimzo-Indian",
+    "variation": "4.e3, Main line with 8...dc and 9...cd",
+    "name": "Nimzo-Indian, 4.e3, Main line with 8...dc and 9...cd",
+    "pgn": "1 d4 Nf6 2 c4 e6 3 Nc3 Bb4 4 e3 O-O 5 Nf3 d5 6 Bd3 c5 7 O-O Nc6 8 a3 dxc4 9 Bxc4"
+  },
+  "E58": {
+    "parent": "Nimzo-Indian",
+    "variation": "4.e3, Main line with 8...Bxc3",
+    "name": "Nimzo-Indian, 4.e3, Main line with 8...Bxc3",
+    "pgn": "1 d4 Nf6 2 c4 e6 3 Nc3 Bb4 4 e3 O-O 5 Nf3 d5 6 Bd3 c5 7 O-O Nc6 8 a3 Bxc3 9 bxc3"
+  },
+  "E59": {
+    "parent": "Nimzo-Indian",
+    "variation": "4.e3, Main line",
+    "name": "Nimzo-Indian, 4.e3, Main line",
+    "pgn": "1 d4 Nf6 2 c4 e6 3 Nc3 Bb4 4 e3 O-O 5 Nf3 d5 6 Bd3 c5 7 O-O Nc6 8 a3 Bxc3 9 bxc3 dxc4 10 Bxc4"
+  },
+  "E60": {
+    "parent": "King's Indian Defense",
+    "variation": "Base",
+    "name": "King's Indian Defense",
+    "pgn": "1 d4 Nf6 2 c4 g6"
+  },
+  "E61": {
+    "parent": "King's Indian",
+    "variation": "Base",
+    "name": "King's Indian",
+    "pgn": "1 d4 Nf6 2 c4 g6 3 Nc3"
+  },
+  "E62": {
+    "parent": "King's Indian",
+    "variation": "Fianchetto",
+    "name": "King's Indian, Fianchetto",
+    "pgn": "1 d4 Nf6 2 c4 g6 3 Nc3 Bg7 4 Nf3 d6 5 g3"
+  },
+  "E63": {
+    "parent": "King's Indian",
+    "variation": "Fianchetto, Panno Variation",
+    "name": "King's Indian, Fianchetto, Panno Variation",
+    "pgn": "1 d4 Nf6 2 c4 g6 3 Nc3 Bg7 4 Nf3 d6 5 g3 O-O 6 Bg2 Nc6 7 O-O a6"
+  },
+  "E64": {
+    "parent": "King's Indian",
+    "variation": "Fianchetto, Yugoslav System",
+    "name": "King's Indian, Fianchetto, Yugoslav System",
+    "pgn": "1 d4 Nf6 2 c4 g6 3 Nc3 Bg7 4 Nf3 d6 5 g3 O-O 6 Bg2 c5"
+  },
+  "E65": {
+    "parent": "King's Indian",
+    "variation": "Fianchetto, Yugoslav, 7.O-O",
+    "name": "King's Indian, Fianchetto, Yugoslav, 7.O-O",
+    "pgn": "1 d4 Nf6 2 c4 g6 3 Nc3 Bg7 4 Nf3 d6 5 g3 O-O 6 Bg2 c5 7 O-O"
+  },
+  "E66": {
+    "parent": "King's Indian",
+    "variation": "Fianchetto, Yugoslav Panno",
+    "name": "King's Indian, Fianchetto, Yugoslav Panno",
+    "pgn": "1 d4 Nf6 2 c4 g6 3 Nc3 Bg7 4 Nf3 d6 5 g3 O-O 6 Bg2 c5 7 O-O Nc6 8 d5"
+  },
+  "E67": {
+    "parent": "King's Indian",
+    "variation": "Fianchetto",
+    "name": "King's Indian, Fianchetto",
+    "pgn": "1 d4 Nf6 2 c4 g6 3 Nc3 Bg7 4 Nf3 d6 5 g3 O-O 6 Bg2 Nbd7"
+  },
+  "E68": {
+    "parent": "King's Indian",
+    "variation": "Fianchetto, Classical Variation, 8.e4",
+    "name": "King's Indian, Fianchetto, Classical Variation, 8.e4",
+    "pgn": "1 d4 Nf6 2 c4 g6 3 Nc3 Bg7 4 Nf3 d6 5 g3 O-O 6 Bg2 Nbd7 7 O-O e5 8 e4"
+  },
+  "E69": {
+    "parent": "King's Indian",
+    "variation": "Fianchetto, Classical Main line",
+    "name": "King's Indian, Fianchetto, Classical Main line",
+    "pgn": "1 d4 Nf6 2 c4 g6 3 Nc3 Bg7 4 Nf3 d6 5 g3 O-O 6 Bg2 Nbd7 7 O-O e5 8 e4 c6 9 h3"
+  },
+  "E70": {
+    "parent": "King's Indian",
+    "variation": "Base",
+    "name": "King's Indian",
+    "pgn": "1 d4 Nf6 2 c4 g6 3 Nc3 Bg7 4 e4 d6"
+  },
+  "E71": {
+    "parent": "King's Indian",
+    "variation": "Makagonov System (5.h3)",
+    "name": "King's Indian, Makagonov System (5.h3)",
+    "pgn": "1 d4 Nf6 2 c4 g6 3 Nc3 Bg7 4 e4 d6 5 h3"
+  },
+  "E72": {
+    "parent": "King's Indian",
+    "variation": "Base",
+    "name": "King's Indian",
+    "pgn": "1 d4 Nf6 2 c4 g6 3 Nc3 Bg7 4 e4 d6 5 g3"
+  },
+  "E73": {
+    "parent": "King's Indian",
+    "variation": "Base",
+    "name": "King's Indian",
+    "pgn": "1 d4 Nf6 2 c4 g6 3 Nc3 Bg7 4 e4 d6 5 Be2"
+  },
+  "E74": {
+    "parent": "King's Indian",
+    "variation": "Averbakh, 6...c5",
+    "name": "King's Indian, Averbakh, 6...c5",
+    "pgn": "1 d4 Nf6 2 c4 g6 3 Nc3 Bg7 4 e4 d6 5 Be2 O-O 6 Bg5 c5"
+  },
+  "E75": {
+    "parent": "King's Indian",
+    "variation": "Averbakh, Main line",
+    "name": "King's Indian, Averbakh, Main line",
+    "pgn": "1 d4 Nf6 2 c4 g6 3 Nc3 Bg7 4 e4 d6 5 Be2 O-O 6 Bg5 c5 7 d5 e6"
+  },
+  "E76": {
+    "parent": "King's Indian",
+    "variation": "Four Pawns Attack",
+    "name": "King's Indian, Four Pawns Attack",
+    "pgn": "1 d4 Nf6 2 c4 g6 3 Nc3 Bg7 4 e4 d6 5 f4"
+  },
+  "E77": {
+    "parent": "King's Indian",
+    "variation": "Base",
+    "name": "King's Indian",
+    "pgn": "1 d4 Nf6 2 c4 g6 3 Nc3 Bg7 4 e4 d6 5 f4 O-O 6 Be2"
+  },
+  "E78": {
+    "parent": "King's Indian",
+    "variation": "Four Pawns Attack, with Be2 and Nf3",
+    "name": "King's Indian, Four Pawns Attack, with Be2 and Nf3",
+    "pgn": "1 d4 Nf6 2 c4 g6 3 Nc3 Bg7 4 e4 d6 5 f4 O-O 6 Be2 c5 7 Nf3"
+  },
+  "E79": {
+    "parent": "King's Indian",
+    "variation": "Four Pawns Attack, Main line",
+    "name": "King's Indian, Four Pawns Attack, Main line",
+    "pgn": "1 d4 Nf6 2 c4 g6 3 Nc3 Bg7 4 e4 d6 5 f4 O-O 6 Be2 c5 7 Nf3 cxd4 8 Nxd4 Nc6 9 Be3"
+  },
+  "E80": {
+    "parent": "King's Indian",
+    "variation": "Samisch Variation",
+    "name": "King's Indian, Samisch Variation",
+    "pgn": "1 d4 Nf6 2 c4 g6 3 Nc3 Bg7 4 e4 d6 5 f3"
+  },
+  "E81": {
+    "parent": "King's Indian",
+    "variation": "Samisch",
+    "name": "King's Indian, Samisch",
+    "pgn": "1 d4 Nf6 2 c4 g6 3 Nc3 d5 4 e4 d6 5 f3 O-O"
+  },
+  "E82": {
+    "parent": "King's Indian",
+    "variation": "Samisch, double Fianchetto Variation",
+    "name": "King's Indian, Samisch, double Fianchetto Variation",
+    "pgn": "1 d4 Nf6 2 c4 g6 3 Nc3 Bg7 4 e4 d6 5 f3 O-O 6 Be3 b6"
+  },
+  "E83": {
+    "parent": "King's Indian",
+    "variation": "Samisch",
+    "name": "King's Indian, Samisch",
+    "pgn": "1 d4 Nf6 2 c4 g6 3 Nc3 Bg7 4 e4 d6 5 f3 O-O 6 Be3 Nc6"
+  },
+  "E84": {
+    "parent": "King's Indian",
+    "variation": "Samisch, Panno Main line",
+    "name": "King's Indian, Samisch, Panno Main line",
+    "pgn": "1 d4 Nf6 2 c4 g6 3 Nc3 Bg7 4 e4 d6 5 f3 O-O 6 Be3 Nc6 7 Nge2 a6 8 Qd2 Rb8"
+  },
+  "E85": {
+    "parent": "King's Indian",
+    "variation": "Samisch, Orthodox Variation",
+    "name": "King's Indian, Samisch, Orthodox Variation",
+    "pgn": "1 d4 Nf6 2 c4 g6 3 Nc3 Bg7 4 e4 d6 5 f3 O-O 6 Be3 e5"
+  },
+  "E86": {
+    "parent": "King's Indian",
+    "variation": "Samisch, Orthodox, 7.Nge2 c6",
+    "name": "King's Indian, Samisch, Orthodox, 7.Nge2 c6",
+    "pgn": "1 d4 Nf6 2 c4 g6 3 Nc3 Bg7 4 e4 d6 5 f3 O-O 6 Be3 e5 7 Nge2 c6"
+  },
+  "E87": {
+    "parent": "King's Indian",
+    "variation": "Samisch, Orthodox",
+    "name": "King's Indian, Samisch, Orthodox",
+    "pgn": "1 d4 Nf6 2 c4 g6 3 Nc3 Bg7 4 e4 d6 5 f3 O-O 6 Be3 e5 7 d5"
+  },
+  "E88": {
+    "parent": "King's Indian",
+    "variation": "Samisch, Orthodox, 7.d5 c6",
+    "name": "King's Indian, Samisch, Orthodox, 7.d5 c6",
+    "pgn": "1 d4 Nf6 2 c4 g6 3 Nc3 Bg7 4 e4 d6 5 f3 O-O 6 Be3 e5 7 d5 c6"
+  },
+  "E89": {
+    "parent": "King's Indian",
+    "variation": "Samisch, Orthodox Main line",
+    "name": "King's Indian, Samisch, Orthodox Main line",
+    "pgn": "1 d4 Nf6 2 c4 g6 3 Nc3 Bg7 4 e4 d6 5 f3 O-O 6 Be3 e5 7 d5 c6 8 Nge2 cxd5"
+  },
+  "E90": {
+    "parent": "King's Indian",
+    "variation": "Base",
+    "name": "King's Indian",
+    "pgn": "1 d4 Nf6 2 c4 g6 3 Nc3 Bg7 4 e4 d6 5 Nf3"
+  },
+  "E91": {
+    "parent": "King's Indian",
+    "variation": "Base",
+    "name": "King's Indian",
+    "pgn": "1 d4 Nf6 2 c4 g6 3 Nc3 Bg7 4 e4 d6 5 Nf3 O-O 6 Be2"
+  },
+  "E92": {
+    "parent": "King's Indian",
+    "variation": "Base",
+    "name": "King's Indian",
+    "pgn": "1 d4 Nf6 2 c4 g6 3 Nc3 Bg7 4 e4 d6 5 Nf3 O-O 6 Be2 e5"
+  },
+  "E93": {
+    "parent": "King's Indian",
+    "variation": "Petrosian System",
+    "name": "King's Indian, Petrosian System",
+    "pgn": "1 d4 Nf6 2 c4 g6 3 Nc3 Bg7 4 e4 d6 5 Nf3 O-O 6 Be2 e5 7 d5 Nbd7"
+  },
+  "E94": {
+    "parent": "King's Indian",
+    "variation": "Orthodox",
+    "name": "King's Indian, Orthodox",
+    "pgn": "1 d4 Nf6 2 c4 g6 3 Nc3 Bg7 4 e4 d6 5 Nf3 O-O 6 Be2 e5 7 O-O"
+  },
+  "E95": {
+    "parent": "King's Indian",
+    "variation": "Orthodox, 7...Nbd7, 8.Re1",
+    "name": "King's Indian, Orthodox, 7...Nbd7, 8.Re1",
+    "pgn": "1 d4 Nf6 2 c4 g6 3 Nc3 Bg7 4 e4 d6 5 Nf3 O-O 6 Be2 e5 7 O-O Nbd7 8 Re1"
+  },
+  "E96": {
+    "parent": "King's Indian",
+    "variation": "Orthodox, 7...Nbd7, Main line",
+    "name": "King's Indian, Orthodox, 7...Nbd7, Main line",
+    "pgn": "1 d4 Nf6 2 c4 g6 3 Nc3 Bg7 4 e4 d6 5 Nf3 O-O 6 Be2 e5 7 O-O Nbd7 8 Re1 c6 9 Bf1 a5"
+  },
+  "E97": {
+    "parent": "King's Indian",
+    "variation": "Base",
+    "name": "King's Indian",
+    "pgn": "1 d4 Nf6 2 c4 g6 3 Nc3 Bg7 4 e4 d6 5 Nf3 O-O 6 Be2 e5 7 O-O Nc6"
+  },
+  "E98": {
+    "parent": "King's Indian",
+    "variation": "Orthodox, Taimanov, 9.Ne1",
+    "name": "King's Indian, Orthodox, Taimanov, 9.Ne1",
+    "pgn": "1 d4 Nf6 2 c4 g6 3 Nc3 Bg7 4 e4 d6 5 Nf3 O-O 6 Be2 e5 7 O-O Nc6 8 d5 Ne7 9 Ne1"
+  },
+  "E99": {
+    "parent": "King's Indian",
+    "variation": "Orthodox, Taimanov",
+    "name": "King's Indian, Orthodox, Taimanov",
+    "pgn": "1 d4 Nf6 2 c4 g6 3 Nc3 Bg7 4 e4 d6 5 Nf3 O-O 6 Be2 e5 7 O-O Nc6 8 d5 Ne7 9 Ne1 Nd7 10 f3 f5"
+  }
+}

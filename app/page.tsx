@@ -16,20 +16,6 @@ export default function Home() {
   
   const { games, setGames, isLoading, setLoading, setSelectedGame, username, setUsername } = useChessStore();
 
-  const isDev = process.env.NEXT_PUBLIC_DEV === "1";
-
-  const loadLocalData = (all: boolean = false) => {
-    setLoading(true);
-    setUsername("titouannnnnn");
-    setSearchInput("titouannnnnn");
-    
-    // Simuler un léger délai pour le feedback visuel
-    setTimeout(() => {
-      setGames((all ? localGamesAll : localGames) as ChessGame[]);
-      setLoading(false);
-    }, 300);
-  };
-
   const fetchGames = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!searchInput) return;
@@ -104,27 +90,6 @@ export default function Home() {
                   </button>
                 </div>
               </form>
-
-              {isDev && (
-                <div className="flex gap-2">
-                  <button
-                    onClick={() => loadLocalData(false)}
-                    disabled={isLoading}
-                    className="bg-white/5 hover:bg-white/10 text-stone-400 hover:text-white px-5 rounded-2xl border border-white/5 transition-all flex items-center justify-center shrink-0"
-                    title="Charger données locales (1 AN)"
-                  >
-                    <Database className={cn("size-4", isLoading && "animate-pulse")} />
-                  </button>
-                  <button
-                    onClick={() => loadLocalData(true)}
-                    disabled={isLoading}
-                    className="bg-white/5 hover:bg-white/10 text-stone-400 hover:text-white px-5 rounded-2xl border border-white/5 transition-all flex items-center justify-center shrink-0"
-                    title="Charger données locales (ALL TIME)"
-                  >
-                    <History className={cn("size-4", isLoading && "animate-pulse")} />
-                  </button>
-                </div>
-              )}
             </div>
 
             <div className="flex justify-center">

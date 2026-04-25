@@ -9,8 +9,9 @@ import { TerminationChart } from "@/components/stats/termination-chart";
 import { RatingChart } from "@/components/stats/rating-chart";
 import { TimeStatsChart } from "@/components/stats/time-stats-chart";
 import { EloProgressionChart } from "@/components/stats/elo-progression-chart";
+import { OpeningsChart } from "@/components/stats/openings-chart";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Loader2, Users, Calendar } from "lucide-react";
+import { Loader2, Users, Calendar, Zap } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 import localGamesAll from "@/data/titouannnnnn_all.json";
@@ -20,6 +21,7 @@ export default function StatsPage() {
   const { games, username, setGames, isLoading, setLoading } = useChessStore();
   const [side, setSide] = useState<"all" | "white" | "black">("all");
   const [period, setPeriod] = useState<string>("total");
+  const [timeClass, setTimeClass] = useState<string>("all");
 
   const isDev = process.env.NEXT_PUBLIC_DEV === "1";
 
@@ -78,6 +80,11 @@ export default function StatsPage() {
       });
     }
 
+    // Filter by time class
+    if (timeClass !== "all") {
+      result = result.filter(g => g.time_class === timeClass);
+    }
+
     // Filter by period locally (in case we have more data than requested)
     if (period !== "total") {
       const limit = (Date.now() / 1000) - (parseInt(period) * 24 * 60 * 60);
@@ -85,7 +92,7 @@ export default function StatsPage() {
     }
 
     return result;
-  }, [games, side, period, username]);
+  }, [games, side, period, username, timeClass]);
 
   const periods = [
     { label: "1S", value: "7" },
@@ -118,6 +125,20 @@ export default function StatsPage() {
         </div>
 
         <div className="flex flex-wrap items-center gap-3">
+          {/* Game Type Selector */}
+          <Select value={timeClass} onValueChange={setTimeClass}>
+            <SelectTrigger className="w-[110px] bg-white/[0.03] border-white/5 text-[10px] font-bold uppercase tracking-widest rounded-xl h-10 focus:ring-0 px-3">
+              <Zap className="size-3 mr-2 text-stone-500 shrink-0" />
+              <SelectValue placeholder="Type" />
+            </SelectTrigger>
+            <SelectContent className="bg-[#1a1a1a] border-white/10">
+              <SelectItem value="all" className="text-[10px] uppercase font-bold tracking-widest text-stone-400 focus:bg-white/10 focus:text-white">Tout</SelectItem>
+              <SelectItem value="rapid" className="text-[10px] uppercase font-bold tracking-widest text-stone-400 focus:bg-white/10 focus:text-white">Rapide</SelectItem>
+              <SelectItem value="blitz" className="text-[10px] uppercase font-bold tracking-widest text-stone-400 focus:bg-white/10 focus:text-white">Blitz</SelectItem>
+              <SelectItem value="bullet" className="text-[10px] uppercase font-bold tracking-widest text-stone-400 focus:bg-white/10 focus:text-white">Bullet</SelectItem>
+            </SelectContent>
+          </Select>
+
           {/* Side Selector */}
           <Select value={side} onValueChange={(v: any) => setSide(v)}>
             <SelectTrigger className="w-[110px] bg-white/[0.03] border-white/5 text-[10px] font-bold uppercase tracking-widest rounded-xl h-10 focus:ring-0 px-3">
@@ -163,7 +184,14 @@ export default function StatsPage() {
         <div className="space-y-8">
           <StatsOverview games={filteredGames} username={username} />
           
-          <EloProgressionChart games={filteredGames} username={username} period={period} />
+          <EloProgressionChart 
+            games={filteredGames} 
+            username={username} 
+            period={period} 
+            timeClass={timeClass}
+          />
+
+          <OpeningsChart games={filteredGames} username={username} />
 
           <StatsChart games={filteredGames} />
           
