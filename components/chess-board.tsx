@@ -13,7 +13,6 @@ interface ChessBoardProps {
   config?: Config;
   className?: string;
 }
-
 export function ChessBoard({ config, className = "w-full aspect-square" }: ChessBoardProps) {
   const boardRef = useRef<HTMLDivElement>(null);
   const cgRef = useRef<Api | null>(null);
@@ -21,31 +20,30 @@ export function ChessBoard({ config, className = "w-full aspect-square" }: Chess
   useEffect(() => {
     if (boardRef.current && !cgRef.current) {
       cgRef.current = Chessground(boardRef.current, {
+        coordinates: true, // Activé par défaut pour les petits échiquiers si demandé
         ...config,
         viewOnly: config?.viewOnly || false,
       });
-
-      // Gestion dynamique du redimensionnement
-      const resizeObserver = new ResizeObserver(() => {
-        cgRef.current?.redrawAll();
-      });
-      resizeObserver.observe(boardRef.current);
-
-      return () => {
-        resizeObserver.disconnect();
-        if (cgRef.current) {
-          cgRef.current.destroy();
-          cgRef.current = null;
-        }
-      };
     }
+
+    return () => {
+      if (cgRef.current) {
+        cgRef.current.destroy();
+        cgRef.current = null;
+      }
+    };
   }, []);
 
   useEffect(() => {
     if (cgRef.current && config) {
       cgRef.current.set(config);
+      // Force un redessin pour garantir le centrage des pièces
+      requestAnimationFrame(() => {
+        cgRef.current?.redrawAll();
+      });
     }
   }, [config]);
+
 
   return (
     <div className={className}>
