@@ -227,8 +227,28 @@ export default function AnalysisPage() {
   // --- Navigation Methods ---
   const goToStart = useCallback(() => { setAnimateNext(true); setCurrentMoveIndex(-1); }, []);
   const goToPrev = useCallback(() => { setAnimateNext(true); setCurrentMoveIndex((i) => Math.max(-1, i - 1)); }, []);
-  const goToNext = useCallback(() => { setAnimateNext(true); setCurrentMoveIndex((i) => Math.min(history.length - 1, i + 1)); }, [history.length]);
-  const goToEnd = useCallback(() => { setAnimateNext(true); setCurrentMoveIndex(history.length - 1); }, [history.length]);
+  const goToNext = useCallback(() => { 
+    setAnimateNext(true); 
+    setCurrentMoveIndex((i) => {
+      if (i < history.length - 1) return i + 1;
+      
+      // Si on est à la fin d'une variante, on revient sur la ligne principale
+      if (isVariation) {
+        const divIdx = history.findIndex((m, idx) => m !== mainHistory[idx]);
+        const splitIdx = divIdx !== -1 ? divIdx : mainHistory.length;
+        setHistory(mainHistory);
+        // On se repositionne sur le coup de la ligne principale qui suivait la divergence
+        return Math.min(mainHistory.length - 1, splitIdx);
+      }
+      return i;
+    });
+  }, [history, mainHistory, isVariation]);
+
+  const goToEnd = useCallback(() => { 
+    setAnimateNext(true); 
+    if (isVariation) setHistory(mainHistory);
+    setCurrentMoveIndex(mainHistory.length - 1); 
+  }, [mainHistory]);
 
   const loadPgn = useCallback((pgnStr: string) => {
     if (!pgnStr) return;
@@ -490,11 +510,10 @@ export default function AnalysisPage() {
   }, [goToNext, goToPrev]);
 
   useEffect(() => {
-    const board = boardContainerRef.current; const historyBox = historyContainerRef.current; const graphBox = graphContainerRef.current;
+    const board = boardContainerRef.current; const graphBox = graphContainerRef.current;
     if (board) board.addEventListener('wheel', handleWheel, { passive: false });
-    if (historyBox) historyBox.addEventListener('wheel', handleWheel, { passive: false });
     if (graphBox) graphBox.addEventListener('wheel', handleWheel, { passive: false });
-    return () => { if (board) board.removeEventListener('wheel', handleWheel); if (historyBox) historyBox.removeEventListener('wheel', handleWheel); if (graphBox) graphBox.removeEventListener('wheel', handleWheel); };
+    return () => { if (board) board.removeEventListener('wheel', handleWheel); if (graphBox) graphBox.removeEventListener('wheel', handleWheel); };
   }, [handleWheel]);
 
   const renderHistoryList = () => {
@@ -620,8 +639,9 @@ export default function AnalysisPage() {
                    <h2 className="text-xs font-black uppercase tracking-[0.2em] text-stone-500">Navigation Partie</h2>
                 </div>
                 <div ref={historyContainerRef} className="flex-1 overflow-y-auto custom-scrollbar pr-2 font-mono overscroll-none touch-none relative">
+                  <div className="sticky top-0 left-0 right-0 h-4 bg-gradient-to-b from-[#141414] to-transparent pointer-events-none z-10" />
                   {renderHistoryList()}
-                  <div className="sticky bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-[#141414] to-transparent pointer-events-none z-10" />
+                  <div className="sticky bottom-0 left-0 right-0 h-10 bg-gradient-to-t from-[#141414] to-transparent pointer-events-none z-10" />
                 </div>
               </div>
             </TabsContent>
@@ -632,8 +652,9 @@ export default function AnalysisPage() {
                    <h2 className="text-xs font-black uppercase tracking-[0.2em] text-stone-500">Historique</h2>
                 </div>
                 <div ref={historyContainerRef} className="flex-1 overflow-y-auto custom-scrollbar pr-2 font-mono overscroll-none touch-none relative">
+                  <div className="sticky top-0 left-0 right-0 h-4 bg-gradient-to-b from-[#0a0a0a] to-transparent pointer-events-none z-10" />
                   {renderHistoryList()}
-                  <div className="sticky bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-[#0a0a0a] to-transparent pointer-events-none z-10" />
+                  <div className="sticky bottom-0 left-0 right-0 h-10 bg-gradient-to-t from-[#0a0a0a] to-transparent pointer-events-none z-10" />
                 </div>
               </div>
               <div className="bg-white/[0.02] border border-white/[0.05] rounded-xl p-4 space-y-3 shrink-0 shadow-lg mt-auto"><Textarea placeholder="Coller un PGN ici..." className="text-[10px] h-20 bg-black/20 border-white/5 focus:border-blue-500/50 transition-colors custom-scrollbar" value={pgnInput} onChange={e => setPgnInput(e.target.value)} /><Button className="w-full h-8 text-[10px] uppercase font-black tracking-widest bg-white/5 hover:bg-white/10 border-white/5" onClick={() => loadPgn(pgnInput)}>Charger PGN</Button></div>
