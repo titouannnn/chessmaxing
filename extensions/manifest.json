@@ -1,0 +1,34 @@
+{
+  "manifest_version": 3,
+  "name": "chessmaxing extensions",
+  "version": "1.0",
+
+  "description": "Export a PGN game from chess.com to a analysis board online free.",
+
+  "icons": {
+    "48": "logo.png"
+  },
+
+  "permissions": [
+    "scripting",
+    "activeTab",
+    "storage"
+  ],
+  "host_permissions": [
+    "https://www.chess.com/*"
+  ],
+
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": "logo.png"
+  },
+
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "borderify@mozilla.org",
+      "data_collection_permissions": {
+        "required": ["none"]
+      }
+    }
+  }
+}
