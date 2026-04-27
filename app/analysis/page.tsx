@@ -11,9 +11,11 @@ import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Progress } from "@/components/ui/progress";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   ChevronFirst, ChevronLeft, ChevronRight, ChevronLast, 
-  Activity, Settings2, ArrowUpDown, BarChart3, Loader2
+  Activity, Settings2, ArrowUpDown, BarChart3, Loader2,
+  Trophy, Lightbulb, MessageSquare
 } from "lucide-react";
 import { cn, logger } from "@/lib/utils";
 
@@ -176,6 +178,7 @@ export default function AnalysisPage() {
   const [isReviewing, setIsReviewing] = useState(false);
   const [reviewProgress, setReviewProgress] = useState(0);
   const [gameEvaluations, setGameEvaluations] = useState<MoveEval[]>([]);
+  const [activeVariation, setActiveVariation] = useState<string[] | null>(null);
 
   const [isEngineReady, setIsEngineReady] = useState(false);
   const [isInitialLoading, setIsInitialLoading] = useState(false);
@@ -307,10 +310,27 @@ export default function AnalysisPage() {
   }, [selectedGame, username, loadPgn]);
 
   useEffect(() => {
+    // Si l'historique diverge du PGN principal, on sauvegarde cette variante
+    const divIdx = history.findIndex((m, i) => m !== mainHistory[i]);
+    if (divIdx !== -1) {
+      setActiveVariation(history);
+    } else if (history.length > mainHistory.length) {
+      setActiveVariation(history);
+    }
+  }, [history, mainHistory]);
+
+  useEffect(() => {
     const chess = new Chess();
     for (let i = 0; i <= currentMoveIndex; i++) { try { chess.move(history[i]); } catch(e) {} }
+    
     const newFen = chess.fen();
     setFen(newFen);
+
+    const isGameOver = chess.isGameOver();
+    if (isGameOver) {
+      if (chess.isCheckmate()) setDisplayedEval({ height: chess.turn() === 'w' ? 0 : 100, text: "MAT" });
+      else setDisplayedEval({ height: 50, text: "1/2" });
+    }
     
     // Gel de la barre d'évaluation pendant 200ms pour éviter le zig-zag
     setIsEvalFrozen(true);
@@ -322,11 +342,6 @@ export default function AnalysisPage() {
     
     setIsEngineStale(true); 
     isEngineStaleRef.current = true; // Indique que les lignes actuelles sont obsolètes
-    
-    if (chess.isGameOver()) {
-      if (chess.isCheckmate()) setDisplayedEval({ height: chess.turn() === 'w' ? 0 : 100, text: "M0" });
-      else setDisplayedEval({ height: 50, text: "1/2" });
-    }
   }, [currentMoveIndex, history]);
 
   useEffect(() => {
@@ -401,7 +416,7 @@ export default function AnalysisPage() {
         }
       }
     };
-  }, [isReviewing, fen, processNextReviewMove]);
+  }, [isReviewing, fen, processNextReviewMove, multiPv]);
 
   useEffect(() => {
     if (!workerRef.current || !isEngineReady || isReviewing) return;
@@ -418,6 +433,11 @@ export default function AnalysisPage() {
       if (!isAnalyzing) setDisplayedEval({ height: 50, text: "0.0" });
       return; 
     }
+
+    // Vérifier si la position actuelle est déjà un MAT pour ne pas écraser l'affichage
+    const chess = new Chess(fen);
+    if (chess.isGameOver()) return;
+
     const best = engineInfo.lines.find(l => l.id === 1);
     if (engineInfo.depth >= 4 && best && (best.cp !== undefined || best.mate !== undefined)) {
       // Les scores dans engineInfo.lines sont DÉJÀ normalisés du point de vue des Blancs
@@ -434,7 +454,7 @@ export default function AnalysisPage() {
         });
       }
     }
-  }, [engineInfo, isAnalyzing, fen]);
+  }, [engineInfo, isAnalyzing, fen, isEvalFrozen]);
 
   useEffect(() => {
     if (activeMoveRef.current && historyContainerRef.current) {
@@ -571,10 +591,17 @@ export default function AnalysisPage() {
         cg-board { border-radius: 4px !important; }
       `}} />
       <div className="flex items-center justify-between">
-<div className="space-y-1"><h1 className="text-3xl font-display font-bold tracking-tight">Analyse</h1><p className="text-sm text-stone-500 font-manrope">{selectedGame ? `Partie contre ${selectedGame.white.username} vs ${selectedGame.black.username}` : "Échiquier d'analyse libre."}</p></div></div>
+        <div className="space-y-1">
+          <h1 className="text-3xl font-display font-bold tracking-tight">Analyse</h1>
+          <p className="text-sm text-stone-500 font-manrope">
+            {selectedGame ? `Partie contre ${selectedGame.white.username} vs ${selectedGame.black.username}` : "Échiquier d'analyse libre."}
+          </p>
+        </div>
+      </div>
       <div className="flex flex-col lg:flex-row gap-8 items-start relative">
-        <div className="w-full lg:w-[65%] xl:w-[70%] flex flex-col gap-6 relative">
-          {/* HOVER PREVIEW BOARD (Immune to move jumps) */}
+        {/* LEFT COLUMN: Board & Navigation */}
+        <div className="w-full lg:w-[55%] xl:w-[60%] flex flex-col gap-6 relative">
+          {/* HOVER PREVIEW BOARD */}
           <div 
             className={cn(
                 "fixed z-[100] pointer-events-none shadow-2xl transition-all duration-300 ease-out rounded-xl border border-white/10 overflow-hidden bg-[#1a1a1a]", 
@@ -589,7 +616,7 @@ export default function AnalysisPage() {
                     fen: hoveredPosition, 
                     orientation, 
                     viewOnly: true, 
-                    coordinates: true,
+                    coordinates: false,
                     animation: { enabled: true, duration: 300 } 
                   }} 
                   className="w-full h-full" 
@@ -598,7 +625,7 @@ export default function AnalysisPage() {
             </div>
           </div>
 
-          <div className="flex items-center justify-center gap-2 p-2 bg-white/[0.02] border border-white/5 rounded-xl">
+          <div className="flex items-center justify-center gap-2 p-2 bg-white/[0.02] border border-white/5 rounded-xl h-[52px]">
             <Button variant="ghost" size="icon" onClick={goToStart} disabled={currentMoveIndex === -1}><ChevronFirst /></Button>
             <Button variant="ghost" size="icon" onClick={goToPrev} disabled={currentMoveIndex === -1}><ChevronLeft /></Button>
             <Button variant="ghost" size="icon" onClick={() => setIsSettingsOpen(!isSettingsOpen)} className={cn(isSettingsOpen && "text-blue-400")}><Settings2 /></Button>
@@ -648,7 +675,10 @@ export default function AnalysisPage() {
             </div>
             <div className="flex-grow flex flex-col gap-2">
                <div className="flex items-center justify-between text-xs px-1">
-                 <div className="flex items-center gap-2"><div className="size-4 bg-white/10 rounded flex items-center justify-center text-[8px] font-black">{orientation === "white" ? "B" : "W"}</div><span className="font-bold text-stone-400">{orientation === "white" ? playerInfoDisplay.black.name : playerInfoDisplay.white.name}</span></div>
+                 <div className="flex items-center gap-2">
+                   <div className="size-4 bg-white/10 rounded flex items-center justify-center text-[8px] font-black">{orientation === "white" ? "B" : "W"}</div>
+                   <span className="font-bold text-stone-400">{orientation === "white" ? playerInfoDisplay.black.name : playerInfoDisplay.white.name}</span>
+                 </div>
                  <span className="font-mono text-stone-500">{clocks[currentMoveIndex + 1] || "0:00"}</span>
                </div>
                <div className="aspect-square w-full bg-white/[0.02] border border-white/[0.05] rounded-xl overflow-hidden relative shadow-2xl">
@@ -662,103 +692,263 @@ export default function AnalysisPage() {
                  )}
                </div>
                <div className="flex items-center justify-between text-xs px-1">
-                 <div className="flex items-center gap-2"><div className="size-4 bg-white/10 rounded flex items-center justify-center text-[8px] font-black">{orientation === "white" ? "W" : "B"}</div><span className="font-bold text-stone-200">{orientation === "white" ? playerInfoDisplay.white.name : playerInfoDisplay.black.name}</span></div>
+                 <div className="flex items-center gap-2">
+                   <div className="size-4 bg-white/10 rounded flex items-center justify-center text-[8px] font-black">{orientation === "white" ? "W" : "B"}</div>
+                   <span className="font-bold text-stone-200">{orientation === "white" ? playerInfoDisplay.white.name : playerInfoDisplay.black.name}</span>
+                 </div>
                  <span className="font-mono text-white font-bold">{clocks[currentMoveIndex + 1] || "0:00"}</span>
                </div>
             </div>
           </div>
-          <div ref={graphContainerRef} className="w-full bg-white/[0.02] border border-white/[0.05] rounded-xl p-4 flex flex-col items-center justify-center transition-all min-h-[300px] overscroll-none touch-none">
-            {gameEvaluations.length > 0 ? (
-               <EvaluationGraph data={gameEvaluations} currentIndex={currentMoveIndex} totalMoves={history.length} onSelectMove={setCurrentMoveIndex} />
-            ) : (
-              <div onClick={!isReviewing ? startReview : undefined} className="flex flex-col items-center gap-3 cursor-pointer group/bilan">
-                <BarChart3 className="text-stone-700 group-hover/bilan:text-blue-500 transition-colors" />
-                <span className="text-[11px] font-black uppercase tracking-[0.2em] text-stone-600 group-hover/bilan:text-stone-300">Lancer l'analyse du bilan</span>
-                {isReviewing && <div className="mt-4 flex flex-col items-center gap-4 animate-in fade-in zoom-in-95"><Loader2 className="animate-spin text-blue-500 size-8" /><div className="w-64 space-y-1"><Progress value={reviewProgress} className="h-1 bg-white/10" /><p className="text-[10px] text-center font-mono text-stone-500 uppercase tracking-widest">{reviewProgress}% terminé</p></div></div>}
-              </div>
-            )}
-          </div>
         </div>
-        <div className="w-full lg:w-[35%] xl:w-[30%] flex flex-col gap-6 self-stretch">
-          <div className="bg-[#141414] border border-white/[0.05] rounded-xl p-4 space-y-4 shadow-xl min-h-[160px]">
-            <div className="flex items-center justify-between"><div className="flex items-center gap-3"><Activity className={cn("size-4", isAnalyzing ? "text-blue-500 animate-pulse" : "text-stone-600")} /> <span className="text-sm font-bold text-stone-300">Stockfish 18</span></div><Switch checked={isAnalyzing} onCheckedChange={setIsAnalyzing} /></div>
-            {isAnalyzing && (
-              <div className={cn("space-y-0 pt-2 border-t border-white/5 transition-opacity duration-200", isEngineStale ? "opacity-40" : "opacity-100")}>
-                {engineInfo.lines.map(line => (
-                  <div 
-                    key={line.id} 
-                    className="pv-line-container flex gap-3 items-center py-2.5 px-2 hover:bg-white/[0.04] border-b border-white/[0.03] last:border-0 transition-colors group relative text-[10px]"
-                    onMouseEnter={(e) => {
-                      if (hideTimeoutRef.current) clearTimeout(hideTimeoutRef.current);
-                      const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
-                      // Aligner sur le bord gauche de la ligne, juste en dessous
-                      setPreviewPos({ x: rect.left, y: rect.bottom + 10, visible: true });
-                    }}
-                    onMouseLeave={() => {
-                      hideTimeoutRef.current = setTimeout(() => setPreviewPos(p => ({ ...p, visible: false })), 200);
-                    }}
-                  >
-                    <span className={cn(
-                      "min-w-[42px] text-center px-1.5 py-0.5 rounded font-black tabular-nums", 
-                      (line.mate !== undefined ? line.mate > 0 : line.cp! > 0) ? "bg-blue-500/10 text-blue-400" : "bg-red-500/10 text-red-400"
-                    )}>
-                      {line.mate !== undefined 
-                        ? (line.mate > 0 ? `#${line.mate}` : `-${Math.abs(line.mate)}`) 
-                        : (line.cp! / 100 > 0 ? "+" : "") + (line.cp! / 100).toFixed(1)}
-                    </span>
-                    <div className="flex flex-wrap gap-x-2 gap-y-1">
-                      {line.sanMoves.slice(0, 8).map((m, i) => (
-                        <span 
-                          key={i} 
-                          className="text-stone-500 hover:text-white cursor-pointer transition-colors font-mono text-[11px]" 
-                          onMouseEnter={() => {
-                            if (hideTimeoutRef.current) clearTimeout(hideTimeoutRef.current);
-                            const t = new Chess(fen); 
-                            for(let j=0; j<=i; j++) t.move(line.pv[j]); 
-                            setHoveredPosition(t.fen());
-                          }}
-                          onClick={() => handlePvMoveClick(line, i)}
-                        >
-                          <FormattedMove move={m} />
-                        </span>
-                      ))}
-                    </div>
+
+        {/* RIGHT COLUMN: Tabs (Analyse & Bilan) */}
+        <div className="w-full lg:w-[45%] xl:w-[40%] flex flex-col self-stretch">
+          <Tabs defaultValue="analyse" className="w-full flex flex-col h-full gap-0">
+            <TabsList className="grid w-full grid-cols-2 bg-white/5 border border-white/10 p-1 h-[52px] shrink-0">
+              <TabsTrigger value="bilan" className="text-xs font-black uppercase tracking-widest data-[state=active]:bg-blue-600 data-[state=active]:text-white">Bilan</TabsTrigger>
+              <TabsTrigger value="analyse" className="text-xs font-black uppercase tracking-widest data-[state=active]:bg-blue-600 data-[state=active]:text-white">Analyse</TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="bilan" className="flex-1 hidden data-[state=active]:flex flex-col gap-4 mt-6 animate-in fade-in duration-300">
+              <div ref={graphContainerRef} className="w-full bg-white/[0.02] border border-white/[0.05] rounded-xl p-4 flex flex-col items-center justify-center transition-all min-h-[240px] overscroll-none touch-none">
+                {gameEvaluations.length > 0 ? (
+                   <EvaluationGraph data={gameEvaluations} currentIndex={currentMoveIndex} totalMoves={history.length} onSelectMove={setCurrentMoveIndex} />
+                ) : (
+                  <div onClick={!isReviewing ? startReview : undefined} className="flex flex-col items-center gap-3 cursor-pointer group/bilan w-full py-12">
+                    <BarChart3 className="text-stone-700 group-hover/bilan:text-blue-500 transition-colors size-10" />
+                    <span className="text-[11px] font-black uppercase tracking-[0.2em] text-stone-600 group-hover/bilan:text-stone-300">Lancer l'analyse du bilan</span>
+                    {isReviewing && <div className="mt-4 flex flex-col items-center gap-4 animate-in fade-in zoom-in-95"><Loader2 className="animate-spin text-blue-500 size-8" /><div className="w-64 space-y-1"><Progress value={reviewProgress} className="h-1 bg-white/10" /><p className="text-[10px] text-center font-mono text-stone-500 uppercase tracking-widest">{reviewProgress}% terminé</p></div></div>}
                   </div>
-                ))}
+                )}
               </div>
-            )}
-          </div>
-          <div className="bg-white/[0.02] border border-white/[0.05] rounded-xl p-4 flex flex-col flex-grow min-h-[400px] overflow-hidden">
-            <div className="flex items-center justify-between mb-6 shrink-0">
-               <h2 className="text-xs font-black uppercase tracking-[0.2em] text-stone-500">Historique</h2>
-               {isVariation && !isReviewing && (
-                 <Button size="sm" variant="ghost" className="h-6 text-[9px] uppercase font-black text-orange-500 hover:bg-orange-500/10 gap-1.5" onClick={() => { setHistory(mainHistory); setCurrentMoveIndex(mainHistory.length - 1); }}><ArrowUpDown className="size-3" /> Retour Partie</Button>
-               )}
-            </div>
-            <div ref={historyContainerRef} className="flex-1 overflow-y-auto custom-scrollbar pr-2 font-mono overscroll-none touch-none">
-              {history.length > 0 ? (
-                <div className="space-y-0.5">
-                  {Array.from({ length: Math.ceil(history.length / 2) }).map((_, i) => {
-                    const m1 = history[i*2], m2 = history[i*2+1], main1 = mainHistory[i*2], main2 = mainHistory[i*2+1];
-                    const var1 = m1 !== main1 && !isReviewing, var2 = m2 && m2 !== main2 && !isReviewing;
-                    return (
-                      <div key={i} className={cn("flex items-center py-0.5 px-2 rounded transition-all", (currentMoveIndex === i*2 || currentMoveIndex === i*2+1) ? "bg-white/[0.03]" : "hover:bg-white/[0.01]")}>
-                        <div className="w-8 text-stone-600 text-right pr-3 text-[10px] font-black">{i + 1}.</div>
-                        <div ref={currentMoveIndex === i*2 ? activeMoveRef : null} className={cn("flex-1 px-1.5 cursor-pointer rounded transition-all", currentMoveIndex === i * 2 ? "text-blue-400 font-black scale-110" : var1 ? "text-orange-400/80" : "text-stone-300")} onClick={() => setCurrentMoveIndex(i * 2)}><FormattedMove move={m1} /></div>
-                        {m2 && (
-                          <div ref={currentMoveIndex === i*2+1 ? activeMoveRef : null} className={cn("flex-1 px-1.5 cursor-pointer rounded transition-all", currentMoveIndex === i * 2 + 1 ? "text-blue-400 font-black scale-110" : var2 ? "text-orange-400/80" : "text-stone-300")} onClick={() => setCurrentMoveIndex(i * 2 + 1)}><FormattedMove move={m2} /></div>
-                        )}
-                      </div>
-                    );
-                  })}
+
+              <div className="bg-[#141414] border border-white/[0.05] rounded-xl p-6 space-y-4 flex-grow shadow-xl">
+                <div className="flex items-center gap-2 text-blue-400">
+                  <Lightbulb className="size-4" />
+                  <h3 className="text-xs font-black uppercase tracking-widest">Conseils & Analyse</h3>
                 </div>
-              ) : <div className="h-full flex items-center justify-center text-[10px] font-black text-stone-700 uppercase tracking-widest italic">Aucun coup</div>}
-            </div>
-          </div>
-          <div className="bg-white/[0.02] border border-white/[0.05] rounded-xl p-4 space-y-3 shrink-0 shadow-lg">
-            <Textarea placeholder="Coller un PGN ici..." className="text-[10px] h-20 bg-black/20 border-white/5 focus:border-blue-500/50 transition-colors custom-scrollbar" value={pgnInput} onChange={e => setPgnInput(e.target.value)} />
-            <Button className="w-full h-8 text-[10px] uppercase font-black tracking-widest bg-white/5 hover:bg-white/10 border-white/5" onClick={() => loadPgn(pgnInput)}>Charger PGN</Button>
-          </div>
+                <div className="space-y-4 text-stone-400 text-sm leading-relaxed">
+                   {gameEvaluations.length > 0 ? (
+                     <div className="flex flex-col gap-4 animate-in fade-in duration-500">
+                        <div className="bg-white/5 p-4 rounded-lg border border-white/5">
+                           <p className="italic text-[13px]">"L'analyse est terminée. Vous pouvez naviguer sur le graphique pour voir l'évolution de la partie."</p>
+                        </div>
+                        <div className="flex items-start gap-3 p-3 rounded-lg hover:bg-white/5 transition-colors cursor-help">
+                           <Trophy className="size-5 text-yellow-500 shrink-0" />
+                           <p className="text-[12px]">Précision estimée : <span className="text-white font-bold">--%</span>. (Fonctionnalité à venir)</p>
+                        </div>
+                        <div className="flex items-start gap-3 p-3 rounded-lg hover:bg-white/5 transition-colors">
+                           <MessageSquare className="size-5 text-blue-500 shrink-0" />
+                           <p className="text-[12px]">Prochainement : Explications textuelles de vos erreurs et meilleurs coups.</p>
+                        </div>
+                     </div>
+                   ) : (
+                     <div className="flex flex-col items-center justify-center py-12 text-center space-y-2">
+                       <p className="italic text-stone-600 text-sm italic">Aucune donnée d'analyse disponible.</p>
+                       <p className="text-[11px] text-stone-700 uppercase font-bold tracking-tighter">Cliquez sur le bouton ci-dessus pour commencer.</p>
+                     </div>
+                   )}
+                </div>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="analyse" className="flex-1 hidden data-[state=active]:flex flex-col gap-4 mt-6 animate-in fade-in duration-300">
+              <div className="bg-[#141414] border border-white/[0.05] rounded-xl p-4 shadow-xl flex flex-col min-h-[160px]">
+                <div className="flex items-center justify-between pb-4">
+                  <div className="flex items-center gap-3">
+                    <Activity className={cn("size-4", isAnalyzing ? "text-blue-500 animate-pulse" : "text-stone-600")} /> 
+                    <span className="text-sm font-bold text-stone-300">Stockfish 18</span>
+                  </div>
+                  <Switch checked={isAnalyzing} onCheckedChange={setIsAnalyzing} />
+                </div>
+                <div 
+                  className={cn("space-y-0 pt-2 border-t border-white/5 transition-opacity duration-200", isEngineStale ? "opacity-40" : "opacity-100")}
+                  style={{ minHeight: `${multiPv * 36 + 20}px` }}
+                >
+                  {(() => {
+                    const chess = new Chess(fen);
+                    if (chess.isGameOver()) {
+                      return (
+                        <div className="flex items-center justify-center h-full py-8 gap-4 animate-in fade-in">
+                          <span className={cn(
+                            "px-4 py-2 rounded-lg font-black tracking-widest text-lg shadow-2xl",
+                            chess.isCheckmate() ? "bg-red-500/20 text-red-400 border border-red-500/30" : "bg-stone-500/20 text-stone-400 border border-stone-500/30"
+                          )}>
+                            {chess.isCheckmate() ? "ÉCHEC ET MAT" : "PAT / NULLE"}
+                          </span>
+                        </div>
+                      );
+                    }
+
+                    return isAnalyzing && engineInfo.lines.length > 0 ? (
+                      engineInfo.lines.map(line => (
+                        <div 
+                          key={line.id} 
+                          className="pv-line-container flex gap-3 items-center py-2.5 px-2 hover:bg-white/[0.04] border-b border-white/[0.03] last:border-0 transition-colors group relative text-[10px]"
+                          onMouseEnter={(e) => {
+                            if (hideTimeoutRef.current) clearTimeout(hideTimeoutRef.current);
+                            const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
+                            setPreviewPos({ x: rect.left, y: rect.bottom + 8, visible: true });
+                          }}
+                          onMouseLeave={() => {
+                            hideTimeoutRef.current = setTimeout(() => setPreviewPos(p => ({ ...p, visible: false })), 200);
+                          }}
+                        >
+                          <span className={cn(
+                            "min-w-[42px] text-center px-1.5 py-0.5 rounded font-black tabular-nums", 
+                            (line.mate !== undefined ? line.mate > 0 : line.cp! > 0) ? "bg-blue-500/10 text-blue-400" : "bg-red-500/10 text-red-400"
+                          )}>
+                            {line.mate !== undefined 
+                              ? (line.mate > 0 ? `#${line.mate}` : `-${Math.abs(line.mate)}`) 
+                              : (line.cp! / 100 > 0 ? "+" : "") + (line.cp! / 100).toFixed(1)}
+                          </span>
+                          <div className="flex flex-wrap gap-x-2 gap-y-1">
+                            {line.sanMoves.slice(0, 6).map((m, i) => (
+                              <span 
+                                key={i} 
+                                className="text-stone-500 hover:text-white cursor-pointer transition-colors font-mono text-[11px]" 
+                                onMouseEnter={() => {
+                                  if (hideTimeoutRef.current) clearTimeout(hideTimeoutRef.current);
+                                  const t = new Chess(fen); 
+                                  for(let j=0; j<=i; j++) t.move(line.pv[j]); 
+                                  setHoveredPosition(t.fen());
+                                }}
+                                onClick={() => handlePvMoveClick(line, i)}
+                              >
+                                <FormattedMove move={m} />
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      ))
+                    ) : isAnalyzing ? (
+                      <div className="flex items-center justify-center py-8">
+                        <Loader2 className="animate-spin text-stone-700 size-5" />
+                      </div>
+                    ) : null;
+                  })()}
+                </div>
+              </div>
+
+              <div className="bg-white/[0.02] border border-white/[0.05] rounded-xl p-4 flex flex-col flex-grow min-h-[300px] overflow-hidden">
+                <div className="flex items-center justify-between mb-6 shrink-0">
+                   <h2 className="text-xs font-black uppercase tracking-[0.2em] text-stone-500">Historique</h2>
+                </div>
+                <div ref={historyContainerRef} className="flex-1 overflow-y-auto custom-scrollbar pr-2 font-mono overscroll-none touch-none">
+                  {mainHistory.length > 0 ? (
+                    <div className="space-y-1">
+                      {(() => {
+                        const variationToDisplay = activeVariation || (history.length > 0 ? history : null);
+                        const divIdx = variationToDisplay ? variationToDisplay.findIndex((m, i) => m !== mainHistory[i]) : -1;
+                        const splitIdx = divIdx !== -1 ? divIdx : (variationToDisplay && variationToDisplay.length > mainHistory.length ? mainHistory.length : -1);
+                        const hasVariation = splitIdx !== -1;
+                        const isCurrentlyInVariation = (currentMoveIndex >= splitIdx && hasVariation) && history[currentMoveIndex] !== mainHistory[currentMoveIndex];
+
+                        const rows = [];
+                        for (let i = 0; i < Math.ceil(mainHistory.length / 2); i++) {
+                          const idx1 = i * 2;
+                          const idx2 = i * 2 + 1;
+                          const isDivergenceAtIdx1 = hasVariation && splitIdx === idx1;
+                          const isDivergenceAtIdx2 = hasVariation && splitIdx === idx2;
+
+                          rows.push(
+                            <div key={`main-${i}`} className={cn("flex items-center py-0.5 px-2 rounded transition-all", (currentMoveIndex === idx1 || currentMoveIndex === idx2) && !isCurrentlyInVariation ? "bg-white/[0.03]" : "hover:bg-white/[0.01]")}>
+                              <div className="w-8 text-stone-600 text-right pr-3 text-[10px] font-black">{i + 1}.</div>
+                              <div 
+                                ref={currentMoveIndex === idx1 && !isCurrentlyInVariation ? activeMoveRef : null}
+                                className={cn(
+                                  "flex-1 px-1.5 cursor-pointer rounded transition-all", 
+                                  currentMoveIndex === idx1 && !isCurrentlyInVariation ? "text-blue-400 font-black scale-105" : "text-stone-300"
+                                )} 
+                                onClick={() => { setHistory(mainHistory); setCurrentMoveIndex(idx1); }}
+                              >
+                                <FormattedMove move={mainHistory[idx1]} />
+                              </div>
+                              {mainHistory[idx2] && (
+                                <div 
+                                  ref={currentMoveIndex === idx2 && !isCurrentlyInVariation ? activeMoveRef : null}
+                                  className={cn(
+                                    "flex-1 px-1.5 cursor-pointer rounded transition-all", 
+                                    currentMoveIndex === idx2 && !isCurrentlyInVariation ? "text-blue-400 font-black scale-105" : "text-stone-300"
+                                  )} 
+                                  onClick={() => { setHistory(mainHistory); setCurrentMoveIndex(idx2); }}
+                                >
+                                  <FormattedMove move={mainHistory[idx2]} />
+                                </div>
+                              )}
+                            </div>
+                          );
+
+                          if (isDivergenceAtIdx1 || isDivergenceAtIdx2) {
+                            rows.push(
+                              <div key="variation-block" className="my-2 ml-8 p-3 bg-blue-500/5 border-l-2 border-blue-500/30 rounded-r-lg animate-in slide-in-from-left-2 duration-300">
+                                <div className="flex items-center gap-2 mb-2">
+                                  <div className="size-1.5 rounded-full bg-blue-500" />
+                                  <span className="text-[9px] font-black uppercase tracking-widest text-blue-400/80">Variante</span>
+                                </div>
+                                <div className="flex flex-wrap gap-x-2 gap-y-1">
+                                  {variationToDisplay!.slice(splitIdx).map((m, vIdx) => {
+                                    const globalIdx = splitIdx + vIdx;
+                                    const moveNum = Math.floor(globalIdx / 2) + 1;
+                                    const isWhite = globalIdx % 2 === 0;
+                                    const isHighlighted = currentMoveIndex === globalIdx && isCurrentlyInVariation;
+                                    return (
+                                      <span 
+                                        key={vIdx}
+                                        ref={isHighlighted ? activeMoveRef : null}
+                                        className={cn(
+                                          "text-[11px] cursor-pointer transition-colors flex items-center gap-0.5",
+                                          isHighlighted ? "text-blue-400 font-black scale-110" : "text-stone-400 hover:text-white"
+                                        )}
+                                        onClick={() => { setHistory(variationToDisplay!); setCurrentMoveIndex(globalIdx); }}
+                                      >
+                                        {isWhite && <span className="text-stone-600 text-[9px] font-bold mr-0.5">{moveNum}.</span>}
+                                        {!isWhite && (vIdx === 0 || isDivergenceAtIdx2) && <span className="text-stone-600 text-[9px] font-bold mr-0.5">{moveNum}...</span>}
+                                        <FormattedMove move={m} />
+                                      </span>
+                                    );
+                                  })}
+                                </div>
+                              </div>
+                            );
+                          }
+                        }
+
+                        if (hasVariation && splitIdx >= mainHistory.length) {
+                             rows.push(
+                              <div key="variation-end" className="my-2 ml-8 p-3 bg-blue-500/5 border-l-2 border-blue-500/30 rounded-r-lg animate-in slide-in-from-left-2 duration-300">
+                                 <div className="flex flex-wrap gap-x-2 gap-y-1">
+                                  {variationToDisplay!.slice(splitIdx).map((m, vIdx) => {
+                                    const globalIdx = splitIdx + vIdx;
+                                    const isHighlighted = currentMoveIndex === globalIdx && isCurrentlyInVariation;
+                                    const moveNum = Math.floor(globalIdx / 2) + 1;
+                                    const isWhite = globalIdx % 2 === 0;
+                                    return (
+                                      <span key={vIdx} className={cn("text-[11px] cursor-pointer", isHighlighted ? "text-blue-400 font-black" : "text-stone-400 hover:text-white")} onClick={() => { setHistory(variationToDisplay!); setCurrentMoveIndex(globalIdx); }}>
+                                        {isWhite ? `${moveNum}. ` : ""}<FormattedMove move={m} />
+                                      </span>
+                                    );
+                                  })}
+                                 </div>
+                              </div>
+                             );
+                        }
+                        return rows;
+                      })()}
+                    </div>
+                  ) : (
+                    <div className="h-full flex items-center justify-center text-[10px] font-black text-stone-700 uppercase tracking-widest italic">Aucun coup</div>
+                  )}
+                </div>
+              </div>
+
+              <div className="bg-white/[0.02] border border-white/[0.05] rounded-xl p-4 space-y-3 shrink-0 shadow-lg mt-auto">
+                <Textarea placeholder="Coller un PGN ici..." className="text-[10px] h-20 bg-black/20 border-white/5 focus:border-blue-500/50 transition-colors custom-scrollbar" value={pgnInput} onChange={e => setPgnInput(e.target.value)} />
+                <Button className="w-full h-8 text-[10px] uppercase font-black tracking-widest bg-white/5 hover:bg-white/10 border-white/5" onClick={() => loadPgn(pgnInput)}>Charger PGN</Button>
+              </div>
+            </TabsContent>
+          </Tabs>
         </div>
       </div>
     </main>
