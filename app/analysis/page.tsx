@@ -224,6 +224,9 @@ export default function AnalysisPage() {
   // --- Sync Refs ---
   useEffect(() => { engineModeRef.current = engineMode; }, [engineMode]);
 
+  // --- Derived UI Data ---
+  const isVariation = useMemo(() => history.length !== mainHistory.length || history.some((m, i) => m !== mainHistory[i]), [history, mainHistory]);
+
   // --- Navigation Methods ---
   const goToStart = useCallback(() => { setAnimateNext(true); setCurrentMoveIndex(-1); }, []);
   const goToPrev = useCallback(() => { setAnimateNext(true); setCurrentMoveIndex((i) => Math.max(-1, i - 1)); }, []);
@@ -248,7 +251,7 @@ export default function AnalysisPage() {
     setAnimateNext(true); 
     if (isVariation) setHistory(mainHistory);
     setCurrentMoveIndex(mainHistory.length - 1); 
-  }, [mainHistory]);
+  }, [mainHistory, isVariation]);
 
   const loadPgn = useCallback((pgnStr: string) => {
     if (!pgnStr) return;
