@@ -335,7 +335,6 @@ export default function AnalysisPage() {
   const [orientation, setOrientation] = useState<"white" | "black">("white");
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [showEngineArrows, setShowEngineArrows] = useState(true);
-  const [showPlayedArrows, setShowPlayedArrows] = useState(true);
   const [displayedEval, setDisplayedEval] = useState({ height: 50, text: "0.0" });
   const [hoveredPosition, setHoveredPosition] = useState<string | null>(null);
   const [previewPos, setPreviewPos] = useState({ x: 0, y: 0, visible: false });
@@ -798,8 +797,9 @@ export default function AnalysisPage() {
               {variationToDisplay!.slice(splitIdx).map((m, vIdx) => {
                 const globalIdx = splitIdx + vIdx, isHighlighted = currentMoveIndex === globalIdx && isCurrentlyInVariation, moveNum = Math.floor(globalIdx / 2) + 1, isWhite = globalIdx % 2 === 0;
                 return (
-                  <span key={vIdx} className={cn("text-[11px] cursor-pointer", isHighlighted ? "text-blue-400 font-black" : "text-stone-400 hover:text-white")} onClick={() => { setHistory(variationToDisplay!); setCurrentMoveIndex(globalIdx); }}>
+                  <span key={vIdx} className={cn("text-[11px] cursor-pointer transition-colors flex items-center gap-0.5", isHighlighted ? "text-blue-400 font-black" : "text-stone-400 hover:text-white")} onClick={() => { setHistory(variationToDisplay!); setCurrentMoveIndex(globalIdx); }}>
                     {isWhite ? `${moveNum}. ` : ""}<FormattedMove move={m} />
+                    {classifications[globalIdx] && <ClassificationIcon classification={classifications[globalIdx].classification} />}
                   </span>
                 );
               })}
@@ -966,7 +966,6 @@ export default function AnalysisPage() {
             <div className="h-[72px] grid grid-cols-2 md:grid-cols-5 gap-4 p-4 bg-white/[0.03] border border-white/10 rounded-xl animate-in fade-in slide-in-from-top-2 shrink-0">
               <div className="flex flex-col gap-2"><span className="text-[10px] font-bold uppercase tracking-widest text-stone-500">Vue</span><Button variant="outline" size="sm" className="h-8 text-[10px] bg-white/5 border-white/10 hover:bg-white/10" onClick={() => setOrientation(orientation === "white" ? "black" : "white")}><ArrowUpDown className="size-3 mr-2" /> Tourner</Button></div>
               <div className="flex flex-col gap-2"><span className="text-[10px] font-bold uppercase tracking-widest text-stone-500">Moteur</span><div className="flex items-center justify-between bg-white/5 px-2 h-8 rounded border border-white/5"><span className="text-[9px] font-bold text-stone-400">Flèches SF</span><Switch checked={showEngineArrows} onCheckedChange={setShowEngineArrows} className="scale-75" /></div></div>
-              <div className="flex flex-col gap-2"><span className="text-[10px] font-bold uppercase tracking-widest text-stone-500">Partie</span><div className="flex items-center justify-between bg-white/5 px-2 h-8 rounded border border-white/5"><span className="text-[9px] font-bold text-stone-400">Flèches Coups</span><Switch checked={showPlayedArrows} onCheckedChange={setShowPlayedArrows} className="scale-75" /></div></div>
               <div className="flex flex-col gap-2"><span className="text-[10px] font-bold uppercase tracking-widest text-stone-500">Analyse</span><Select value={multiPv.toString()} onValueChange={(v) => setMultiPv(parseInt(v))}><SelectTrigger className="h-8 bg-white/5 border-white/10 text-[10px] font-bold"><SelectValue /></SelectTrigger><SelectContent className="bg-[#1a1a1a] border-white/10">{[1, 2, 3, 4, 5].map(n => <SelectItem key={n} value={n.toString()} className="text-[10px]">{n} Lignes</SelectItem>)}</SelectContent></Select></div>
               <div className="flex flex-col gap-2"><span className="text-[10px] font-bold uppercase tracking-widest text-stone-500">Profondeur Bilan</span><Select value={reviewDepth.toString()} onValueChange={(v) => setReviewDepth(parseInt(v))}><SelectTrigger className="h-8 bg-white/5 border-white/10 text-[10px] font-bold"><SelectValue /></SelectTrigger><SelectContent className="bg-[#1a1a1a] border-white/10">{[10, 12, 14, 16, 18, 20].map(n => <SelectItem key={n} value={n.toString()} className="text-[10px]">Profondeur {n}</SelectItem>)}</SelectContent></Select></div>
             </div>
