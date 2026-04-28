@@ -214,7 +214,8 @@ const ClassificationIcon = ({ classification }: { classification: MoveClassifica
       classification === 'erreur' ? "bg-orange-500" :
       "bg-red-500"
     )}>
-      {classification === 'incroyable' || classification === 'excellent' ? '!!' : 
+      {classification === 'incroyable' ? '!!' : 
+       classification === 'excellent' ? '!' :
        classification === 'erreur' ? '?' : '??'}
     </span>
   );
@@ -346,6 +347,7 @@ export default function AnalysisPage() {
   const [multiPv, setMultiPv] = useState(2);
   const [reviewDepth, setReviewDepth] = useState(16);
   const [gameEvaluations, setGameEvaluations] = useState<MoveEval[]>([]);
+  const [variationEvaluations, setVariationEvaluations] = useState<MoveEval[]>([]);
   const [reviewProgress, setReviewProgress] = useState(0);
   const [engineInfo, setEngineInfo] = useState<EngineInfo>({ depth: 0, seldepth: 0, nps: 0, lines: [] });
   const [isEngineStale, setIsEngineStale] = useState(false);
@@ -393,11 +395,22 @@ export default function AnalysisPage() {
     }
 
     const fens = reviewQueueRef.current;
-    const classes = history.map((_, i) => classifyMove(i, gameEvaluations, fens, i < tCount, history));
-    const mainClasses = mainHistory.map((_, i) => classifyMove(i, gameEvaluations, fens, i < tCount, mainHistory));
+    
+    // Combine gameEvaluations and variationEvaluations for lookup
+    const allEvals = [...gameEvaluations, ...variationEvaluations];
+    
+    const classes = history.map((_, i) => classifyMove(i, allEvals, fens, i < tCount, history));
+    const mainClasses = mainHistory.map((_, i) => classifyMove(i, allEvals, fens, i < tCount, mainHistory));
     
     return { classifications: classes, mainClassifications: mainClasses, theoreticalCount: tCount, openingName: opening };
-  }, [history, mainHistory, gameEvaluations]);
+  }, [history, mainHistory, gameEvaluations, variationEvaluations]);
+
+  // --- Variation Analysis Trigger ---
+  useEffect(() => {
+    if (isVariation && engineMode === 'idle' && isEngineReadyRef.current) {
+      setEngineMode('analysis');
+    }
+  }, [isVariation, engineMode]);
 
   // --- Navigation Methods ---
   const goToStart = useCallback(() => { setAnimateNext(true); setCurrentMoveIndex(-1); }, []);
@@ -446,6 +459,7 @@ export default function AnalysisPage() {
       setClocks(newClocks);
       setCurrentMoveIndex(newHistory.length - 1);
       setGameEvaluations([]); 
+      setVariationEvaluations([]);
     } catch (e) { console.error("PGN Error", e); }
   }, []);
 
@@ -612,17 +626,58 @@ export default function AnalysisPage() {
             const rawMate = scoreMatch[1] === "mate" ? parseInt(scoreMatch[2], 10) : undefined;
             const sanMoves: string[] = [];
             for (const uci of uciMoves) { try { const move = tempChess.move(uci); sanMoves.push(move.san); } catch (err) { break; } }
+            
+            const val = rawCp !== undefined ? rawCp * multiplier : getMateCp(rawMate! * multiplier);
+            const wp = (getWinningChance(val) + 1) / 2;
+
             const newLine = { id: multipvIdx, depth, pv: uciMoves, sanMoves, cp: rawCp !== undefined ? rawCp * multiplier : undefined, mate: rawMate !== undefined ? rawMate * multiplier : undefined };
             const lines = [...engineUpdateRef.current.lines];
             const existingIdx = lines.findIndex(l => l.id === multipvIdx);
             if (existingIdx !== -1) lines[existingIdx] = newLine; else lines.push(newLine);
             engineUpdateRef.current.lines = lines.sort((a, b) => a.id - b.id);
+
+            // If we are in analysis mode and have enough depth, store in variationEvaluations
+            if (depth >= 14 && isVariation) {
+              setVariationEvaluations(prev => {
+                const currentIdx = currentMoveIndex + 1;
+                const existing = prev.find(e => e.moveIndex === currentIdx) || { moveIndex: currentIdx, evaluation: getWinningChance(val) * 10 };
+                const updated = { ...existing };
+                
+                if (multipvIdx === 1) {
+                  let playedMoveUci: string | undefined = undefined;
+                  const playedMoveSan = history[currentIdx];
+                  if (playedMoveSan) {
+                    try {
+                      const tChess = new Chess(reviewQueueRef.current[currentIdx] || fen);
+                      const m = tChess.move(playedMoveSan);
+                      playedMoveUci = m.from + m.to;
+                    } catch (e) {}
+                  }
+
+                  updated.cp = val;
+                  updated.mate = rawMate !== undefined ? rawMate * multiplier : undefined;
+                  updated.bestMove = uciMoves[0];
+                  updated.playedMove = playedMoveUci;
+                  updated.wp = wp;
+                  updated.evaluation = getWinningChance(val) * 10;
+                } else if (multipvIdx === 2) {
+                  updated.wp2 = wp;
+                }
+
+                if (prev.some(e => e.moveIndex === currentIdx)) {
+                  return prev.map(e => e.moveIndex === currentIdx ? updated : e);
+                } else {
+                  return [...prev, updated];
+                }
+              });
+            }
           }
           if (Date.now() - lastUpdateTimeRef.current > 150) { setEngineInfo({ ...engineUpdateRef.current }); lastUpdateTimeRef.current = Date.now(); }
         }
       }
     };
-  }, [fen, history]);
+  }, [fen, history, isVariation, currentMoveIndex]);
+
 
   useEffect(() => {
     if (engineMode === 'analysis') {
@@ -652,14 +707,14 @@ export default function AnalysisPage() {
         else setDisplayedEval({ height: (getWinningChance(best.cp!) + 1) * 50, text: (best.cp! / 100 > 0 ? "+" : "") + (best.cp! / 100).toFixed(1) });
       } else setDisplayedEval({ height: 50, text: "0.0" });
     } else {
-      const staticEval = gameEvaluations.find(e => e.moveIndex === currentMoveIndex + 1);
+      const staticEval = [...gameEvaluations, ...variationEvaluations].find(e => e.moveIndex === currentMoveIndex + 1);
       if (staticEval) {
         if (staticEval.mate !== undefined) setDisplayedEval({ height: (staticEval.mate > 0) ? 100 : 0, text: (staticEval.mate > 0 ? "#" : "-") + Math.abs(staticEval.mate) });
         else if (staticEval.cp !== undefined) setDisplayedEval({ height: (getWinningChance(staticEval.cp) + 1) * 50, text: (staticEval.cp / 100 > 0 ? "+" : "") + (staticEval.cp / 100).toFixed(1) });
         else setDisplayedEval({ height: 50, text: "0.0" });
       } else setDisplayedEval({ height: 50, text: "0.0" });
     }
-  }, [engineMode, engineInfo, fen, gameEvaluations, currentMoveIndex]);
+  }, [engineMode, engineInfo, fen, gameEvaluations, variationEvaluations, currentMoveIndex]);
 
   useEffect(() => {
     const chess = new Chess();
@@ -714,10 +769,10 @@ export default function AnalysisPage() {
 
   useEffect(() => {
     if (activeMoveRef.current && historyContainerRef.current) {
-      const container = historyContainerRef.current;
-      const element = activeMoveRef.current;
-      if (element.offsetTop < container.scrollTop) container.scrollTo({ top: element.offsetTop, behavior: 'smooth' });
-      else if (element.offsetTop + element.offsetHeight > container.scrollTop + container.offsetHeight) container.scrollTo({ top: element.offsetTop - container.offsetHeight + element.offsetHeight, behavior: 'smooth' });
+      activeMoveRef.current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
+      });
     }
   }, [currentMoveIndex]);
 
@@ -755,14 +810,14 @@ export default function AnalysisPage() {
       const idx1 = i * 2, idx2 = i * 2 + 1;
       const isDivergenceAtIdx1 = hasVariation && splitIdx === idx1, isDivergenceAtIdx2 = hasVariation && splitIdx === idx2;
       rows.push(
-        <div key={`main-${i}`} className={cn("flex items-center py-0.5 px-2 rounded transition-all", (currentMoveIndex === idx1 || currentMoveIndex === idx2) && !isCurrentlyInVariation ? "bg-white/[0.03]" : "hover:bg-white/[0.01]")}>
-          <div className="w-8 text-stone-600 text-right pr-3 text-[10px] font-black">{i + 1}.</div>
-          <div ref={currentMoveIndex === idx1 && !isCurrentlyInVariation ? activeMoveRef : null} className={cn("flex-1 px-1.5 cursor-pointer rounded transition-all flex items-center", currentMoveIndex === idx1 && !isCurrentlyInVariation ? "text-blue-400 font-black scale-105" : "text-stone-300")} onClick={() => { setHistory(mainHistory); setCurrentMoveIndex(idx1); }}>
+        <div key={`main-${i}`} className={cn("grid grid-cols-[32px_1fr_1fr] items-center py-1 px-2 rounded transition-all", (currentMoveIndex === idx1 || currentMoveIndex === idx2) && !isCurrentlyInVariation ? "bg-white/[0.03]" : "hover:bg-white/[0.01]")}>
+          <div className="text-stone-600 text-right pr-3 text-[10px] font-black">{i + 1}.</div>
+          <div ref={currentMoveIndex === idx1 && !isCurrentlyInVariation ? activeMoveRef : null} className={cn("px-1.5 cursor-pointer rounded transition-all flex items-center justify-between", currentMoveIndex === idx1 && !isCurrentlyInVariation ? "text-blue-400 font-black scale-105" : "text-stone-300")} onClick={() => { setHistory(mainHistory); setCurrentMoveIndex(idx1); }}>
             <FormattedMove move={mainHistory[idx1]} />
             {mainClassifications[idx1] && <ClassificationIcon classification={mainClassifications[idx1].classification} />}
           </div>
           {mainHistory[idx2] && (
-            <div ref={currentMoveIndex === idx2 && !isCurrentlyInVariation ? activeMoveRef : null} className={cn("flex-1 px-1.5 cursor-pointer rounded transition-all flex items-center", currentMoveIndex === idx2 && !isCurrentlyInVariation ? "text-blue-400 font-black scale-105" : "text-stone-300")} onClick={() => { setHistory(mainHistory); setCurrentMoveIndex(idx2); }}>
+            <div ref={currentMoveIndex === idx2 && !isCurrentlyInVariation ? activeMoveRef : null} className={cn("px-1.5 cursor-pointer rounded transition-all flex items-center justify-between", currentMoveIndex === idx2 && !isCurrentlyInVariation ? "text-blue-400 font-black scale-105" : "text-stone-300")} onClick={() => { setHistory(mainHistory); setCurrentMoveIndex(idx2); }}>
               <FormattedMove move={mainHistory[idx2]} />
               {mainClassifications[idx2] && <ClassificationIcon classification={mainClassifications[idx2].classification} />}
             </div>
@@ -822,7 +877,7 @@ export default function AnalysisPage() {
           shapes.push({ orig, dest, brush: "blue" });
         }
       } else if (activeTab === 'bilan' && gameEvaluations.length > 0) {
-        const currentEval = gameEvaluations.find(e => e.moveIndex === currentMoveIndex + 1);
+        const currentEval = [...gameEvaluations, ...variationEvaluations].find(e => e.moveIndex === currentMoveIndex + 1);
         if (currentEval?.bestMove) {
           const orig = currentEval.bestMove.substring(0, 2) as Key, dest = currentEval.bestMove.substring(2, 4) as Key;
           // On affiche TOUJOURS le meilleur coup suggéré pour la position actuelle
@@ -832,17 +887,11 @@ export default function AnalysisPage() {
     }
 
     // --- Classification Markers ---
-    if (activeTab === 'bilan' && gameEvaluations.length > 0 && currentMoveIndex >= 0) {
+    if (activeTab === 'bilan' && (gameEvaluations.length > 0 || variationEvaluations.length > 0) && currentMoveIndex >= 0) {
       const fens = reviewQueueRef.current;
       
-      // Determine theoretical count for opening phase
-      let theoreticalCount = 0;
-      for (let i = 0; i < history.length; i++) {
-        const seq = history.slice(0, i + 1).join(" ");
-        if (ecoData[seq]) theoreticalCount = i + 1;
-      }
-
-      const moveEval = classifyMove(currentMoveIndex, gameEvaluations, fens, currentMoveIndex < theoreticalCount, history);
+      const moveEval = classifications[currentMoveIndex];
+      if (!moveEval) return shapes;
       
       const lastMoveSan = history[currentMoveIndex];
       try {
@@ -861,7 +910,7 @@ export default function AnalysisPage() {
     }
 
     return shapes;
-  }, [engineMode, engineInfo, currentMoveIndex, showEngineArrows, activeTab, gameEvaluations, history]);
+  }, [engineMode, engineInfo, currentMoveIndex, showEngineArrows, activeTab, gameEvaluations, variationEvaluations, classifications, history]);
 
   const config: Config = { fen, orientation, turnColor: new Chess(fen).turn() === 'w' ? 'white' : 'black', movable: { color: new Chess(fen).turn() === 'w' ? 'white' : 'black', free: false, dests: (() => { const d = new Map(); new Chess(fen).moves({ verbose: true }).forEach(m => { if (!d.has(m.from)) d.set(m.from, []); d.get(m.from).push(m.to); }); return d; })(), events: { after: onMove } }, drawable: { enabled: true, visible: true, autoShapes }, animation: { enabled: animateNext, duration: 250 } };
 
@@ -958,7 +1007,7 @@ export default function AnalysisPage() {
     <main className="max-w-[1400px] mx-auto p-4 md:p-8 space-y-6 text-white min-h-screen bg-[#0a0a0a]">
       <style dangerouslySetInnerHTML={{ __html: `.cg-wrap coords { font-size: 8px !important; font-weight: bold !important; line-height: 12px !important; } .cg-wrap coords.ranks { right: -12px !important; top: 0 !important; } .cg-wrap coords.files { bottom: -12px !important; left: 0 !important; text-align: center !important; } .cg-wrap piece { width: 12.5% !important; height: 12.5% !important; } cg-board { border-radius: 4px !important; }`}} />
       <div className="flex items-center justify-between"><div className="space-y-1"><h1 className="text-3xl font-display font-bold tracking-tight">Review</h1><p className="text-sm text-stone-500 font-manrope">{selectedGame ? `Partie contre ${selectedGame.white.username} vs ${selectedGame.black.username}` : "Échiquier d'analyse libre."}</p></div></div>
-      <div className="flex flex-col lg:flex-row gap-8 items-start relative">
+      <div className="flex flex-col lg:flex-row gap-8 items-stretch relative">
         <div className="w-full lg:w-[55%] xl:w-[60%] flex flex-col gap-6 relative min-w-0">
           <div className={cn("fixed z-[100] pointer-events-none shadow-2xl transition-all duration-300 ease-out rounded-xl border border-white/10 overflow-hidden bg-[#1a1a1a]", previewPos.visible ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-2 scale-95")} style={{ top: previewPos.y, left: previewPos.x, width: 240, height: 240 }}><div className="w-full h-full" style={{ boxSizing: 'content-box' }}>{hoveredPosition && <ChessBoard config={{ fen: hoveredPosition, orientation, viewOnly: true, coordinates: false, animation: { enabled: true, duration: 300 } }} className="w-full h-full" />}</div></div>
           <div className="flex items-center justify-center gap-2 p-2 bg-white/[0.02] border border-white/5 rounded-xl h-[52px]"><Button variant="ghost" size="icon" onClick={goToStart} disabled={currentMoveIndex === -1}><ChevronFirst /></Button><Button variant="ghost" size="icon" onClick={goToPrev} disabled={currentMoveIndex === -1}><ChevronLeft /></Button><Button variant="ghost" size="icon" onClick={() => setIsSettingsOpen(!isSettingsOpen)} className={cn(isSettingsOpen && "text-blue-400")}><Settings2 /></Button><Button variant="ghost" size="icon" onClick={goToNext} disabled={currentMoveIndex === history.length - 1}><ChevronRight /></Button><Button variant="ghost" size="icon" onClick={goToEnd} disabled={currentMoveIndex === history.length - 1}><ChevronLast /></Button></div>
@@ -1013,8 +1062,8 @@ export default function AnalysisPage() {
               )}
             </TabsContent>
             <TabsContent value="analyse" className="flex-1 hidden data-[state=active]:flex flex-col gap-4 mt-6 animate-in fade-in duration-300">
-              <div className="bg-[#141414] border border-white/[0.05] rounded-xl p-4 shadow-xl flex flex-col h-[280px] shrink-0 overflow-hidden"><div className="flex items-center justify-between pb-4"><div className="flex items-center gap-3"><Activity className={cn("size-4", engineMode === 'analysis' ? "text-blue-500 animate-pulse" : "text-stone-600")} /><span className="text-sm font-bold text-stone-300">Stockfish 18</span></div><Switch checked={engineMode === 'analysis'} onCheckedChange={(c) => setEngineMode(c ? 'analysis' : 'idle')} /></div><div className={cn("space-y-0 pt-2 border-t border-white/5 transition-opacity duration-200", isEngineStale ? "opacity-40" : "opacity-100")} style={{ minHeight: `${multiPv * 36 + 20}px` }}>{(() => { const chess = new Chess(fen); if (chess.isGameOver()) { return (<div className="flex items-center justify-center h-full py-8 gap-4 animate-in fade-in"><span className={cn("px-4 py-2 rounded-lg font-black tracking-widest text-lg shadow-2xl", chess.isCheckmate() ? "bg-red-500/20 text-red-400 border border-red-500/30" : "bg-stone-500/20 text-stone-400 border border-stone-500/30")}>{chess.isCheckmate() ? "ÉCHEC ET MAT" : "PAT / NULLE"}</span></div>); } return engineMode === 'analysis' && engineInfo.lines.length > 0 ? (engineInfo.lines.map(line => (<div key={line.id} className="pv-line-container flex gap-3 items-center py-2.5 px-2 hover:bg-white/[0.04] border-b border-white/[0.03] last:border-0 transition-colors group relative text-[10px]" onMouseEnter={(e) => { if (hideTimeoutRef.current) clearTimeout(hideTimeoutRef.current); const rect = (e.currentTarget as HTMLElement).getBoundingClientRect(); setPreviewPos({ x: rect.left, y: rect.bottom + 8, visible: true }); }} onMouseLeave={() => { hideTimeoutRef.current = setTimeout(() => setPreviewPos(p => ({ ...p, visible: false })), 200); }}><span className={cn("min-w-[42px] text-center px-1.5 py-0.5 rounded font-black tabular-nums", (line.mate !== undefined ? line.mate > 0 : line.cp! > 0) ? "bg-blue-500/10 text-blue-400" : "bg-red-500/10 text-red-400")}>{line.mate !== undefined ? (line.mate > 0 ? `#${line.mate}` : `-${Math.abs(line.mate)}`) : (line.cp! / 100 > 0 ? "+" : "") + (line.cp! / 100).toFixed(1)}</span><div className="flex flex-wrap gap-x-2 gap-y-1">{line.sanMoves.slice(0, 6).map((m, i) => (<span key={i} className="text-stone-500 hover:text-white cursor-pointer transition-colors font-mono text-[11px]" onMouseEnter={() => { if (hideTimeoutRef.current) clearTimeout(hideTimeoutRef.current); const t = new Chess(fen); for(let j=0; j<=i; j++) t.move(line.pv[j]); setHoveredPosition(t.fen()); }} onClick={() => handlePvMoveClick(line, i)}><FormattedMove move={m} /></span>))}</div></div>))) : engineMode === 'analysis' ? (<div className="flex items-center justify-center py-8"><Loader2 className="animate-spin text-stone-700 size-5" /></div>) : null; })()}</div></div>
-              <div className="bg-white/[0.02] border border-white/[0.05] rounded-xl p-4 flex flex-col h-[400px] overflow-hidden">
+              <div className="bg-[#141414] border border-white/[0.05] rounded-xl p-4 shadow-xl flex flex-col h-[240px] shrink-0 overflow-hidden"><div className="flex items-center justify-between pb-4"><div className="flex items-center gap-3"><Activity className={cn("size-4", engineMode === 'analysis' ? "text-blue-500 animate-pulse" : "text-stone-600")} /><span className="text-sm font-bold text-stone-300">Stockfish 18</span></div><Switch checked={engineMode === 'analysis'} onCheckedChange={(c) => setEngineMode(c ? 'analysis' : 'idle')} /></div><div className={cn("space-y-0 pt-2 border-t border-white/5 transition-opacity duration-200", isEngineStale ? "opacity-40" : "opacity-100")} style={{ minHeight: `${multiPv * 36 + 20}px` }}>{(() => { const chess = new Chess(fen); if (chess.isGameOver()) { return (<div className="flex items-center justify-center h-full py-8 gap-4 animate-in fade-in"><span className={cn("px-4 py-2 rounded-lg font-black tracking-widest text-lg shadow-2xl", chess.isCheckmate() ? "bg-red-500/20 text-red-400 border border-red-500/30" : "bg-stone-500/20 text-stone-400 border border-stone-500/30")}>{chess.isCheckmate() ? "ÉCHEC ET MAT" : "PAT / NULLE"}</span></div>); } return engineMode === 'analysis' && engineInfo.lines.length > 0 ? (engineInfo.lines.map(line => (<div key={line.id} className="pv-line-container flex gap-3 items-center py-2.5 px-2 hover:bg-white/[0.04] border-b border-white/[0.03] last:border-0 transition-colors group relative text-[10px]" onMouseEnter={(e) => { if (hideTimeoutRef.current) clearTimeout(hideTimeoutRef.current); const rect = (e.currentTarget as HTMLElement).getBoundingClientRect(); setPreviewPos({ x: rect.left, y: rect.bottom + 8, visible: true }); }} onMouseLeave={() => { hideTimeoutRef.current = setTimeout(() => setPreviewPos(p => ({ ...p, visible: false })), 200); }}><span className={cn("min-w-[42px] text-center px-1.5 py-0.5 rounded font-black tabular-nums", (line.mate !== undefined ? line.mate > 0 : line.cp! > 0) ? "bg-blue-500/10 text-blue-400" : "bg-red-500/10 text-red-400")}>{line.mate !== undefined ? (line.mate > 0 ? `#${line.mate}` : `-${Math.abs(line.mate)}`) : (line.cp! / 100 > 0 ? "+" : "") + (line.cp! / 100).toFixed(1)}</span><div className="flex flex-wrap gap-x-2 gap-y-1">{line.sanMoves.slice(0, 6).map((m, i) => (<span key={i} className="text-stone-500 hover:text-white cursor-pointer transition-colors font-mono text-[11px]" onMouseEnter={() => { if (hideTimeoutRef.current) clearTimeout(hideTimeoutRef.current); const t = new Chess(fen); for(let j=0; j<=i; j++) t.move(line.pv[j]); setHoveredPosition(t.fen()); }} onClick={() => handlePvMoveClick(line, i)}><FormattedMove move={m} /></span>))}</div></div>))) : engineMode === 'analysis' ? (<div className="flex items-center justify-center py-8"><Loader2 className="animate-spin text-stone-700 size-5" /></div>) : null; })()}</div></div>
+              <div className="bg-white/[0.02] border border-white/[0.05] rounded-xl p-4 flex flex-col flex-1 overflow-hidden">
                 <div className="flex items-center justify-between mb-6 shrink-0">
                    <h2 className="text-xs font-black uppercase tracking-[0.2em] text-stone-500">Historique</h2>
                 </div>
