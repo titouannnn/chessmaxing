@@ -768,13 +768,15 @@ export default function AnalysisPage() {
   }, [fen, history, currentMoveIndex]);
 
   useEffect(() => {
-    if (activeMoveRef.current && historyContainerRef.current) {
-      activeMoveRef.current.scrollIntoView({
-        behavior: 'smooth',
-        block: 'center',
+    if (activeMoveRef.current && historyContainerRef.current && engineMode !== 'review') {
+      requestAnimationFrame(() => {
+        activeMoveRef.current?.scrollIntoView({
+          behavior: 'smooth',
+          block: 'center',
+        });
       });
     }
-  }, [currentMoveIndex]);
+  }, [currentMoveIndex, engineMode]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -1031,7 +1033,7 @@ export default function AnalysisPage() {
         <div className="w-full lg:w-[45%] xl:w-[40%] flex flex-col self-stretch min-w-0">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full flex flex-col h-full gap-0">
             <TabsList className="grid w-full grid-cols-2 bg-white/5 border border-white/10 p-1 h-[52px] shrink-0"><TabsTrigger value="bilan" className="text-xs font-black uppercase tracking-widest data-[state=active]:bg-blue-600 data-[state=active]:text-white">Bilan</TabsTrigger><TabsTrigger value="analyse" className="text-xs font-black uppercase tracking-widest data-[state=active]:bg-blue-600 data-[state=active]:text-white">Analyse</TabsTrigger></TabsList>
-            <TabsContent value="bilan" className="flex-1 hidden data-[state=active]:flex flex-col gap-4 mt-6 animate-in fade-in duration-300">
+            <TabsContent value="bilan" className="flex-1 hidden data-[state=active]:flex flex-col gap-4 mt-6 animate-in fade-in duration-300 min-h-0">
               {gameEvaluations.length === 0 && !engineMode.includes('review') && (
                 <Button onClick={startReview} className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold h-12 uppercase tracking-widest shrink-0">
                   <BarChart3 className="size-4 mr-2" /> Lancer l'analyse du bilan
@@ -1048,8 +1050,8 @@ export default function AnalysisPage() {
               )}
               {renderReport()}
               
-              {(!gameEvaluations.length || engineMode === 'review') && (
-                <div className="bg-white/[0.02] border border-white/[0.05] rounded-xl p-4 flex flex-col flex-1 overflow-hidden">
+              {engineMode !== 'review' && (
+                <div className="bg-white/[0.02] border border-white/[0.05] rounded-xl p-4 flex flex-col flex-1 overflow-hidden min-h-0">
                   <div className="flex items-center justify-between mb-6 shrink-0">
                      <h2 className="text-xs font-black uppercase tracking-[0.2em] text-stone-500">Navigation Partie</h2>
                   </div>
