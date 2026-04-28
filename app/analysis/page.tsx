@@ -202,6 +202,24 @@ const generateBadgeSvg = (classification: MoveClassification) => {
   `;
 };
 
+const ClassificationIcon = ({ classification }: { classification: MoveClassification }) => {
+  // Afficher seulement pour les catégories critiques demandées
+  const showList = ['incroyable', 'excellent', 'erreur', 'gaffe'];
+  if (!showList.includes(classification)) return null;
+
+  return (
+    <span className={cn("inline-flex items-center justify-center size-4 rounded-[2px] text-[8px] font-black text-white ml-1", 
+      classification === 'incroyable' ? "bg-cyan-500" :
+      classification === 'excellent' ? "bg-blue-500" :
+      classification === 'erreur' ? "bg-orange-500" :
+      "bg-red-500"
+    )}>
+      {classification === 'incroyable' || classification === 'excellent' ? '!!' : 
+       classification === 'erreur' ? '?' : '??'}
+    </span>
+  );
+};
+
 // --- Custom Evaluation Graph Component ---
 const EvaluationGraph = ({ 
   data, 
@@ -361,6 +379,26 @@ export default function AnalysisPage() {
 
   // --- Derived UI Data ---
   const isVariation = useMemo(() => history.length !== mainHistory.length || history.some((m, i) => m !== mainHistory[i]), [history, mainHistory]);
+
+  const { classifications, mainClassifications, theoreticalCount, openingName } = useMemo(() => {
+    let opening = "Ouverture inconnue";
+    let tCount = 0;
+    
+    // Always use mainHistory for theoretical count and opening name
+    for (let i = 0; i < mainHistory.length; i++) {
+      const seq = mainHistory.slice(0, i + 1).join(" ");
+      if (ecoData[seq]) {
+        opening = ecoData[seq].name;
+        tCount = i + 1;
+      }
+    }
+
+    const fens = reviewQueueRef.current;
+    const classes = history.map((_, i) => classifyMove(i, gameEvaluations, fens, i < tCount, history));
+    const mainClasses = mainHistory.map((_, i) => classifyMove(i, gameEvaluations, fens, i < tCount, mainHistory));
+    
+    return { classifications: classes, mainClassifications: mainClasses, theoreticalCount: tCount, openingName: opening };
+  }, [history, mainHistory, gameEvaluations]);
 
   // --- Navigation Methods ---
   const goToStart = useCallback(() => { setAnimateNext(true); setCurrentMoveIndex(-1); }, []);
@@ -720,9 +758,15 @@ export default function AnalysisPage() {
       rows.push(
         <div key={`main-${i}`} className={cn("flex items-center py-0.5 px-2 rounded transition-all", (currentMoveIndex === idx1 || currentMoveIndex === idx2) && !isCurrentlyInVariation ? "bg-white/[0.03]" : "hover:bg-white/[0.01]")}>
           <div className="w-8 text-stone-600 text-right pr-3 text-[10px] font-black">{i + 1}.</div>
-          <div ref={currentMoveIndex === idx1 && !isCurrentlyInVariation ? activeMoveRef : null} className={cn("flex-1 px-1.5 cursor-pointer rounded transition-all", currentMoveIndex === idx1 && !isCurrentlyInVariation ? "text-blue-400 font-black scale-105" : "text-stone-300")} onClick={() => { setHistory(mainHistory); setCurrentMoveIndex(idx1); }}><FormattedMove move={mainHistory[idx1]} /></div>
+          <div ref={currentMoveIndex === idx1 && !isCurrentlyInVariation ? activeMoveRef : null} className={cn("flex-1 px-1.5 cursor-pointer rounded transition-all flex items-center", currentMoveIndex === idx1 && !isCurrentlyInVariation ? "text-blue-400 font-black scale-105" : "text-stone-300")} onClick={() => { setHistory(mainHistory); setCurrentMoveIndex(idx1); }}>
+            <FormattedMove move={mainHistory[idx1]} />
+            {mainClassifications[idx1] && <ClassificationIcon classification={mainClassifications[idx1].classification} />}
+          </div>
           {mainHistory[idx2] && (
-            <div ref={currentMoveIndex === idx2 && !isCurrentlyInVariation ? activeMoveRef : null} className={cn("flex-1 px-1.5 cursor-pointer rounded transition-all", currentMoveIndex === idx2 && !isCurrentlyInVariation ? "text-blue-400 font-black scale-105" : "text-stone-300")} onClick={() => { setHistory(mainHistory); setCurrentMoveIndex(idx2); }}><FormattedMove move={mainHistory[idx2]} /></div>
+            <div ref={currentMoveIndex === idx2 && !isCurrentlyInVariation ? activeMoveRef : null} className={cn("flex-1 px-1.5 cursor-pointer rounded transition-all flex items-center", currentMoveIndex === idx2 && !isCurrentlyInVariation ? "text-blue-400 font-black scale-105" : "text-stone-300")} onClick={() => { setHistory(mainHistory); setCurrentMoveIndex(idx2); }}>
+              <FormattedMove move={mainHistory[idx2]} />
+              {mainClassifications[idx2] && <ClassificationIcon classification={mainClassifications[idx2].classification} />}
+            </div>
           )}
         </div>
       );
@@ -738,6 +782,7 @@ export default function AnalysisPage() {
                     {isWhite && <span className="text-stone-600 text-[9px] font-bold mr-0.5">{moveNum}.</span>}
                     {!isWhite && (vIdx === 0 || isDivergenceAtIdx2) && <span className="text-stone-600 text-[9px] font-bold mr-0.5">{moveNum}...</span>}
                     <FormattedMove move={m} />
+                    {classifications[globalIdx] && <ClassificationIcon classification={classifications[globalIdx].classification} />}
                   </span>
                 );
               })}
@@ -828,21 +873,6 @@ export default function AnalysisPage() {
   const renderReport = () => {
     if (gameEvaluations.length === 0 || engineMode === 'review') return null;
 
-    let openingName = "Ouverture inconnue";
-    let theoreticalCount = 0;
-    
-    // Correction ECO : Join history with spaces to match lichess-eco format
-    for (let i = 0; i < history.length; i++) {
-      const seq = history.slice(0, i + 1).join(" ");
-      if (ecoData[seq]) {
-        openingName = ecoData[seq].name;
-        theoreticalCount = i + 1;
-      }
-    }
-
-    const fens = reviewQueueRef.current;
-    const classifications = history.map((_, i) => classifyMove(i, gameEvaluations, fens, i < theoreticalCount, history));
-
     const categories: MoveClassification[] = ['theorique', 'incroyable', 'excellent', 'meilleur', 'tres_bien', 'bon', 'imprecision', 'erreur', 'gaffe'];
     const counts = {
       w: categories.reduce((acc, cat) => ({ ...acc, [cat]: 0 }), {} as Record<MoveClassification, number>),
@@ -912,7 +942,7 @@ export default function AnalysisPage() {
             <div key={i} onClick={() => setCurrentMoveIndex(i)} className={cn("flex items-center justify-between p-2 rounded cursor-pointer transition-colors", currentMoveIndex === i ? "bg-white/10" : "hover:bg-white/5")}>
               <div className="flex items-center gap-3">
                 <span className="text-stone-500 font-mono w-8">{Math.floor(i/2)+1}{i%2===0 ? '.' : '...'}</span>
-                <span className="font-bold w-12"><FormattedMove move={m} /></span>
+                <span className="font-bold flex items-center gap-1 min-w-[60px]"><FormattedMove move={m} /><ClassificationIcon classification={classifications[i].classification} /></span>
               </div>
               <div className={cn("px-2 py-0.5 rounded text-[10px] font-bold uppercase", getBadgeColor(classifications[i].classification))}>
                 {getLabel(classifications[i].classification)}
