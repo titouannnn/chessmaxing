@@ -18,6 +18,9 @@ import {
   Trophy, Lightbulb, MessageSquare
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import ecoDataRaw from "@/data/lichess-eco.json";
+
+const ecoData = ecoDataRaw as Record<string, { eco: string, name: string }>;
 
 // --- Constants (Lichess Multipliers) ---
 const LICHESS_MULTIPLIER = -0.00368208;
@@ -38,6 +41,9 @@ interface MoveEval {
   mate?: number;
   cp?: number; // Raw centipawn value
   bestMove?: string; // UCI move
+  playedMove?: string; // Raw UCI move played in the game
+  wp?: number; // Win probability (0 to 1) for multipv 1
+  wp2?: number; // Win probability (0 to 1) for multipv 2
 }
 
 type EngineMode = 'idle' | 'analysis' | 'review';
@@ -65,6 +71,72 @@ const getWinningChance = (cp: number) => {
 const getMateCp = (mate: number) => {
   const cp = (21 - Math.min(10, Math.abs(mate))) * 100;
   return cp * (mate > 0 ? 1 : -1);
+};
+
+const countMaterial = (fen: string, color: 'w' | 'b') => {
+  const chess = new Chess(fen);
+  const board = chess.board();
+  let material = 0;
+  const values: Record<string, number> = { p: 1, n: 3, b: 3, r: 5, q: 9, k: 0 };
+  for (const row of board) {
+    for (const piece of row) {
+      if (piece && piece.color === color) {
+        material += values[piece.type];
+      }
+    }
+  }
+  return material;
+};
+
+type MoveClassification = 'theorique' | 'incroyable' | 'excellent' | 'tres_bien' | 'meilleur' | 'bon' | 'imprecision' | 'erreur' | 'gaffe';
+
+const classifyMove = (
+  moveIdx: number, 
+  evals: MoveEval[], 
+  fens: string[],
+  isTheoretical: boolean,
+  history: string[]
+): { classification: MoveClassification, deltaW: number } => {
+  if (isTheoretical) return { classification: 'theorique', deltaW: 0 };
+  
+  const currentEval = evals.find(e => e.moveIndex === moveIdx);
+  const nextEval = evals.find(e => e.moveIndex === moveIdx + 1);
+  
+  if (!currentEval || currentEval.wp === undefined || !nextEval || nextEval.wp === undefined) {
+    return { classification: 'meilleur', deltaW: 0 };
+  }
+  
+  const wpBefore = currentEval.wp; // Win prob White before move i
+  const wpAfter = nextEval.wp;     // Win prob White after move i
+  const isWhite = moveIdx % 2 === 0;
+  
+  // ΔW represents the loss of win probability for the side whose turn it was
+  const deltaW = isWhite ? Math.max(0, wpBefore - wpAfter) : Math.max(0, wpAfter - wpBefore);
+  
+  const isBestMove = currentEval.playedMove === currentEval.bestMove || deltaW < 0.005;
+  const onlyGoodMove = currentEval.wp2 !== undefined && (isWhite ? (currentEval.wp - currentEval.wp2 >= 0.15) : (currentEval.wp2 - currentEval.wp >= 0.15));
+  
+  let classification: MoveClassification = 'meilleur';
+  
+  if (isBestMove) {
+    if (onlyGoodMove && fens[moveIdx] && fens[moveIdx + 1]) {
+      const turn = isWhite ? 'w' : 'b';
+      const matBefore = countMaterial(fens[moveIdx], turn);
+      const matAfter = countMaterial(fens[moveIdx + 1], turn);
+      if (matAfter < matBefore) classification = 'incroyable';
+      else classification = 'excellent';
+    } else {
+      classification = 'meilleur';
+    }
+  } else if (deltaW < 0.02) classification = 'tres_bien';
+  else if (deltaW < 0.05) classification = 'bon';
+  else if (deltaW < 0.10) classification = 'imprecision';
+  else if (deltaW < 0.20) classification = 'erreur';
+  else classification = 'gaffe';
+
+  console.log(`[Move ${moveIdx}] ${isWhite ? 'W' : 'B'} played ${history[moveIdx]}: WP ${wpBefore.toFixed(3)} -> ${wpAfter.toFixed(3)}, ΔW: ${(deltaW * 100).toFixed(1)}%, WP2: ${currentEval.wp2?.toFixed(3)}, Class: ${classification}`);
+
+  return { classification, deltaW };
 };
 
 // --- Custom Evaluation Graph Component ---
@@ -309,16 +381,33 @@ export default function AnalysisPage() {
     setCurrentMoveIndex(idx - 1);
     if (idx > 0 && idx % 5 === 0) setGameEvaluations([...reviewResultsRef.current.filter(Boolean)]);
     const chess = new Chess(reviewQueueRef.current[idx]);
+    
+    let playedMoveUci: string | undefined = undefined;
+    const playedMoveSan = history[idx];
+    if (playedMoveSan) {
+      try {
+        const tempChess = new Chess(reviewQueueRef.current[idx]);
+        const m = tempChess.move(playedMoveSan);
+        playedMoveUci = m.from + m.to;
+      } catch (e) {}
+    }
+
     if (chess.isGameOver()) {
       const turn = chess.turn();
       const winProb = chess.isCheckmate() ? (turn === 'w' ? -1 : 1) : 0;
-      reviewResultsRef.current[idx] = { moveIndex: idx - 1, evaluation: winProb * 10, cp: winProb * 1000 };
+      reviewResultsRef.current[idx] = { 
+        moveIndex: idx, 
+        evaluation: winProb * 10, 
+        cp: winProb * 1000,
+        playedMove: playedMoveUci,
+        wp: winProb > 0 ? 1 : (winProb < 0 ? 0 : 0.5)
+      };
       reviewCurrentIdx.current++; processNextReviewMoveRef.current?.();
       return;
     }
     workerRef.current?.postMessage(`position fen ${reviewQueueRef.current[idx]}`);
     workerRef.current?.postMessage(`go depth ${reviewDepth}`);
-  }, [reviewDepth]);
+  }, [reviewDepth, history]);
 
   const startReview = useCallback(() => {
     if (!history.length || !isEngineReadyRef.current) return;
@@ -333,7 +422,7 @@ export default function AnalysisPage() {
     for (const move of history) { chess.move(move); fens.push(chess.fen()); }
     reviewQueueRef.current = fens;
     workerRef.current?.postMessage("stop");
-    workerRef.current?.postMessage("setoption name MultiPV value 1");
+    workerRef.current?.postMessage("setoption name MultiPV value 2");
     workerRef.current?.postMessage("ucinewgame");
     workerRef.current?.postMessage("isready"); 
   }, [history]);
@@ -357,16 +446,51 @@ export default function AnalysisPage() {
           const depth = parseInt(line.match(/\bdepth (\d+)/)?.[1] || "0");
           const scoreMatch = line.match(/\bscore (cp|mate) (-?\d+)/);
           const pvMatch = line.match(/\bpv\s+([a-h][1-8][a-h][1-8][qrbn]?)/);
+          const multipvMatch = line.match(/\bmultipv (\d+)/);
+          const multipv = multipvMatch ? parseInt(multipvMatch[1], 10) : 1;
+
           if (scoreMatch) {
             const turn = new Chess(reviewQueueRef.current[reviewCurrentIdx.current]).turn();
             const multiplier = turn === 'w' ? 1 : -1;
             const cp = scoreMatch[1] === "cp" ? parseInt(scoreMatch[2], 10) : undefined;
             const mate = scoreMatch[1] === "mate" ? parseInt(scoreMatch[2], 10) : undefined;
             const val = cp !== undefined ? cp * multiplier : getMateCp(mate! * multiplier);
-            reviewResultsRef.current[reviewCurrentIdx.current] = { moveIndex: reviewCurrentIdx.current - 1, evaluation: getWinningChance(val) * 10, mate: mate !== undefined ? mate * multiplier : undefined, cp: val, bestMove: pvMatch ? pvMatch[1] : undefined };
+            const wp = (getWinningChance(val) + 1) / 2; // Normalize from 0 to 1
+
+            const currentIdx = reviewCurrentIdx.current;
+            const existingEval = reviewResultsRef.current[currentIdx] || {
+              moveIndex: currentIdx,
+              evaluation: getWinningChance(val) * 10,
+            };
+
+            if (multipv === 1) {
+              // Calculate played move for this position
+              let playedMoveUci: string | undefined = undefined;
+              const playedMoveSan = history[currentIdx];
+              if (playedMoveSan) {
+                try {
+                  const tempChess = new Chess(reviewQueueRef.current[currentIdx]);
+                  const m = tempChess.move(playedMoveSan);
+                  playedMoveUci = m.from + m.to;
+                } catch (e) {}
+              }
+
+              reviewResultsRef.current[currentIdx] = { 
+                ...existingEval,
+                mate: mate !== undefined ? mate * multiplier : undefined, 
+                cp: val, 
+                bestMove: pvMatch ? pvMatch[1] : undefined,
+                playedMove: playedMoveUci,
+                wp: wp
+              };
+            } else if (multipv === 2) {
+              reviewResultsRef.current[currentIdx] = {
+                ...existingEval,
+                wp2: wp
+              };
+            }
           }
-        }
-      }
+        }      }
       if (mode === 'analysis') {
         const depth = parseInt(line.match(/\bdepth (\d+)/)?.[1] || "0");
         const scoreMatch = line.match(/\bscore (cp|mate) (-?\d+)/);
@@ -398,7 +522,7 @@ export default function AnalysisPage() {
         }
       }
     };
-  }, [fen]);
+  }, [fen, history]);
 
   useEffect(() => {
     if (engineMode === 'analysis') {
@@ -428,7 +552,7 @@ export default function AnalysisPage() {
         else setDisplayedEval({ height: (getWinningChance(best.cp!) + 1) * 50, text: (best.cp! / 100 > 0 ? "+" : "") + (best.cp! / 100).toFixed(1) });
       } else setDisplayedEval({ height: 50, text: "0.0" });
     } else {
-      const staticEval = gameEvaluations.find(e => e.moveIndex === currentMoveIndex);
+      const staticEval = gameEvaluations.find(e => e.moveIndex === currentMoveIndex + 1);
       if (staticEval) {
         if (staticEval.mate !== undefined) setDisplayedEval({ height: (staticEval.mate > 0) ? 100 : 0, text: (staticEval.mate > 0 ? "#" : "-") + Math.abs(staticEval.mate) });
         else if (staticEval.cp !== undefined) setDisplayedEval({ height: (getWinningChance(staticEval.cp) + 1) * 50, text: (staticEval.cp / 100 > 0 ? "+" : "") + (staticEval.cp / 100).toFixed(1) });
@@ -579,25 +703,68 @@ export default function AnalysisPage() {
   };
 
   const autoShapes = useMemo(() => {
-    const shapes = [];
+    const shapes: any[] = [];
+    
+    // --- Engine Arrows ---
     if (showEngineArrows) {
-      const actualNextMove = (() => { if (currentMoveIndex >= history.length - 1) return null; try { const chess = new Chess(fen); const move = chess.move(history[currentMoveIndex + 1]); return { orig: move.from as Key, dest: move.to as Key }; } catch (e) { return null; } })();
       if (engineMode === 'analysis') {
         const best = engineInfo.lines.find(l => l.id === 1);
         if (best && engineInfo.depth > 0 && best.pv.length > 0) {
           const move = best.pv[0], orig = move.substring(0, 2) as Key, dest = move.substring(2, 4) as Key;
-          if (!actualNextMove || orig !== actualNextMove.orig || dest !== actualNextMove.dest) shapes.push({ orig, dest, brush: "blue" });
+          shapes.push({ orig, dest, brush: "blue" });
         }
-      } else if (activeTab === 'bilan') {
-        const staticEval = gameEvaluations.find(e => e.moveIndex === currentMoveIndex);
-        if (staticEval?.bestMove) {
-          const orig = staticEval.bestMove.substring(0, 2) as Key, dest = staticEval.bestMove.substring(2, 4) as Key;
-          if (!actualNextMove || orig !== actualNextMove.orig || dest !== actualNextMove.dest) shapes.push({ orig, dest, brush: "blue" });
+      } else if (activeTab === 'bilan' && gameEvaluations.length > 0) {
+        const currentEval = gameEvaluations.find(e => e.moveIndex === currentMoveIndex + 1);
+        if (currentEval?.bestMove) {
+          const orig = currentEval.bestMove.substring(0, 2) as Key, dest = currentEval.bestMove.substring(2, 4) as Key;
+          // On affiche TOUJOURS le meilleur coup suggéré pour la position actuelle
+          shapes.push({ orig, dest, brush: "blue" });
         }
       }
     }
+
+    // --- Classification Markers ---
+    if (activeTab === 'bilan' && gameEvaluations.length > 0 && currentMoveIndex >= 0) {
+      const fens = reviewQueueRef.current;
+      
+      // Determine theoretical count for opening phase
+      let theoreticalCount = 0;
+      for (let i = 0; i < history.length; i++) {
+        const seq = history.slice(0, i + 1).join(" ");
+        if (ecoData[seq]) theoreticalCount = i + 1;
+      }
+
+      const moveEval = classifyMove(currentMoveIndex, gameEvaluations, fens, currentMoveIndex < theoreticalCount, history);
+      
+      const lastMoveSan = history[currentMoveIndex];
+      try {
+        const tempChess = new Chess(fens[currentMoveIndex]);
+        const m = tempChess.move(lastMoveSan);
+        const dest = m.to as Key;
+
+        // On utilise uniquement les brushes standards de chessground pour éviter les crashs
+        const getMarkerBrush = (c: MoveClassification) => {
+          switch(c) {
+            case 'incroyable': return 'blue';
+            case 'excellent': return 'blue';
+            case 'meilleur': return 'green';
+            case 'tres_bien': return 'green';
+            case 'bon': return 'green';
+            case 'theorique': return 'green';
+            case 'imprecision': return 'yellow';
+            case 'erreur': return 'red';
+            case 'gaffe': return 'red';
+            default: return 'green';
+          }
+        };
+
+        // Draw a circle on the destination square of the last move
+        shapes.push({ orig: dest, dest: dest, brush: getMarkerBrush(moveEval.classification) });
+      } catch(e) {}
+    }
+
     return shapes;
-  }, [engineMode, engineInfo, history, currentMoveIndex, fen, showEngineArrows, activeTab, gameEvaluations]);
+  }, [engineMode, engineInfo, currentMoveIndex, showEngineArrows, activeTab, gameEvaluations, history]);
 
   const config: Config = { fen, orientation, turnColor: new Chess(fen).turn() === 'w' ? 'white' : 'black', movable: { color: new Chess(fen).turn() === 'w' ? 'white' : 'black', free: false, dests: (() => { const d = new Map(); new Chess(fen).moves({ verbose: true }).forEach(m => { if (!d.has(m.from)) d.set(m.from, []); d.get(m.from).push(m.to); }); return d; })(), events: { after: onMove } }, drawable: { enabled: true, visible: true, autoShapes }, animation: { enabled: animateNext, duration: 250 } };
 
@@ -605,6 +772,105 @@ export default function AnalysisPage() {
     if (!selectedGame) return { white: { name: "Blanc", rating: "" }, black: { name: "Noir", rating: "" } };
     return { white: { name: selectedGame.white.username, rating: selectedGame.white.rating }, black: { name: selectedGame.black.username, rating: selectedGame.black.rating } };
   }, [selectedGame]);
+
+  const renderReport = () => {
+    if (gameEvaluations.length === 0 || engineMode === 'review') return null;
+
+    let openingName = "Ouverture inconnue";
+    let theoreticalCount = 0;
+    
+    // Correction ECO : Join history with spaces to match lichess-eco format
+    for (let i = 0; i < history.length; i++) {
+      const seq = history.slice(0, i + 1).join(" ");
+      if (ecoData[seq]) {
+        openingName = ecoData[seq].name;
+        theoreticalCount = i + 1;
+      }
+    }
+
+    const fens = reviewQueueRef.current;
+    const classifications = history.map((_, i) => classifyMove(i, gameEvaluations, fens, i < theoreticalCount, history));
+
+    const categories: MoveClassification[] = ['theorique', 'incroyable', 'excellent', 'meilleur', 'tres_bien', 'bon', 'imprecision', 'erreur', 'gaffe'];
+    const counts = {
+      w: categories.reduce((acc, cat) => ({ ...acc, [cat]: 0 }), {} as Record<MoveClassification, number>),
+      b: categories.reduce((acc, cat) => ({ ...acc, [cat]: 0 }), {} as Record<MoveClassification, number>)
+    };
+    
+    classifications.forEach((c, i) => {
+      const color = i % 2 === 0 ? 'w' : 'b';
+      counts[color][c.classification]++;
+    });
+
+    const getBadgeColor = (c: MoveClassification) => {
+      switch(c) {
+        case 'incroyable': return 'bg-cyan-500 text-white';
+        case 'excellent': return 'bg-blue-500 text-white';
+        case 'meilleur': return 'bg-green-500 text-white';
+        case 'tres_bien': return 'bg-green-400 text-white';
+        case 'bon': return 'bg-emerald-400 text-white';
+        case 'theorique': return 'bg-stone-500 text-white';
+        case 'imprecision': return 'bg-yellow-500 text-white';
+        case 'erreur': return 'bg-orange-500 text-white';
+        case 'gaffe': return 'bg-red-500 text-white';
+      }
+    };
+
+    const getLabel = (c: MoveClassification) => {
+      switch(c) {
+        case 'incroyable': return 'Incroyable !!';
+        case 'excellent': return 'Excellent';
+        case 'meilleur': return 'Meilleur';
+        case 'tres_bien': return 'Très Bien';
+        case 'bon': return 'Bon';
+        case 'theorique': return 'Théorique';
+        case 'imprecision': return 'Imprécision';
+        case 'erreur': return 'Erreur';
+        case 'gaffe': return 'Gaffe';
+      }
+    };
+
+    return (
+      <div className="bg-white/[0.02] border border-white/[0.05] rounded-xl p-4 flex flex-col gap-4 animate-in fade-in max-h-[600px]">
+        <div className="flex justify-between items-center pb-4 border-b border-white/10 shrink-0">
+          <h3 className="font-bold text-lg">Bilan du match</h3>
+          <div className="text-sm font-bold text-stone-400 text-right max-w-[200px] truncate">{openingName}</div>
+        </div>
+        
+        {/* Grille structurée pour les compteurs */}
+        <div className="flex flex-col gap-2 shrink-0">
+          <div className="grid grid-cols-3 text-center border-b border-white/5 pb-2">
+            <span className="text-[10px] font-black text-stone-500 uppercase">Blancs</span>
+            <span className="text-[10px] font-black text-stone-600 uppercase">Catégorie</span>
+            <span className="text-[10px] font-black text-stone-500 uppercase">Noirs</span>
+          </div>
+          <div className="space-y-1">
+            {categories.map(cat => (
+              <div key={cat} className="grid grid-cols-3 items-center text-center">
+                <span className={cn("text-xs font-mono", counts.w[cat] > 0 ? "text-white font-bold" : "text-stone-700")}>{counts.w[cat]}</span>
+                <span className={cn("text-[9px] font-black uppercase px-2 py-0.5 rounded-sm mx-auto", getBadgeColor(cat))}>{getLabel(cat)}</span>
+                <span className={cn("text-xs font-mono", counts.b[cat] > 0 ? "text-white font-bold" : "text-stone-700")}>{counts.b[cat]}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="overflow-y-auto mt-2 pr-2 custom-scrollbar space-y-1 flex-1 overscroll-none touch-none">
+          {history.map((m, i) => (
+            <div key={i} onClick={() => setCurrentMoveIndex(i)} className={cn("flex items-center justify-between p-2 rounded cursor-pointer transition-colors", currentMoveIndex === i ? "bg-white/10" : "hover:bg-white/5")}>
+              <div className="flex items-center gap-3">
+                <span className="text-stone-500 font-mono w-8">{Math.floor(i/2)+1}{i%2===0 ? '.' : '...'}</span>
+                <span className="font-bold w-12"><FormattedMove move={m} /></span>
+              </div>
+              <div className={cn("px-2 py-0.5 rounded text-[10px] font-bold uppercase", getBadgeColor(classifications[i].classification))}>
+                {getLabel(classifications[i].classification)}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  };
 
   return (
     <main className="max-w-[1400px] mx-auto p-4 md:p-8 space-y-6 text-white min-h-screen bg-[#0a0a0a]">
@@ -636,17 +902,34 @@ export default function AnalysisPage() {
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full flex flex-col h-full gap-0">
             <TabsList className="grid w-full grid-cols-2 bg-white/5 border border-white/10 p-1 h-[52px] shrink-0"><TabsTrigger value="bilan" className="text-xs font-black uppercase tracking-widest data-[state=active]:bg-blue-600 data-[state=active]:text-white">Bilan</TabsTrigger><TabsTrigger value="analyse" className="text-xs font-black uppercase tracking-widest data-[state=active]:bg-blue-600 data-[state=active]:text-white">Analyse</TabsTrigger></TabsList>
             <TabsContent value="bilan" className="flex-1 hidden data-[state=active]:flex flex-col gap-4 mt-6 animate-in fade-in duration-300">
-              <div className="w-full bg-white/[0.02] border border-white/[0.05] rounded-xl p-4 flex flex-col items-center justify-center transition-all min-h-[240px] overscroll-none touch-none">{gameEvaluations.length > 0 && engineMode !== 'review' ? (<div className="flex flex-col items-center gap-3 py-12"><div className="size-12 rounded-full bg-blue-500/10 flex items-center justify-center"><BarChart3 className="text-blue-500 size-6" /></div><span className="text-[11px] font-black uppercase tracking-[0.2em] text-stone-300">Bilan terminé</span></div>) : (<div onClick={engineMode !== 'review' ? startReview : undefined} className="flex flex-col items-center gap-3 cursor-pointer group/bilan w-full py-12"><BarChart3 className="text-stone-700 group-hover/bilan:text-blue-500 transition-colors size-10" /><span className="text-[11px] font-black uppercase tracking-[0.2em] text-stone-600 group-hover/bilan:text-stone-300">Lancer l'analyse du bilan</span>{engineMode === 'review' && (<div className="mt-4 flex flex-col items-center gap-4 animate-in fade-in zoom-in-95"><Loader2 className="animate-spin text-blue-500 size-8" /><div className="w-64 space-y-1"><Progress value={reviewProgress} className="h-1 bg-white/10" /><p className="text-[10px] text-center font-mono text-stone-500 uppercase tracking-widest">{reviewProgress}% terminé</p></div></div>)}</div>)}</div>
-              <div className="bg-white/[0.02] border border-white/[0.05] rounded-xl p-4 flex flex-col h-[400px] overflow-hidden">
-                <div className="flex items-center justify-between mb-6 shrink-0">
-                   <h2 className="text-xs font-black uppercase tracking-[0.2em] text-stone-500">Navigation Partie</h2>
+              {gameEvaluations.length === 0 && !engineMode.includes('review') && (
+                <Button onClick={startReview} className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold h-12 uppercase tracking-widest shrink-0">
+                  <BarChart3 className="size-4 mr-2" /> Lancer l'analyse du bilan
+                </Button>
+              )}
+              {engineMode === 'review' && (
+                <div className="bg-white/[0.02] border border-white/[0.05] rounded-xl p-4 flex flex-col items-center gap-4 animate-in fade-in shrink-0">
+                  <Loader2 className="animate-spin text-blue-500 size-6" />
+                  <div className="w-full max-w-md space-y-1">
+                    <Progress value={reviewProgress} className="h-1 bg-white/10" />
+                    <p className="text-[10px] text-center font-mono text-stone-500 uppercase tracking-widest">{reviewProgress}% terminé</p>
+                  </div>
                 </div>
-                <div ref={historyContainerRef} className="flex-1 overflow-y-auto custom-scrollbar pr-2 font-mono overscroll-none touch-none relative">
-                  <div className="sticky top-0 left-0 right-0 h-4 bg-gradient-to-b from-[#141414] to-transparent pointer-events-none z-10" />
-                  {renderHistoryList()}
-                  <div className="sticky bottom-0 left-0 right-0 h-10 bg-gradient-to-t from-[#141414] to-transparent pointer-events-none z-10" />
+              )}
+              {renderReport()}
+              
+              {(!gameEvaluations.length || engineMode === 'review') && (
+                <div className="bg-white/[0.02] border border-white/[0.05] rounded-xl p-4 flex flex-col flex-1 overflow-hidden">
+                  <div className="flex items-center justify-between mb-6 shrink-0">
+                     <h2 className="text-xs font-black uppercase tracking-[0.2em] text-stone-500">Navigation Partie</h2>
+                  </div>
+                  <div ref={historyContainerRef} className="flex-1 overflow-y-auto custom-scrollbar pr-2 font-mono overscroll-none touch-none relative">
+                    <div className="sticky top-0 left-0 right-0 h-4 bg-gradient-to-b from-[#141414] to-transparent pointer-events-none z-10" />
+                    {renderHistoryList()}
+                    <div className="sticky bottom-0 left-0 right-0 h-10 bg-gradient-to-t from-[#141414] to-transparent pointer-events-none z-10" />
+                  </div>
                 </div>
-              </div>
+              )}
             </TabsContent>
             <TabsContent value="analyse" className="flex-1 hidden data-[state=active]:flex flex-col gap-4 mt-6 animate-in fade-in duration-300">
               <div className="bg-[#141414] border border-white/[0.05] rounded-xl p-4 shadow-xl flex flex-col h-[280px] shrink-0 overflow-hidden"><div className="flex items-center justify-between pb-4"><div className="flex items-center gap-3"><Activity className={cn("size-4", engineMode === 'analysis' ? "text-blue-500 animate-pulse" : "text-stone-600")} /><span className="text-sm font-bold text-stone-300">Stockfish 18</span></div><Switch checked={engineMode === 'analysis'} onCheckedChange={(c) => setEngineMode(c ? 'analysis' : 'idle')} /></div><div className={cn("space-y-0 pt-2 border-t border-white/5 transition-opacity duration-200", isEngineStale ? "opacity-40" : "opacity-100")} style={{ minHeight: `${multiPv * 36 + 20}px` }}>{(() => { const chess = new Chess(fen); if (chess.isGameOver()) { return (<div className="flex items-center justify-center h-full py-8 gap-4 animate-in fade-in"><span className={cn("px-4 py-2 rounded-lg font-black tracking-widest text-lg shadow-2xl", chess.isCheckmate() ? "bg-red-500/20 text-red-400 border border-red-500/30" : "bg-stone-500/20 text-stone-400 border border-stone-500/30")}>{chess.isCheckmate() ? "ÉCHEC ET MAT" : "PAT / NULLE"}</span></div>); } return engineMode === 'analysis' && engineInfo.lines.length > 0 ? (engineInfo.lines.map(line => (<div key={line.id} className="pv-line-container flex gap-3 items-center py-2.5 px-2 hover:bg-white/[0.04] border-b border-white/[0.03] last:border-0 transition-colors group relative text-[10px]" onMouseEnter={(e) => { if (hideTimeoutRef.current) clearTimeout(hideTimeoutRef.current); const rect = (e.currentTarget as HTMLElement).getBoundingClientRect(); setPreviewPos({ x: rect.left, y: rect.bottom + 8, visible: true }); }} onMouseLeave={() => { hideTimeoutRef.current = setTimeout(() => setPreviewPos(p => ({ ...p, visible: false })), 200); }}><span className={cn("min-w-[42px] text-center px-1.5 py-0.5 rounded font-black tabular-nums", (line.mate !== undefined ? line.mate > 0 : line.cp! > 0) ? "bg-blue-500/10 text-blue-400" : "bg-red-500/10 text-red-400")}>{line.mate !== undefined ? (line.mate > 0 ? `#${line.mate}` : `-${Math.abs(line.mate)}`) : (line.cp! / 100 > 0 ? "+" : "") + (line.cp! / 100).toFixed(1)}</span><div className="flex flex-wrap gap-x-2 gap-y-1">{line.sanMoves.slice(0, 6).map((m, i) => (<span key={i} className="text-stone-500 hover:text-white cursor-pointer transition-colors font-mono text-[11px]" onMouseEnter={() => { if (hideTimeoutRef.current) clearTimeout(hideTimeoutRef.current); const t = new Chess(fen); for(let j=0; j<=i; j++) t.move(line.pv[j]); setHoveredPosition(t.fen()); }} onClick={() => handlePvMoveClick(line, i)}><FormattedMove move={m} /></span>))}</div></div>))) : engineMode === 'analysis' ? (<div className="flex items-center justify-center py-8"><Loader2 className="animate-spin text-stone-700 size-5" /></div>) : null; })()}</div></div>
