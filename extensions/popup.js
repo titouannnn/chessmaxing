@@ -4,39 +4,103 @@ const btn = document.getElementById('btn');
 const mess = document.getElementById('status-message');
 
 const getPGNManual = async (tabId) => {
-  // Utilisation de l'API scripting via webApi
   const results = await webApi.scripting.executeScript({
     target: { tabId: tabId },
     func: async () => {
-      const delay = (ms) => new Promise(res => setTimeout(res, ms));
+      console.log("CHESSMAXER: Début de l'extraction...");
+      
+      const delay = (ms) => new Promise(res => setTimeout(res, ms + Math.random() * 200));
 
-      // 1. Bouton Share
-      const shareBtn = document.querySelector("[data-cy='sidebar-share-icon']");
-      if (!shareBtn) return {error: "PGN not find. Are you on a chess.com game ?"};
-      shareBtn.click();
+      const clickElement = (el) => {
+        if (!el) return;
+        const opts = { bubbles: true, cancelable: true, view: window };
+        el.dispatchEvent(new MouseEvent('mousedown', opts));
+        el.dispatchEvent(new MouseEvent('mouseup', opts));
+        el.click();
+      };
 
-      await delay(500);
+      try {
+        // ÉTAPE 0 : Vérifier si le PGN est DÉJÀ visible (mode manuel)
+        let pgnArea = document.querySelector("[name='pgn']") || 
+                       document.querySelector(".share-menu-pgn-textarea") ||
+                       document.querySelector("textarea[readonly]");
+        
+        if (pgnArea && pgnArea.value && pgnArea.value.length > 20) {
+          console.log("CHESSMAXER: PGN déjà visible, récupération directe.");
+          return { pgn: pgnArea.value };
+        }
 
-      // 2. Onglet PGN
-      const pgnTab = document.querySelector("#tab-pgn");
-      if (!pgnTab) return { error: "PGN button not find" };
-      pgnTab.click();
+        // ÉTAPE 1 : Trouver le bouton Share
+        const shareBtn = document.querySelector("[data-cy='sidebar-share-icon']") || 
+                         document.querySelector(".icon-font-chess-share") ||
+                         document.querySelector(".share-menu-button") ||
+                         document.querySelector(".board-controls-share") ||
+                         document.querySelector("button[aria-label='Share']");
 
-      await delay(300);
+        if (!shareBtn) {
+           console.log("CHESSMAXER: Bouton Share non trouvé.");
+           return { error: "Bouton de partage non trouvé. Ouvrez-le manuellement sur Chess.com avant de cliquer ici." };
+        }
+        
+        console.log("CHESSMAXER: Clic sur Share...");
+        clickElement(shareBtn);
+        await delay(1000);
 
-      // 3. Lire le PGN
-      const pgnArea = document.querySelector("[name='pgn']");
-      const pgnValue = pgnArea ? pgnArea.value : null;
+        // ÉTAPE 2 : Trouver l'onglet PGN
+        console.log("CHESSMAXER: Recherche de l'onglet PGN...");
+        let pgnTab = document.querySelector("#tab-pgn") || 
+                     document.querySelector("[data-tab='pgn']") ||
+                     document.querySelector(".share-menu-tab-pgn");
 
-      // 4. Fermer la modale
-      const closeBtn = document.querySelector(".share-menu-modal-header button");
-      if (closeBtn) closeBtn.click();
+        if (!pgnTab) {
+          // Recherche textuelle très large
+          const allElements = Array.from(document.querySelectorAll("button, div, span, li, a"));
+          pgnTab = allElements.find(el => {
+            const text = el.textContent.trim();
+            return text === "PGN" || text === "PGN/FEN";
+          });
+        }
 
-      return { pgn: pgnValue };
+        if (!pgnTab) {
+          console.log("CHESSMAXER: Onglet PGN introuvable.");
+          // On liste les boutons trouvés pour aider au debug dans la console de l'utilisateur
+          const btns = Array.from(document.querySelectorAll("button")).map(b => b.textContent.trim());
+          console.log("Boutons visibles :", btns);
+          return { error: "Onglet PGN introuvable. Ouvrez la fenêtre de partage sur l'onglet PGN manuellement." };
+        }
+        
+        console.log("CHESSMAXER: Clic sur l'onglet PGN...");
+        clickElement(pgnTab);
+        await delay(800);
+
+        // ÉTAPE 3 : Lire le PGN
+        pgnArea = document.querySelector("[name='pgn']") || 
+                   document.querySelector(".share-menu-pgn-textarea") ||
+                   document.querySelector("textarea[readonly]") ||
+                   document.querySelector(".ui_v5-input-component");
+        
+        const pgnValue = pgnArea ? (pgnArea.value || pgnArea.textContent) : null;
+
+        if (!pgnValue || pgnValue.length < 10) {
+          console.log("CHESSMAXER: Zone PGN vide.");
+          return { error: "Zone PGN vide. Assurez-vous d'être sur l'onglet PGN." };
+        }
+
+        console.log("CHESSMAXER: PGN extrait avec succès.");
+        
+        // Fermeture
+        const closeBtn = document.querySelector(".share-menu-modal-header button") || 
+                         document.querySelector(".ui_modal-close") ||
+                         document.querySelector(".icon-font-chess-x");
+        if (closeBtn) clickElement(closeBtn);
+
+        return { pgn: pgnValue };
+      } catch (err) {
+        return { error: "Erreur: " + err.message };
+      }
     }
   });
 
-  // Récupération du résultat
   const res = results[0].result;
   if (res && res.error) throw new Error(res.error);
   return res ? res.pgn : null;
@@ -44,55 +108,42 @@ const getPGNManual = async (tabId) => {
 
 function writeErrorMessage(mess, text) {
   const originalText = mess.innerText;
-  const originalColor = mess.style.color;
-
   mess.innerText = text;
   mess.style.color = "#f80808";
-
-  // get back to the previous style after 3 seconds
   setTimeout(() => {
-      mess.innerText = originalText;
-      mess.style.color = originalColor;
-  }, 3000);
+      mess.innerText = "Export to Analysis";
+      mess.style.color = "#fff";
+  }, 4000);
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-
     btn.addEventListener('click', async () => {
         try {
-            // On utilise webApi ici aussi
             const tabs = await webApi.tabs.query({ active: true, currentWindow: true });
             if (!tabs || tabs.length === 0) return;
-            
             const tabId = tabs[0].id;
 
-            // Vérification de l'API scripting
-            if (!webApi.scripting) {
-                // alert("L'API scripting n'est pas disponible sur Firefox. Vérifiez le manifest.json.");
-                writeErrorMessage(mess, "L'API scripting n'est pas disponible sur Firefox. Vérifiez le manifest.json.")
-                return;
-            }
+            mess.innerText = "Recherche...";
+            mess.style.color = "#aaa";
 
             const pgn = await getPGNManual(tabId);
 
             if (!pgn) {
-                // alert("Impossible de récupérer le PGN.");
-                writeErrorMessage(mess, "It's not possible to get the PGN");
+                writeErrorMessage(mess, "PGN non trouvé.");
                 return;
             }
 
-            mess.innerText = "Exported !";
+            mess.innerText = "Exporté !";
             mess.style.color = "#08f860";
 
-            await webApi.storage.local.set({ pgn });
+            await webApi.storage.local.set({ pgn: pgn });
             
             webApi.tabs.create({
                 url: "http://localhost:3000/analysis"
             });
 
         } catch (e) {
-            // alert("Error: " + e.message);
-            writeErrorMessage(mess, "Error: " + e.message);
+            writeErrorMessage(mess, e.message);
         }
     });
 });
