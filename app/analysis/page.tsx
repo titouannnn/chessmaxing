@@ -964,7 +964,7 @@ export default function AnalysisPage() {
     };
 
     return (
-      <div className="bg-white/[0.02] border border-white/[0.05] rounded-xl p-4 flex flex-col gap-4 animate-in fade-in max-h-[600px]">
+      <div className="bg-white/[0.02] border border-white/[0.05] rounded-xl p-4 flex flex-col gap-4 animate-in fade-in flex-1 overflow-hidden min-h-0">
         <div className="flex justify-between items-center pb-4 border-b border-white/10 shrink-0">
           <h3 className="font-bold text-lg">Bilan du match</h3>
           <div className="text-sm font-bold text-stone-400 text-right max-w-[200px] truncate">{openingName}</div>
@@ -988,18 +988,10 @@ export default function AnalysisPage() {
           </div>
         </div>
 
-        <div className="overflow-y-auto mt-2 pr-2 custom-scrollbar space-y-1 flex-1 overscroll-none touch-none">
-          {history.map((m, i) => (
-            <div key={i} onClick={() => setCurrentMoveIndex(i)} className={cn("flex items-center justify-between p-2 rounded cursor-pointer transition-colors", currentMoveIndex === i ? "bg-white/10" : "hover:bg-white/5")}>
-              <div className="flex items-center gap-3">
-                <span className="text-stone-500 font-mono w-8">{Math.floor(i/2)+1}{i%2===0 ? '.' : '...'}</span>
-                <span className="font-bold flex items-center gap-1 min-w-[60px]"><FormattedMove move={m} /><ClassificationIcon classification={classifications[i].classification} /></span>
-              </div>
-              <div className={cn("px-2 py-0.5 rounded text-[10px] font-bold uppercase", getBadgeColor(classifications[i].classification))}>
-                {getLabel(classifications[i].classification)}
-              </div>
-            </div>
-          ))}
+        <div ref={historyContainerRef} className="flex-1 overflow-y-auto custom-scrollbar pr-2 font-mono overscroll-none touch-none relative mt-2">
+          <div className="sticky top-0 left-0 right-0 h-4 bg-gradient-to-b from-[#141414] to-transparent pointer-events-none z-10" />
+          {renderHistoryList()}
+          <div className="sticky bottom-0 left-0 right-0 h-10 bg-gradient-to-t from-[#141414] to-transparent pointer-events-none z-10" />
         </div>
       </div>
     );
@@ -1050,8 +1042,8 @@ export default function AnalysisPage() {
               )}
               {renderReport()}
               
-              {engineMode !== 'review' && (
-                <div className="bg-white/[0.02] border border-white/[0.05] rounded-xl p-4 flex flex-col flex-1 overflow-hidden min-h-0">
+              {engineMode !== 'review' && gameEvaluations.length === 0 && (
+                <div className="bg-white/[0.02] border border-white/[0.05] rounded-xl p-4 flex flex-col h-[300px] shrink-0 overflow-hidden">
                   <div className="flex items-center justify-between mb-6 shrink-0">
                      <h2 className="text-xs font-black uppercase tracking-[0.2em] text-stone-500">Navigation Partie</h2>
                   </div>
