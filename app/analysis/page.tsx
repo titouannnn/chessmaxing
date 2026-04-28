@@ -90,6 +90,54 @@ const countMaterial = (fen: string, color: 'w' | 'b') => {
 
 type MoveClassification = 'theorique' | 'incroyable' | 'excellent' | 'tres_bien' | 'meilleur' | 'bon' | 'imprecision' | 'erreur' | 'gaffe';
 
+const CLASSIFICATION_ICONS: Record<MoveClassification, { icon: string, color: string, label: string }> = {
+  incroyable: { 
+    icon: '<path d="M10 17.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0ZM8.5 4a1 1 0 0 0-1 1v9a1 1 0 0 0 2 0V5a1 1 0 0 0-1-1Zm6 13.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Zm-1.5-13.5a1 1 0 0 0-1 1v9a1 1 0 0 0 2 0V5a1 1 0 0 0-1-1Z" fill="white"/>', 
+    color: '#00bcd4', // Cyan
+    label: '!!' 
+  },
+  excellent: { 
+    icon: '<path d="M10.243 15.314L6 11.071l1.414-1.414 2.829 2.828 5.657-5.657 1.414 1.414z" fill="white"/>', 
+    color: '#2196f3', // Blue
+    label: '!!' 
+  },
+  meilleur: { 
+    icon: '<path d="M10.243 15.314L6 11.071l1.414-1.414 2.829 2.828 5.657-5.657 1.414 1.414z" fill="white"/>', 
+    color: '#4caf50', // Green
+    label: '✓' 
+  },
+  tres_bien: { 
+    icon: '<path d="M10.243 15.314L6 11.071l1.414-1.414 2.829 2.828 5.657-5.657 1.414 1.414z" fill="white"/>', 
+    color: '#81c784', // Light Green
+    label: '✓' 
+  },
+  bon: { 
+    icon: '<path d="M10.243 15.314L6 11.071l1.414-1.414 2.829 2.828 5.657-5.657 1.414 1.414z" fill="white"/>', 
+    color: '#a5d6a7', // Pale Green
+    label: '✓' 
+  },
+  theorique: { 
+    icon: '<path d="M4 6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6Zm2 0v12h12V6H6Zm3 2h6v2H9V8Zm0 4h6v2H9v-2Z" fill="white"/>', 
+    color: '#78909c', // Stone
+    label: 'Livre' 
+  },
+  imprecision: { 
+    icon: '<path d="M11 15v2h2v-2h-2Zm0-8v6h2V7h-2Zm5.17 8a2 2 0 1 1-2.83 2.83 2 2 0 0 1 2.83-2.83ZM13 7h2v6h-2V7Z" fill="white"/>', // Approximation of ?!
+    color: '#fbc02d', // Yellow
+    label: '?!' 
+  },
+  erreur: { 
+    icon: '<path d="M11 15v2h2v-2h-2Zm0-8v6h2V7h-2Z" fill="white"/>', // ?
+    color: '#fb8c00', // Orange
+    label: '?' 
+  },
+  gaffe: { 
+    icon: '<path d="M8 15v2h2v-2H8Zm5 0v2h2v-2h-2ZM9 7v6h2V7H9Zm5 0v6h2V7h-2Z" fill="white"/>', // ??
+    color: '#e53935', // Red
+    label: '??' 
+  }
+};
+
 const classifyMove = (
   moveIdx: number, 
   evals: MoveEval[], 
