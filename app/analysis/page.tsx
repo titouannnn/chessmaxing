@@ -187,6 +187,21 @@ const classifyMove = (
   return { classification, deltaW };
 };
 
+const generateBadgeSvg = (classification: MoveClassification) => {
+  const config = CLASSIFICATION_ICONS[classification];
+  const size = 32; // On 100x100 square scale
+  const offset = 68; // 100 - size
+  
+  return `
+    <g transform="translate(${offset}, 0)">
+      <rect width="${size}" height="${size}" rx="4" fill="${config.color}" filter="drop-shadow(0 2px 2px rgba(0,0,0,0.5))" />
+      <svg width="${size}" height="${size}" viewBox="0 0 24 24">
+        ${config.icon}
+      </svg>
+    </g>
+  `;
+};
+
 // --- Custom Evaluation Graph Component ---
 const EvaluationGraph = ({ 
   data, 
@@ -790,24 +805,13 @@ export default function AnalysisPage() {
         const m = tempChess.move(lastMoveSan);
         const dest = m.to as Key;
 
-        // On utilise uniquement les brushes standards de chessground pour éviter les crashs
-        const getMarkerBrush = (c: MoveClassification) => {
-          switch(c) {
-            case 'incroyable': return 'blue';
-            case 'excellent': return 'blue';
-            case 'meilleur': return 'green';
-            case 'tres_bien': return 'green';
-            case 'bon': return 'green';
-            case 'theorique': return 'green';
-            case 'imprecision': return 'yellow';
-            case 'erreur': return 'red';
-            case 'gaffe': return 'red';
-            default: return 'green';
+        shapes.push({
+          orig: dest,
+          customSvg: {
+            html: generateBadgeSvg(moveEval.classification),
+            center: 'orig'
           }
-        };
-
-        // Draw a circle on the destination square of the last move
-        shapes.push({ orig: dest, dest: dest, brush: getMarkerBrush(moveEval.classification) });
+        });
       } catch(e) {}
     }
 
