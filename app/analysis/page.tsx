@@ -138,36 +138,61 @@ const CLASSIFICATION_ICONS: Record<MoveClassification, { icon: string, color: st
   }
 };
 
+const getAccuracy = (deltaW: number): number => {
+  // deltaW is 0 to 1. Formula expects 0 to 100 for ΔW.
+  const loss = deltaW * 100;
+  const accuracy = 103.1668 * Math.exp(-0.04354 * loss) - 3.1669;
+  return Math.max(0, Math.min(100, accuracy));
+};
+
 const classifyMove = (
   moveIdx: number, 
   evals: MoveEval[], 
   fens: string[],
   isTheoretical: boolean,
   history: string[]
-): { classification: MoveClassification, deltaW: number } => {
-  if (isTheoretical) return { classification: 'theorique', deltaW: 0 };
+): { classification: MoveClassification, deltaW: number, accuracy: number } => {
+  if (isTheoretical) return { classification: 'theorique', deltaW: 0, accuracy: 100 };
   
   const currentEval = evals.find(e => e.moveIndex === moveIdx);
   const nextEval = evals.find(e => e.moveIndex === moveIdx + 1);
   
   if (!currentEval || currentEval.wp === undefined || !nextEval || nextEval.wp === undefined) {
-    return { classification: 'meilleur', deltaW: 0 };
+    return { classification: 'meilleur', deltaW: 0, accuracy: 100 };
   }
   
   const wpBefore = currentEval.wp; // Win prob White before move i
   const wpAfter = nextEval.wp;     // Win prob White after move i
-  const isWhite = moveIdx % 2 === 0;
+  
+  const chess = new Chess(fens[moveIdx]);
+  const isWhite = chess.turn() === 'w';
   
   // ΔW represents the loss of win probability for the side whose turn it was
   const deltaW = isWhite ? Math.max(0, wpBefore - wpAfter) : Math.max(0, wpAfter - wpBefore);
+  const accuracy = getAccuracy(deltaW);
   
   const isBestMove = currentEval.playedMove === currentEval.bestMove || deltaW < 0.005;
   const onlyGoodMove = currentEval.wp2 !== undefined && (isWhite ? (currentEval.wp - currentEval.wp2 >= 0.15) : (currentEval.wp2 - currentEval.wp >= 0.15));
   
+  // --- Obvious Move Detection ---
+  let isRecapture = false;
+  const isForced = chess.moves().length === 1;
+  if (moveIdx > 0 && fens[moveIdx - 1]) {
+    try {
+      const prevChess = new Chess(fens[moveIdx - 1]);
+      const mPrev = prevChess.move(history[moveIdx - 1]);
+      const mCurr = chess.move(history[moveIdx]);
+      if (mPrev && mCurr && mPrev.to === mCurr.to) {
+        isRecapture = true;
+      }
+    } catch(e) {}
+  }
+  const isObvious = isForced || isRecapture;
+
   let classification: MoveClassification = 'meilleur';
   
   if (isBestMove) {
-    if (onlyGoodMove && fens[moveIdx] && fens[moveIdx + 1]) {
+    if (!isObvious && onlyGoodMove && fens[moveIdx] && fens[moveIdx + 1]) {
       const turn = isWhite ? 'w' : 'b';
       const matBefore = countMaterial(fens[moveIdx], turn);
       const matAfter = countMaterial(fens[moveIdx + 1], turn);
@@ -176,15 +201,15 @@ const classifyMove = (
     } else {
       classification = 'meilleur';
     }
-  } else if (deltaW < 0.02) classification = 'tres_bien';
+  } else if (deltaW < 0.02) classification = isObvious ? 'meilleur' : 'tres_bien';
   else if (deltaW < 0.05) classification = 'bon';
   else if (deltaW < 0.10) classification = 'imprecision';
   else if (deltaW < 0.20) classification = 'erreur';
   else classification = 'gaffe';
 
-  console.log(`[Move ${moveIdx}] ${isWhite ? 'W' : 'B'} played ${history[moveIdx]}: WP ${wpBefore.toFixed(3)} -> ${wpAfter.toFixed(3)}, ΔW: ${(deltaW * 100).toFixed(1)}%, WP2: ${currentEval.wp2?.toFixed(3)}, Class: ${classification}`);
+  console.log(`[Move ${moveIdx}] ${isWhite ? 'W' : 'B'} played ${history[moveIdx]}: WP ${wpBefore.toFixed(3)} -> ${wpAfter.toFixed(3)}, ΔW: ${(deltaW * 100).toFixed(1)}%, Acc: ${accuracy.toFixed(1)}%, Class: ${classification}`);
 
-  return { classification, deltaW };
+  return { classification, deltaW, accuracy };
 };
 
 const generateBadgeSvg = (classification: MoveClassification) => {
@@ -372,6 +397,7 @@ export default function AnalysisPage() {
   const boardContainerRef = useRef<HTMLDivElement>(null);
   const graphContainerRef = useRef<HTMLDivElement>(null);
   const historyContainerRef = useRef<HTMLDivElement>(null);
+  const bilanHistoryContainerRef = useRef<HTMLDivElement>(null);
   const activeMoveRef = useRef<HTMLDivElement>(null);
   const loadedPgnRef = useRef<string | null>(null);
 
@@ -768,15 +794,26 @@ export default function AnalysisPage() {
   }, [fen, history, currentMoveIndex]);
 
   useEffect(() => {
-    if (activeMoveRef.current && historyContainerRef.current && engineMode !== 'review') {
-      requestAnimationFrame(() => {
-        activeMoveRef.current?.scrollIntoView({
-          behavior: 'smooth',
-          block: 'center',
+    if (activeMoveRef.current) {
+      const container = activeTab === 'bilan' ? bilanHistoryContainerRef.current : historyContainerRef.current;
+      if (container) {
+        requestAnimationFrame(() => {
+          if (activeMoveRef.current && container) {
+            const el = activeMoveRef.current;
+            const elTop = el.offsetTop;
+            const elHeight = el.offsetHeight;
+            const containerHeight = container.clientHeight;
+            
+            container.scrollTo({
+              top: elTop - (containerHeight / 2) + (elHeight / 2),
+              behavior: 'smooth'
+            });
+          }
         });
-      });
+      }
     }
-  }, [currentMoveIndex, engineMode]);
+  }, [currentMoveIndex, activeTab]);
+
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -816,12 +853,22 @@ export default function AnalysisPage() {
           <div className="text-stone-600 text-right pr-3 text-[10px] font-black">{i + 1}.</div>
           <div ref={currentMoveIndex === idx1 && !isCurrentlyInVariation ? activeMoveRef : null} className={cn("px-1.5 cursor-pointer rounded transition-all flex items-center justify-between", currentMoveIndex === idx1 && !isCurrentlyInVariation ? "text-blue-400 font-black scale-105" : "text-stone-300")} onClick={() => { setHistory(mainHistory); setCurrentMoveIndex(idx1); }}>
             <FormattedMove move={mainHistory[idx1]} />
-            {mainClassifications[idx1] && <ClassificationIcon classification={mainClassifications[idx1].classification} />}
+            <div className="flex items-center gap-1.5">
+              {mainClassifications[idx1] && mainClassifications[idx1].classification !== 'theorique' && !isReviewActiveRef.current && (
+                <span className="text-[9px] font-black text-stone-600 opacity-50">{mainClassifications[idx1].accuracy.toFixed(0)}%</span>
+              )}
+              {mainClassifications[idx1] && <ClassificationIcon classification={mainClassifications[idx1].classification} />}
+            </div>
           </div>
           {mainHistory[idx2] && (
             <div ref={currentMoveIndex === idx2 && !isCurrentlyInVariation ? activeMoveRef : null} className={cn("px-1.5 cursor-pointer rounded transition-all flex items-center justify-between", currentMoveIndex === idx2 && !isCurrentlyInVariation ? "text-blue-400 font-black scale-105" : "text-stone-300")} onClick={() => { setHistory(mainHistory); setCurrentMoveIndex(idx2); }}>
               <FormattedMove move={mainHistory[idx2]} />
-              {mainClassifications[idx2] && <ClassificationIcon classification={mainClassifications[idx2].classification} />}
+              <div className="flex items-center gap-1.5">
+                {mainClassifications[idx2] && mainClassifications[idx2].classification !== 'theorique' && !isReviewActiveRef.current && (
+                  <span className="text-[9px] font-black text-stone-600 opacity-50">{mainClassifications[idx2].accuracy.toFixed(0)}%</span>
+                )}
+                {mainClassifications[idx2] && <ClassificationIcon classification={mainClassifications[idx2].classification} />}
+              </div>
             </div>
           )}
         </div>
@@ -856,7 +903,12 @@ export default function AnalysisPage() {
                 return (
                   <span key={vIdx} className={cn("text-[11px] cursor-pointer transition-colors flex items-center gap-0.5", isHighlighted ? "text-blue-400 font-black" : "text-stone-400 hover:text-white")} onClick={() => { setHistory(variationToDisplay!); setCurrentMoveIndex(globalIdx); }}>
                     {isWhite ? `${moveNum}. ` : ""}<FormattedMove move={m} />
-                    {classifications[globalIdx] && <ClassificationIcon classification={classifications[globalIdx].classification} />}
+                    <div className="flex items-center gap-1">
+                      {classifications[globalIdx] && classifications[globalIdx].classification !== 'theorique' && !isReviewActiveRef.current && (
+                        <span className="text-[8px] font-black text-stone-600 opacity-50">{classifications[globalIdx].accuracy.toFixed(0)}%</span>
+                      )}
+                      {classifications[globalIdx] && <ClassificationIcon classification={classifications[globalIdx].classification} />}
+                    </div>
                   </span>
                 );
               })}
@@ -889,7 +941,7 @@ export default function AnalysisPage() {
     }
 
     // --- Classification Markers ---
-    if (activeTab === 'bilan' && (gameEvaluations.length > 0 || variationEvaluations.length > 0) && currentMoveIndex >= 0) {
+    if (activeTab === 'bilan' && (gameEvaluations.length > 0 || variationEvaluations.length > 0) && currentMoveIndex >= 0 && !isReviewActiveRef.current) {
       const fens = reviewQueueRef.current;
       
       const moveEval = classifications[currentMoveIndex];
@@ -929,11 +981,20 @@ export default function AnalysisPage() {
       w: categories.reduce((acc, cat) => ({ ...acc, [cat]: 0 }), {} as Record<MoveClassification, number>),
       b: categories.reduce((acc, cat) => ({ ...acc, [cat]: 0 }), {} as Record<MoveClassification, number>)
     };
+    const accuracies = { w: [] as number[], b: [] as number[] };
     
     classifications.forEach((c, i) => {
       const color = i % 2 === 0 ? 'w' : 'b';
       counts[color][c.classification]++;
+      if (c.classification !== 'theorique') {
+        accuracies[color].push(c.accuracy);
+      }
     });
+
+    const avgAcc = {
+      w: accuracies.w.length > 0 ? accuracies.w.reduce((a, b) => a + b, 0) / accuracies.w.length : 100,
+      b: accuracies.b.length > 0 ? accuracies.b.reduce((a, b) => a + b, 0) / accuracies.b.length : 100
+    };
 
     const getBadgeColor = (c: MoveClassification) => {
       switch(c) {
@@ -964,10 +1025,22 @@ export default function AnalysisPage() {
     };
 
     return (
-      <div className="bg-white/[0.02] border border-white/[0.05] rounded-xl p-4 flex flex-col gap-4 animate-in fade-in flex-1 overflow-hidden min-h-0">
+      <div className="bg-white/[0.02] border border-white/[0.05] rounded-xl p-4 flex flex-col gap-4 animate-in fade-in flex-1 min-h-0 overflow-hidden shadow-xl">
         <div className="flex justify-between items-center pb-4 border-b border-white/10 shrink-0">
           <h3 className="font-bold text-lg">Bilan du match</h3>
           <div className="text-sm font-bold text-stone-400 text-right max-w-[200px] truncate">{openingName}</div>
+        </div>
+
+        {/* Accuracy Scores */}
+        <div className="grid grid-cols-2 gap-4 shrink-0">
+          <div className="bg-white/[0.03] rounded-lg p-3 border border-white/5 flex flex-col items-center">
+            <span className="text-[10px] font-black text-stone-500 uppercase mb-1">Précision Blancs</span>
+            <div className="text-2xl font-black text-white">{avgAcc.w.toFixed(1)}%</div>
+          </div>
+          <div className="bg-white/[0.03] rounded-lg p-3 border border-white/5 flex flex-col items-center">
+            <span className="text-[10px] font-black text-stone-500 uppercase mb-1">Précision Noirs</span>
+            <div className="text-2xl font-black text-white">{avgAcc.b.toFixed(1)}%</div>
+          </div>
         </div>
         
         {/* Grille structurée pour les compteurs */}
@@ -988,7 +1061,7 @@ export default function AnalysisPage() {
           </div>
         </div>
 
-        <div ref={historyContainerRef} className="flex-1 overflow-y-auto custom-scrollbar pr-2 font-mono overscroll-none touch-none relative mt-2">
+        <div ref={bilanHistoryContainerRef} className="flex-1 overflow-y-auto custom-scrollbar pr-2 font-mono overscroll-contain touch-none relative mt-2">
           <div className="sticky top-0 left-0 right-0 h-4 bg-gradient-to-b from-[#141414] to-transparent pointer-events-none z-10" />
           {renderHistoryList()}
           <div className="sticky bottom-0 left-0 right-0 h-10 bg-gradient-to-t from-[#141414] to-transparent pointer-events-none z-10" />
@@ -1001,10 +1074,10 @@ export default function AnalysisPage() {
     <main className="max-w-[1400px] mx-auto p-4 md:p-8 space-y-6 text-white min-h-screen bg-[#0a0a0a]">
       <style dangerouslySetInnerHTML={{ __html: `.cg-wrap coords { font-size: 8px !important; font-weight: bold !important; line-height: 12px !important; } .cg-wrap coords.ranks { right: -12px !important; top: 0 !important; } .cg-wrap coords.files { bottom: -12px !important; left: 0 !important; text-align: center !important; } .cg-wrap piece { width: 12.5% !important; height: 12.5% !important; } cg-board { border-radius: 4px !important; }`}} />
       <div className="flex items-center justify-between"><div className="space-y-1"><h1 className="text-3xl font-display font-bold tracking-tight">Review</h1><p className="text-sm text-stone-500 font-manrope">{selectedGame ? `Partie contre ${selectedGame.white.username} vs ${selectedGame.black.username}` : "Échiquier d'analyse libre."}</p></div></div>
-      <div className="flex flex-col lg:flex-row gap-8 items-stretch relative">
-        <div className="w-full lg:w-[55%] xl:w-[60%] flex flex-col gap-6 relative min-w-0">
+      <div className="grid grid-cols-1 lg:grid-cols-[60%_40%] gap-8 items-stretch relative">
+        <div className="flex flex-col gap-6 relative min-w-0">
           <div className={cn("fixed z-[100] pointer-events-none shadow-2xl transition-all duration-300 ease-out rounded-xl border border-white/10 overflow-hidden bg-[#1a1a1a]", previewPos.visible ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-2 scale-95")} style={{ top: previewPos.y, left: previewPos.x, width: 240, height: 240 }}><div className="w-full h-full" style={{ boxSizing: 'content-box' }}>{hoveredPosition && <ChessBoard config={{ fen: hoveredPosition, orientation, viewOnly: true, coordinates: false, animation: { enabled: true, duration: 300 } }} className="w-full h-full" />}</div></div>
-          <div className="flex items-center justify-center gap-2 p-2 bg-white/[0.02] border border-white/5 rounded-xl h-[52px]"><Button variant="ghost" size="icon" onClick={goToStart} disabled={currentMoveIndex === -1}><ChevronFirst /></Button><Button variant="ghost" size="icon" onClick={goToPrev} disabled={currentMoveIndex === -1}><ChevronLeft /></Button><Button variant="ghost" size="icon" onClick={() => setIsSettingsOpen(!isSettingsOpen)} className={cn(isSettingsOpen && "text-blue-400")}><Settings2 /></Button><Button variant="ghost" size="icon" onClick={goToNext} disabled={currentMoveIndex === history.length - 1}><ChevronRight /></Button><Button variant="ghost" size="icon" onClick={goToEnd} disabled={currentMoveIndex === history.length - 1}><ChevronLast /></Button></div>
+          <div className="flex items-center justify-center gap-2 p-2 bg-white/[0.02] border border-white/5 rounded-xl h-[52px] shrink-0"><Button variant="ghost" size="icon" onClick={goToStart} disabled={currentMoveIndex === -1}><ChevronFirst /></Button><Button variant="ghost" size="icon" onClick={goToPrev} disabled={currentMoveIndex === -1}><ChevronLeft /></Button><Button variant="ghost" size="icon" onClick={() => setIsSettingsOpen(!isSettingsOpen)} className={cn(isSettingsOpen && "text-blue-400")}><Settings2 /></Button><Button variant="ghost" size="icon" onClick={goToNext} disabled={currentMoveIndex === history.length - 1}><ChevronRight /></Button><Button variant="ghost" size="icon" onClick={goToEnd} disabled={currentMoveIndex === history.length - 1}><ChevronLast /></Button></div>
           {isSettingsOpen && (
             <div className="h-[72px] grid grid-cols-2 md:grid-cols-5 gap-4 p-4 bg-white/[0.03] border border-white/10 rounded-xl animate-in fade-in slide-in-from-top-2 shrink-0">
               <div className="flex flex-col gap-2"><span className="text-[10px] font-bold uppercase tracking-widest text-stone-500">Vue</span><Button variant="outline" size="sm" className="h-8 text-[10px] bg-white/5 border-white/10 hover:bg-white/10" onClick={() => setOrientation(orientation === "white" ? "black" : "white")}><ArrowUpDown className="size-3 mr-2" /> Tourner</Button></div>
@@ -1013,63 +1086,65 @@ export default function AnalysisPage() {
               <div className="flex flex-col gap-2"><span className="text-[10px] font-bold uppercase tracking-widest text-stone-500">Profondeur Bilan</span><Select value={reviewDepth.toString()} onValueChange={(v) => setReviewDepth(parseInt(v))}><SelectTrigger className="h-8 bg-white/5 border-white/10 text-[10px] font-bold"><SelectValue /></SelectTrigger><SelectContent className="bg-[#1a1a1a] border-white/10">{[10, 12, 14, 16, 18, 20].map(n => <SelectItem key={n} value={n.toString()} className="text-[10px]">Profondeur {n}</SelectItem>)}</SelectContent></Select></div>
             </div>
           )}
-          <div ref={boardContainerRef} className="flex flex-col w-full gap-4 relative overscroll-none touch-none">
+          <div ref={boardContainerRef} className="flex flex-col w-full gap-4 relative overscroll-none touch-none shrink-0">
             <div className="flex flex-row w-full gap-4 items-stretch"><div className="w-8 shrink-0 bg-[#1a1a1a] border border-white/10 rounded-md overflow-hidden flex flex-col justify-end relative shadow-inner"><div className="w-full transition-all duration-700 bg-white" style={{ height: `${displayedEval.height}%` }} /><div className="absolute bottom-2 w-full text-center text-[10px] font-black mix-blend-difference">{displayedEval.text}</div></div><div className="flex-grow flex flex-col gap-2"><div className="flex items-center justify-between text-xs px-1"><div className="flex items-center gap-2"><div className="size-4 bg-white/10 rounded flex items-center justify-center text-[8px] font-black">{orientation === "white" ? "B" : "W"}</div><span className="font-bold text-stone-400">{orientation === "white" ? playerInfoDisplay.black.name : playerInfoDisplay.white.name}</span></div><span className="font-mono text-stone-500">{clocks[currentMoveIndex + 1] || "0:00"}</span></div><div className="aspect-square w-full bg-white/[0.02] border border-white/[0.05] rounded-xl overflow-hidden relative shadow-2xl"><ChessBoard config={config} />{promotionMove && (<div className="absolute inset-0 z-50 bg-black/40 backdrop-blur-[2px] flex items-center justify-center"><div className="bg-[#1a1a1a] border border-white/10 rounded-xl p-4 flex gap-2 shadow-2xl animate-in zoom-in-95">{['q', 'n', 'r', 'b'].map((p: any) => <Button key={p} variant="outline" className="h-16 w-16 text-2xl bg-white/5 border-white/5 hover:bg-white/10" onClick={() => handlePromotion(p)}>{p === 'q' ? "♛" : p === 'n' ? "♞" : p === 'r' ? "♜" : "♝"}</Button>)}</div></div>)}</div><div className="flex items-center justify-between text-xs px-1"><div className="flex items-center gap-2"><div className="size-4 bg-white/10 rounded flex items-center justify-center text-[8px] font-black">{orientation === "white" ? "W" : "B"}</div><span className="font-bold text-stone-200">{orientation === "white" ? playerInfoDisplay.white.name : playerInfoDisplay.black.name}</span></div><span className="font-mono text-white font-bold">{clocks[currentMoveIndex + 1] || "0:00"}</span></div></div></div>
             {gameEvaluations.length > 0 && engineMode !== 'review' && (
-              <div ref={graphContainerRef} className="w-full bg-white/[0.02] border border-white/[0.05] rounded-xl p-4 flex flex-col items-center justify-center transition-all min-h-[180px] animate-in fade-in slide-in-from-top-2 duration-500 overflow-hidden">
+              <div ref={graphContainerRef} className="w-full bg-white/[0.02] border border-white/[0.05] rounded-xl p-4 flex flex-col items-center justify-center transition-all min-h-[180px] animate-in fade-in slide-in-from-top-2 duration-500 overflow-hidden shrink-0">
                 <EvaluationGraph data={gameEvaluations} currentIndex={currentMoveIndex} totalMoves={mainHistory.length} onSelectMove={setCurrentMoveIndex} />
               </div>
             )}
           </div>
         </div>
-        <div className="w-full lg:w-[45%] xl:w-[40%] flex flex-col self-stretch min-w-0">
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full flex flex-col h-full gap-0">
-            <TabsList className="grid w-full grid-cols-2 bg-white/5 border border-white/10 p-1 h-[52px] shrink-0"><TabsTrigger value="bilan" className="text-xs font-black uppercase tracking-widest data-[state=active]:bg-blue-600 data-[state=active]:text-white">Bilan</TabsTrigger><TabsTrigger value="analyse" className="text-xs font-black uppercase tracking-widest data-[state=active]:bg-blue-600 data-[state=active]:text-white">Analyse</TabsTrigger></TabsList>
-            <TabsContent value="bilan" className="flex-1 hidden data-[state=active]:flex flex-col gap-4 mt-6 animate-in fade-in duration-300 min-h-0">
-              {gameEvaluations.length === 0 && !engineMode.includes('review') && (
-                <Button onClick={startReview} className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold h-12 uppercase tracking-widest shrink-0">
-                  <BarChart3 className="size-4 mr-2" /> Lancer l'analyse du bilan
-                </Button>
-              )}
-              {engineMode === 'review' && (
-                <div className="bg-white/[0.02] border border-white/[0.05] rounded-xl p-4 flex flex-col items-center gap-4 animate-in fade-in shrink-0">
-                  <Loader2 className="animate-spin text-blue-500 size-6" />
-                  <div className="w-full max-w-md space-y-1">
-                    <Progress value={reviewProgress} className="h-1 bg-white/10" />
-                    <p className="text-[10px] text-center font-mono text-stone-500 uppercase tracking-widest">{reviewProgress}% terminé</p>
+        <div className="relative min-w-0 min-h-0">
+          <div className="lg:absolute lg:inset-0 flex flex-col min-h-0">
+            <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full flex flex-col h-full min-h-0">
+              <TabsList className="grid w-full grid-cols-2 bg-white/5 border border-white/10 p-1 h-[52px] shrink-0"><TabsTrigger value="bilan" className="text-xs font-black uppercase tracking-widest data-[state=active]:bg-blue-600 data-[state=active]:text-white">Bilan</TabsTrigger><TabsTrigger value="analyse" className="text-xs font-black uppercase tracking-widest data-[state=active]:bg-blue-600 data-[state=active]:text-white">Analyse</TabsTrigger></TabsList>
+              <TabsContent value="bilan" className="flex-1 hidden data-[state=active]:flex flex-col gap-4 mt-6 animate-in fade-in duration-300 min-h-0">
+                {gameEvaluations.length === 0 && !engineMode.includes('review') && (
+                  <Button onClick={startReview} className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold h-12 uppercase tracking-widest shrink-0">
+                    <BarChart3 className="size-4 mr-2" /> Lancer l'analyse du bilan
+                  </Button>
+                )}
+                {engineMode === 'review' && (
+                  <div className="bg-white/[0.02] border border-white/[0.05] rounded-xl p-4 flex flex-col items-center gap-4 animate-in fade-in shrink-0">
+                    <Loader2 className="animate-spin text-blue-500 size-6" />
+                    <div className="w-full max-w-md space-y-1">
+                      <Progress value={reviewProgress} className="h-1 bg-white/10" />
+                      <p className="text-[10px] text-center font-mono text-stone-500 uppercase tracking-widest">{reviewProgress}% terminé</p>
+                    </div>
                   </div>
-                </div>
-              )}
-              {renderReport()}
-              
-              {engineMode !== 'review' && gameEvaluations.length === 0 && (
-                <div className="bg-white/[0.02] border border-white/[0.05] rounded-xl p-4 flex flex-col h-[300px] shrink-0 overflow-hidden">
+                )}
+                {renderReport()}
+                
+                {engineMode !== 'review' && gameEvaluations.length === 0 && (
+                  <div className="bg-white/[0.02] border border-white/[0.05] rounded-xl p-4 flex flex-col flex-1 min-h-0 shrink-0 overflow-hidden">
+                    <div className="flex items-center justify-between mb-6 shrink-0">
+                       <h2 className="text-xs font-black uppercase tracking-[0.2em] text-stone-500">Navigation Partie</h2>
+                    </div>
+                    <div ref={bilanHistoryContainerRef} className="flex-1 overflow-y-auto custom-scrollbar pr-2 font-mono overscroll-contain touch-none relative">
+                      <div className="sticky top-0 left-0 right-0 h-4 bg-gradient-to-b from-[#141414] to-transparent pointer-events-none z-10" />
+                      {renderHistoryList()}
+                      <div className="sticky bottom-0 left-0 right-0 h-10 bg-gradient-to-t from-[#141414] to-transparent pointer-events-none z-10" />
+                    </div>
+                  </div>
+                )}
+              </TabsContent>
+              <TabsContent value="analyse" className="flex-1 hidden data-[state=active]:flex flex-col gap-4 mt-6 animate-in fade-in duration-300 min-h-0">
+                <div className="bg-[#141414] border border-white/[0.05] rounded-xl p-4 shadow-xl flex flex-col h-[240px] shrink-0 overflow-hidden"><div className="flex items-center justify-between pb-4"><div className="flex items-center gap-3"><Activity className={cn("size-4", engineMode === 'analysis' ? "text-blue-500 animate-pulse" : "text-stone-600")} /><span className="text-sm font-bold text-stone-300">Stockfish 18</span></div><Switch checked={engineMode === 'analysis'} onCheckedChange={(c) => setEngineMode(c ? 'analysis' : 'idle')} /></div><div className={cn("space-y-0 pt-2 border-t border-white/5 transition-opacity duration-200", isEngineStale ? "opacity-40" : "opacity-100")} style={{ minHeight: `${multiPv * 36 + 20}px` }}>{(() => { const chess = new Chess(fen); if (chess.isGameOver()) { return (<div className="flex items-center justify-center h-full py-8 gap-4 animate-in fade-in"><span className={cn("px-4 py-2 rounded-lg font-black tracking-widest text-lg shadow-2xl", chess.isCheckmate() ? "bg-red-500/20 text-red-400 border border-red-500/30" : "bg-stone-500/20 text-stone-400 border border-stone-500/30")}>{chess.isCheckmate() ? "ÉCHEC ET MAT" : "PAT / NULLE"}</span></div>); } return engineMode === 'analysis' && engineInfo.lines.length > 0 ? (engineInfo.lines.map(line => (<div key={line.id} className="pv-line-container flex gap-3 items-center py-2.5 px-2 hover:bg-white/[0.04] border-b border-white/[0.03] last:border-0 transition-colors group relative text-[10px]" onMouseEnter={(e) => { if (hideTimeoutRef.current) clearTimeout(hideTimeoutRef.current); const rect = (e.currentTarget as HTMLElement).getBoundingClientRect(); setPreviewPos({ x: rect.left, y: rect.bottom + 8, visible: true }); }} onMouseLeave={() => { hideTimeoutRef.current = setTimeout(() => setPreviewPos(p => ({ ...p, visible: false })), 200); }}><span className={cn("min-w-[42px] text-center px-1.5 py-0.5 rounded font-black tabular-nums", (line.mate !== undefined ? line.mate > 0 : line.cp! > 0) ? "bg-blue-500/10 text-blue-400" : "bg-red-500/10 text-red-400")}>{line.mate !== undefined ? (line.mate > 0 ? `#${line.mate}` : `-${Math.abs(line.mate)}`) : (line.cp! / 100 > 0 ? "+" : "") + (line.cp! / 100).toFixed(1)}</span><div className="flex flex-wrap gap-x-2 gap-y-1">{line.sanMoves.slice(0, 6).map((m, i) => (<span key={i} className="text-stone-500 hover:text-white cursor-pointer transition-colors font-mono text-[11px]" onMouseEnter={() => { if (hideTimeoutRef.current) clearTimeout(hideTimeoutRef.current); const t = new Chess(fen); for(let j=0; j<=i; j++) t.move(line.pv[j]); setHoveredPosition(t.fen()); }} onClick={() => handlePvMoveClick(line, i)}><FormattedMove move={m} /></span>))}</div></div>))) : engineMode === 'analysis' ? (<div className="flex items-center justify-center py-8"><Loader2 className="animate-spin text-stone-700 size-5" /></div>) : null; })()}</div></div>
+                <div className="bg-white/[0.02] border border-white/[0.05] rounded-xl p-4 flex flex-col flex-1 min-h-0 overflow-hidden">
                   <div className="flex items-center justify-between mb-6 shrink-0">
-                     <h2 className="text-xs font-black uppercase tracking-[0.2em] text-stone-500">Navigation Partie</h2>
+                     <h2 className="text-xs font-black uppercase tracking-[0.2em] text-stone-500">Historique</h2>
                   </div>
-                  <div ref={historyContainerRef} className="flex-1 overflow-y-auto custom-scrollbar pr-2 font-mono overscroll-none touch-none relative">
-                    <div className="sticky top-0 left-0 right-0 h-4 bg-gradient-to-b from-[#141414] to-transparent pointer-events-none z-10" />
+                  <div ref={historyContainerRef} className="flex-1 overflow-y-auto custom-scrollbar pr-2 font-mono overscroll-contain touch-none relative">
+                    <div className="sticky top-0 left-0 right-0 h-4 bg-gradient-to-b from-[#0a0a0a] to-transparent pointer-events-none z-10" />
                     {renderHistoryList()}
-                    <div className="sticky bottom-0 left-0 right-0 h-10 bg-gradient-to-t from-[#141414] to-transparent pointer-events-none z-10" />
+                    <div className="sticky bottom-0 left-0 right-0 h-10 bg-gradient-to-t from-[#0a0a0a] to-transparent pointer-events-none z-10" />
                   </div>
                 </div>
-              )}
-            </TabsContent>
-            <TabsContent value="analyse" className="flex-1 hidden data-[state=active]:flex flex-col gap-4 mt-6 animate-in fade-in duration-300">
-              <div className="bg-[#141414] border border-white/[0.05] rounded-xl p-4 shadow-xl flex flex-col h-[240px] shrink-0 overflow-hidden"><div className="flex items-center justify-between pb-4"><div className="flex items-center gap-3"><Activity className={cn("size-4", engineMode === 'analysis' ? "text-blue-500 animate-pulse" : "text-stone-600")} /><span className="text-sm font-bold text-stone-300">Stockfish 18</span></div><Switch checked={engineMode === 'analysis'} onCheckedChange={(c) => setEngineMode(c ? 'analysis' : 'idle')} /></div><div className={cn("space-y-0 pt-2 border-t border-white/5 transition-opacity duration-200", isEngineStale ? "opacity-40" : "opacity-100")} style={{ minHeight: `${multiPv * 36 + 20}px` }}>{(() => { const chess = new Chess(fen); if (chess.isGameOver()) { return (<div className="flex items-center justify-center h-full py-8 gap-4 animate-in fade-in"><span className={cn("px-4 py-2 rounded-lg font-black tracking-widest text-lg shadow-2xl", chess.isCheckmate() ? "bg-red-500/20 text-red-400 border border-red-500/30" : "bg-stone-500/20 text-stone-400 border border-stone-500/30")}>{chess.isCheckmate() ? "ÉCHEC ET MAT" : "PAT / NULLE"}</span></div>); } return engineMode === 'analysis' && engineInfo.lines.length > 0 ? (engineInfo.lines.map(line => (<div key={line.id} className="pv-line-container flex gap-3 items-center py-2.5 px-2 hover:bg-white/[0.04] border-b border-white/[0.03] last:border-0 transition-colors group relative text-[10px]" onMouseEnter={(e) => { if (hideTimeoutRef.current) clearTimeout(hideTimeoutRef.current); const rect = (e.currentTarget as HTMLElement).getBoundingClientRect(); setPreviewPos({ x: rect.left, y: rect.bottom + 8, visible: true }); }} onMouseLeave={() => { hideTimeoutRef.current = setTimeout(() => setPreviewPos(p => ({ ...p, visible: false })), 200); }}><span className={cn("min-w-[42px] text-center px-1.5 py-0.5 rounded font-black tabular-nums", (line.mate !== undefined ? line.mate > 0 : line.cp! > 0) ? "bg-blue-500/10 text-blue-400" : "bg-red-500/10 text-red-400")}>{line.mate !== undefined ? (line.mate > 0 ? `#${line.mate}` : `-${Math.abs(line.mate)}`) : (line.cp! / 100 > 0 ? "+" : "") + (line.cp! / 100).toFixed(1)}</span><div className="flex flex-wrap gap-x-2 gap-y-1">{line.sanMoves.slice(0, 6).map((m, i) => (<span key={i} className="text-stone-500 hover:text-white cursor-pointer transition-colors font-mono text-[11px]" onMouseEnter={() => { if (hideTimeoutRef.current) clearTimeout(hideTimeoutRef.current); const t = new Chess(fen); for(let j=0; j<=i; j++) t.move(line.pv[j]); setHoveredPosition(t.fen()); }} onClick={() => handlePvMoveClick(line, i)}><FormattedMove move={m} /></span>))}</div></div>))) : engineMode === 'analysis' ? (<div className="flex items-center justify-center py-8"><Loader2 className="animate-spin text-stone-700 size-5" /></div>) : null; })()}</div></div>
-              <div className="bg-white/[0.02] border border-white/[0.05] rounded-xl p-4 flex flex-col flex-1 overflow-hidden">
-                <div className="flex items-center justify-between mb-6 shrink-0">
-                   <h2 className="text-xs font-black uppercase tracking-[0.2em] text-stone-500">Historique</h2>
-                </div>
-                <div ref={historyContainerRef} className="flex-1 overflow-y-auto custom-scrollbar pr-2 font-mono overscroll-none touch-none relative">
-                  <div className="sticky top-0 left-0 right-0 h-4 bg-gradient-to-b from-[#0a0a0a] to-transparent pointer-events-none z-10" />
-                  {renderHistoryList()}
-                  <div className="sticky bottom-0 left-0 right-0 h-10 bg-gradient-to-t from-[#0a0a0a] to-transparent pointer-events-none z-10" />
-                </div>
-              </div>
-              <div className="bg-white/[0.02] border border-white/[0.05] rounded-xl p-4 space-y-3 shrink-0 shadow-lg mt-auto"><Textarea placeholder="Coller un PGN ici..." className="text-[10px] h-20 bg-black/20 border-white/5 focus:border-blue-500/50 transition-colors custom-scrollbar" value={pgnInput} onChange={e => setPgnInput(e.target.value)} /><Button className="w-full h-8 text-[10px] uppercase font-black tracking-widest bg-white/5 hover:bg-white/10 border-white/5" onClick={() => loadPgn(pgnInput)}>Charger PGN</Button></div>
-            </TabsContent>
-          </Tabs>
+                <div className="bg-white/[0.02] border border-white/[0.05] rounded-xl p-4 space-y-3 shrink-0 shadow-lg mt-auto"><Textarea placeholder="Coller un PGN ici..." className="text-[10px] h-20 bg-black/20 border-white/5 focus:border-blue-500/50 transition-colors custom-scrollbar" value={pgnInput} onChange={e => setPgnInput(e.target.value)} /><Button className="w-full h-8 text-[10px] uppercase font-black tracking-widest bg-white/5 hover:bg-white/10 border-white/5" onClick={() => loadPgn(pgnInput)}>Charger PGN</Button></div>
+              </TabsContent>
+            </Tabs>
+          </div>
         </div>
       </div>
     </main>
